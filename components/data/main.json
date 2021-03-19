@@ -1,0 +1,126 @@
+[
+    {
+        "name": "Skiing",
+        "image": "../../assets/images/skiing.jpg",
+        "key":1,
+        "duration": "3h - 8h",
+        "price": "60€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+    },
+    {
+        "name": "Wakeboarding",
+        "image":"none",
+        "key":2,
+        "duration": "3h - 8h",
+        "price": "50€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+
+    
+    },
+    {
+        "name": "Bungee Jumping",
+        "image":"none",
+        "key":3,
+        "duration": "3h - 8h",
+        "price": "80€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+
+    },
+    {
+        "name": "Rafting",
+        "image":"none",
+        "key":4,
+        "duration": "3h - 8h",
+        "price": "40€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+
+    },
+    {
+        "name": "Ice-Skating",
+        "image":"none",
+        "key":6,
+        "duration": "1h - 3h",
+        "price": "20€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+
+    },
+    {
+        "name": "Opera",
+        "image": "none",
+        "key":7,
+        "duration": "2h - 4h",
+        "price": "200€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+
+    },
+    {
+        "name": "Museum",
+        "image":"none",
+        "key":9,
+        "duration": "1h - 3h",
+        "price": "Free",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+
+    },
+    {
+        "name": "Cuisine Culture",
+        "image":"none",
+        "key":10,
+        "duration": "2h - 4h",
+        "price": "30€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+
+    },
+    {
+        "name": "Cinema",
+        "image":"none",
+        "key":11,
+        "duration": "1h - 2h",
+        "price": "18€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+
+    },
+    {
+        "name": "Boat Restaurant",
+        "image":"none",
+        "key":12,
+        "duration": "1h - 2h",
+        "price": "20€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+
+    },
+    {
+        "name": "Beer Garden",
+        "image":"none",
+        "key":13,
+        "duration": "1h - 4h",
+        "price": "30€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+
+    },
+    {
+        "name": "Food Festivals",
+        "image":"none",
+        "key":14,
+        "duration": "1h - 5h",
+        "price": "30€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+    },
+    {
+        "name": "Paragliding",
+        "image":"none",
+        "key":15,
+        "duration": "1h - 5h",
+        "price": "150€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+    },
+    {
+        "name": "Concert",
+        "image":"none",
+        "key":16,
+        "duration": "2h - 4h",
+        "price": "170€ / Person",
+        "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
+    }
+
+  ]
