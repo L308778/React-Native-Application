@@ -9,6 +9,10 @@ class DataContextProvider extends React.Component {
         this.state = {  
             activities: Images,
             saved_activities: [],
+            location: {
+                latitude: "",
+                longitude:""
+            }
         };
     }
 
@@ -16,9 +20,13 @@ class DataContextProvider extends React.Component {
         this.setState({saved_activities: this.state.saved_activities.concat(Data[index])});
       };
 
+    on_location = (loc) => {
+        this.setState({location: loc})
+    }
+
     render() {
         return (
-            <DataContext.Provider value={{...this.state, save_activity: this.saved}}>
+            <DataContext.Provider value={{...this.state, save_activity: this.saved, change_location: this.on_location}}>
                 {this.props.children}
             </DataContext.Provider>
         );
