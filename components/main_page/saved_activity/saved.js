@@ -1,8 +1,6 @@
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView, Image, Animated } from "react-native";
 import Constants from "expo-constants";
-import { TextInput } from "react-native-gesture-handler";
-import { Icon, ListItem } from 'react-native-elements'
-import { useIsFocused} from '@react-navigation/native';
+import Swipeable from "react-native-gesture-handler/Swipeable"
 import React, { useState, useContext} from 'react';
 import {DataContext} from "../../../context/dataContext"
 import Images from "../../images/image_loader.js"
@@ -38,7 +36,31 @@ function Saved (props) {
   }
 
   const Item = ({item}) => {
+
+    const handle_delete = (index) => {
+      const arr = [...displayData];
+      arr.splice(index, 1);
+      setDisplayData(arr)
+    }
+
+    const leftSwipe = (progress, dragX) => {
+      const scale = dragX.interpolate({
+        inputRange: [0, 100],
+        outputRange: [0, 1],
+        extrapolate: "clamp"
+      })
+      return(
+        <TouchableOpacity activeOpacity={0.6} onPress={(index) => handle_delete(index)}>
+        <View style={styles.delete}>
+          <Animated.Text style={{transform : [{scale: scale}]}}>
+            Delete
+          </Animated.Text>
+        </View>
+        </TouchableOpacity>
+      )
+    }
     return (
+      <Swipeable renderLeftActions={leftSwipe}>
       <TouchableOpacity onPress={() => props.navigation.navigate("activity_info", {
         params:{"activity": item.key - 1}
       })}>
@@ -52,6 +74,7 @@ function Saved (props) {
         </TouchableOpacity>
       </View>
       </TouchableOpacity>
+      </Swipeable>
     );
   }
 
@@ -156,5 +179,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     borderRadius: 40,
     fontSize:20
+  },
+
+  delete: {
+    backgroundColor:"red",
+    justifyContent:"center",
+    alignItems:"center",
+    width: 80,
+    height: 100
   }
 });
