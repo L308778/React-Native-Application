@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
       borderRadius: 4,
       padding: 20,
       marginTop: 70,
+      position: 
   },
   confirmbuttontext: {
       fontSize: 30,

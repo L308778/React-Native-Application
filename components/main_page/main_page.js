@@ -16,14 +16,20 @@ state being passed as the parentState prop. For some reason it is not concatting
 export default function Main(props) {
 
 
-  const {data, activities, save_activity, saved_activities} = useContext(DataContext)
-  console.log(data, activities,save_activity, saved_activities)
+  const {data, activities, save_activity, saved_activities, for_info, curr_activity} = useContext(DataContext)
   const [saved_activity, setActivity] = useState([]);
 
 
   const saved = (index) => {
     save_activity(index)
   };
+
+  const to_info = (index) => {
+    for_info(index)
+
+
+    props.navigation.navigate("activity_info")
+  }
 
   return (
 
@@ -41,11 +47,7 @@ export default function Main(props) {
           );
         }}
         onSwipedRight={(index) => saved(index)}
-        onSwipedTop={(index) =>
-          props.navigation.navigate("activity_info", {
-            params: { activity: index },
-          })
-        }
+        onSwipedTop={(index) => to_info(index) }
         onSwiped={(cardIndex) => {
           console.log("Yes");
         }}
@@ -57,6 +59,7 @@ export default function Main(props) {
       ></Swiper>
     </SafeAreaView>
   )}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

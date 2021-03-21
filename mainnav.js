@@ -28,7 +28,6 @@ import Settings from "./components/main_page/settings.js";
 import Profile from "./components/main_page/profile.js";
 import Activity_info from "./components/main_page/activity_info.js";
 import Saved from "./components/main_page/saved_activity/saved.js";
-import Book from "./components/book.js";
 import { screensEnabled } from "react-native-screens";
 
 const Stack = createStackNavigator();
@@ -156,7 +155,6 @@ function App() {
           cardStyleInterpolator:
             CardStyleInterpolators.forRevealFromBottomAndroid
         }}/>
-        <Stack.Screen name="book" component={Book} />
         <Stack.Screen name="tab" component={Mainfunc} />
       </Stack.Navigator>
     </NavigationContainer>

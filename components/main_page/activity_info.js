@@ -1,94 +1,94 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from "react-native";
+import React, {useState, useContext} from "react";
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, Dimensions, Button } from "react-native";
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import { Icon } from 'react-native-elements'
 import Activities from "../data/main.json"
 import Images from "../images/image_loader.js"
+import {DataContext} from "../../context/dataContext.js"
 
-/*This is our sign-up page. We still have to add database integration (Firebase?)
-So the navigation from the email sign in still has to be adjusted as well as the connections
-to google, apple etc.*/
+/* This is the page containing the specific data related to the individual activity.
+To do:
 
-/*data: Activities[this.props.route.params.params.activity],
-      image: Images[this.props.route.params.params.index]*/
+1. Change it to a function
+2. Use context to call everything
 
-export default class Location extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state={
-      data : Activities[this.props.route.params.params.activity],
-      image: Images[this.props.route.params.params.activity]
+*/
+
+
+const ScreenWidth = Dimensions.get("window").width
+const ScreenHeight = Dimensions.get("window").height
+
+
+export default function Activity_Info(props) {
+
+    const {curr_activity} = useContext(DataContext)
+
+
+    const [data, setData] = useState(curr_activity.data);
+    const [image, setImage] = useState(curr_activity.image);
+    
+    const c = 2
+
+    const logger = () => {
+      console.log(data)
     }
-  }
 
-  render() {
-    if(this.state.showing == false){
-      return(
-        <View><Text>Safe</Text></View>
-      )
-    }
-    if(typeof(this.state.data)=="undefined"){
-      return(
-        <View>
-          <Text>
-            No data sorry
-          </Text>
-        </View>
-      )
-    }
-    else{
     return (
-      <ScrollView style ={{flex: 1}}contentContainerStyle={styles.container}>
-        <Text style={styles.header}>{this.state.data.name}</Text>
-        <Image style={styles.image} source={this.state.image}/>
+      <View style={{flex:1}}>
+        <View style={{height: 30}}>
+
+        </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.header}>{data.name}</Text>
+        <Image style={styles.image} source={image}/>
+        <View style={styles.long_cont}>
+        <Text style={styles.long_text}>{data.longdescription}</Text>
+        </View>
         <View style={styles.parentinfocontainer}>
             <View style={styles.infocontainer}>
+            <View style = {styles.lineStyle} />
           <Text style={styles.maininfo_txt}>DURATION: </Text>
           <View style = {styles.lineStyle} />
           <Text style={styles.maininfo_txt}>PRICE: </Text>
           <View style = {styles.lineStyle} />
           <Text style={styles.maininfo_txt}>Type: </Text>
           <View style = {styles.lineStyle} />
-          <Text style={styles.maininfo_txt}>Your Score:</Text>
-          <View style = {styles.lineStyle} />
           </View>
           <View style={styles.infocontainer}>
+          <View style = {styles.lineStyle} />
               <Text style={styles.maininfo_txt_ans}>
-                  {this.state.data.duration}
+                  {data.duration}
               </Text>
               <View style = {styles.lineStyle} />
               <Text style={styles.maininfo_txt_ans}>
-                  {this.state.data.price}
+                  {data.price}
               </Text>
               <View style = {styles.lineStyle} />
               <Text style={styles.maininfo_txt_ans}>
                   Entertain
               </Text>
               <View style = {styles.lineStyle} />
-              <Text style={styles.maininfo_txt_ans}>
-                  96.6%
-              </Text>
-              <View style = {styles.lineStyle} />
+              
           </View>
         </View>
-        <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("main")}>
-            <Text style={styles.confirmbuttontext}>
-                BOOK
-            </Text>
-        </TouchableOpacity>
       </ScrollView>
+      <TouchableOpacity style={styles.confirmbutton} onPress={() => props.navigation.navigate("main")}>
+      <Text style={styles.confirmbuttontext}>
+          BOOK
+      </Text>
+  </TouchableOpacity>
+  </View>
     );
-  }
-}
 }
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     alignItems: "center",
-    flexDirection: "column",
+    position: "relative",
     backgroundColor: "white",
+    
   },
   header: {
     fontSize: 40,
@@ -99,7 +99,8 @@ const styles = StyleSheet.create({
     fontFamily:"system font"
   },
   parentinfocontainer:{
-      flexDirection:"row"
+      flexDirection:"row",
+      paddingBottom: ScreenHeight * 0.1
   },
   infocontainer: {
       flexDirection: "column",
@@ -122,6 +123,7 @@ const styles = StyleSheet.create({
 },
   confirmbutton: {
     color: "turquoise",
+    alignSelf:"flex-end",
     backgroundColor: "turquoise",
     borderWidth: 0,
     borderRadius: 4,
@@ -129,6 +131,8 @@ const styles = StyleSheet.create({
     padding: 20,
     width:"100%",
     marginTop: 30,
+    position: "absolute",
+    bottom: 0,
   },
   confirmbuttontext: {
     fontSize: 20,
@@ -145,5 +149,18 @@ const styles = StyleSheet.create({
     width: 300,
     height:400,
     borderRadius: 40
-  }
+  },
+  long_cont: {
+    width: ScreenWidth * 0.7,
+    textAlign:"justify",
+    paddingTop: 30,
+    paddingBottom: 20
+  },
+  long_text: {
+    color: "turquoise",
+    fontSize: 15,
+    fontFamily: "systemfont",
+    lineHeight: 30
+  },
+
 });
