@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from "react-native";
 import Constants from "expo-constants";
-import { SliderPicker } from 'react-native-slider-picker';
+import {Slider, Icon} from "react-native-elements"
 
 /*This is our sign-up page. We still have to add database integration (Firebase?)
 So the navigation from the email sign in still has to be adjusted as well as the connections
@@ -18,41 +18,40 @@ export default class People extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-          <View style={styles.slider}>
-        <SliderPicker 
-          minLabel={'0'}
-          maxLabel={'10'}
-          maxValue={10}
-          callback={position => {
-            this.setState({ value: position });
-          }}
-          defaultValue={this.state.value}
-          labelFontColor={"turquoise"}
-          style={styles.slider}
-          labelFontWeight={'600'}
-          fillColor={'turquoise'}
-          labelFontWeight={'bold'}
-          buttonBackgroundColor={'#fff'}
-          buttonBorderColor={"#6c7682"}
-          buttonBorderWidth={1}
-          scaleNumberFontWeight={'300'}
-          buttonDimensionsPercentage={9}
-          heightPercentage={1}
-          widthPercentage={80}
-          labelFontSize={25}
-        />
-        </View>
         <View style={styles.peoplecontainer}>
             <Text style={styles.peopletext}>YOU ARE </Text>
         <Text style={styles.people}>
             {this.state.value} PEOPLE
         </Text>
         </View>
-        <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("feeling")}>
-            <Text style={styles.confirmbuttontext}>
-                CONFIRM
-            </Text>
-        </TouchableOpacity>
+        <View style={styles.slider_container}>
+          <Slider
+            style={styles.slider}
+            value={this.state.value}
+            maximumValue={20}
+            minimumValue={0}
+            step={1}
+            onValueChange={(value) => this.setState({ value })}
+            thumbStyle={{
+              height: 40,
+              width: 40,
+              backgroundColor: "transparent",
+            }}
+            thumbProps={{
+              children: (
+                <Icon
+                  name="users"
+                  type="font-awesome"
+                  size={20}
+                  reverse
+                  containerStyle={{ bottom: 10, right: 20 }}
+                  color="turquoise"
+                />
+              ),
+            }}
+            
+          />
+        </View>
       </View>
     );
   }
@@ -87,14 +86,14 @@ const styles = StyleSheet.create({
   },
   peopletext: {
     paddingTop: Constants.statusBarHeight,
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "100",
     justifyContent: "flex-start",
     color: "turquoise"
   },
   people: {
     paddingTop: Constants.statusBarHeight,
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "500",
     justifyContent: "flex-start",
     color: "turquoise"
@@ -111,5 +110,14 @@ const styles = StyleSheet.create({
       fontSize: 20,
       fontWeight: "600",
       color: "white"
+  },
+  slider_container: {
+    justifyContent: "center",
+    alignItems: "stretch",
+    flex: 1,
+    padding: 20,
+  },
+  slider: {
+    width: ScreenWidth * 0.8
   },
 });

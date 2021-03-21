@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from "react-native";
 import Constants from "expo-constants";
-import { SliderPicker } from 'react-native-slider-picker';
+import {Slider, Icon} from "react-native-elements"
 
 /*This is our sign-up page. We still have to add database integration (Firebase?)
 So the navigation from the email sign in still has to be adjusted as well as the connections
@@ -22,107 +22,130 @@ export default class Feeling extends React.Component {
     return (
       <View style={styles.container}>
 
-          <View style={styles.slider}>
+          <View style={styles.main_slider}>
               <Text>Romantic</Text>
-        <SliderPicker 
-          minLabel={'0'}
-          maxLabel={'100%'}
-          maxValue={100}
-          callback={position => {
-            this.setState({ romantic: position });
-          }}
-          defaultValue={this.state.romantic}
-          labelFontColor={"turquoise"}
-          style={styles.slider}
-          labelFontWeight={'600'}
-          fillColor={'turquoise'}
-          labelFontWeight={'bold'}
-          buttonBackgroundColor={'#fff'}
-          buttonBorderColor={"#6c7682"}
-          buttonBorderWidth={1}
-          scaleNumberFontWeight={'300'}
-          buttonDimensionsPercentage={9}
-          heightPercentage={1}
-          widthPercentage={80}
-          labelFontSize={25}
-        />
+              <View style={styles.slider_container}>
+          <Slider
+            style={styles.slider}
+            value={this.state.romantic}
+            maximumValue={100}
+            minimumValue={0}
+            step={1}
+            onValueChange={(romantic) => this.setState({ romantic })}
+            thumbStyle={{
+              height: 40,
+              width: 40,
+              backgroundColor: "transparent",
+            }}
+            thumbProps={{
+              children: (
+                <Icon
+                  name="heart"
+                  type="font-awesome"
+                  size={20}
+                  reverse
+                  containerStyle={{ bottom: 10, right: 20 }}
+                  color="turquoise"
+                />
+              ),
+            }}
+            
+          />
+          <Text style={{alignSelf:"center"}}>Romance: {this.state.romantic}%</Text>
+        </View>
         <Text>Relaxed</Text>
-        <SliderPicker 
-          minLabel={'0'}
-          maxLabel={'100%'}
-          maxValue={100}
-          callback={position => {
-            this.setState({ relaxed: position });
-          }}
-          defaultValue={this.state.relaxed}
-          labelFontColor={"turquoise"}
-          style={styles.slider}
-          labelFontWeight={'600'}
-          fillColor={'turquoise'}
-          labelFontWeight={'bold'}
-          buttonBackgroundColor={'#fff'}
-          buttonBorderColor={"#6c7682"}
-          buttonBorderWidth={1}
-          scaleNumberFontWeight={'300'}
-          buttonDimensionsPercentage={9}
-          heightPercentage={1}
-          widthPercentage={80}
-          labelFontSize={25}
-        />
+        <View style={styles.slider_container}>
+          <Slider
+            style={styles.slider}
+            value={this.state.relaxed}
+            maximumValue={100}
+            minimumValue={0}
+            step={1}
+            onValueChange={(relaxed) => this.setState({ relaxed })}
+            thumbStyle={{
+              height: 40,
+              width: 40,
+              backgroundColor: "transparent",
+            }}
+            thumbProps={{
+              children: (
+                <Icon
+                  name="hand-peace-o"
+                  type="font-awesome"
+                  size={20}
+                  reverse
+                  containerStyle={{ bottom: 10, right: 20 }}
+                  color="turquoise"
+                />
+              ),
+            }}
+            
+          />
+          <Text style={{alignSelf:"center"}}>Relaxed: {this.state.relaxed}%</Text>
+        </View>
         <Text>Active</Text>
-        <SliderPicker 
-          minLabel={'0'}
-          maxLabel={'100%'}
-          maxValue={100}
-          callback={position => {
-            this.setState({ active: position });
-          }}
-          defaultValue={this.state.active}
-          labelFontColor={"turquoise"}
-          style={styles.slider}
-          labelFontWeight={'600'}
-          fillColor={'turquoise'}
-          labelFontWeight={'bold'}
-          buttonBackgroundColor={'#fff'}
-          buttonBorderColor={"#6c7682"}
-          buttonBorderWidth={1}
-          scaleNumberFontWeight={'300'}
-          buttonDimensionsPercentage={9}
-          heightPercentage={1}
-          widthPercentage={80}
-          labelFontSize={25}
-        />
+        <View style={styles.slider_container}>
+          <Slider
+            style={styles.slider}
+            value={this.state.active}
+            maximumValue={100}
+            minimumValue={0}
+            step={1}
+            onValueChange={(active) => this.setState({ active })}
+            thumbStyle={{
+              height: 40,
+              width: 40,
+              backgroundColor: "transparent",
+            }}
+            thumbProps={{
+              children: (
+                <Icon
+                  name="commenting"
+                  type="font-awesome"
+                  size={20}
+                  reverse
+                  containerStyle={{ bottom: 10, right: 20 }}
+                  color="turquoise"
+                />
+              ),
+            }}
+            
+          />
+          <Text style={{alignSelf:"center"}}>Active: {this.state.active}%</Text>
+        </View>
         <Text>
             Entertained
         </Text>
-        <SliderPicker 
-          minLabel={'0'}
-          maxLabel={'100%'}
-          maxValue={100}
-          callback={position => {
-            this.setState({ entertained: position });
-          }}
-          defaultValue={this.state.entertained}
-          labelFontColor={"turquoise"}
-          style={styles.slider}
-          labelFontWeight={'600'}
-          fillColor={'turquoise'}
-          labelFontWeight={'bold'}
-          buttonBackgroundColor={'#fff'}
-          buttonBorderColor={"#6c7682"}
-          buttonBorderWidth={1}
-          scaleNumberFontWeight={'300'}
-          buttonDimensionsPercentage={9}
-          heightPercentage={1}
-          widthPercentage={80}
-          labelFontSize={25}
-        />
+        <View style={styles.slider_container}>
+          <Slider
+            style={styles.slider}
+            value={this.state.entertained}
+            maximumValue={100}
+            minimumValue={0}
+            step={1}
+            onValueChange={(entertained) => this.setState({ entertained })}
+            thumbStyle={{
+              height: 40,
+              width: 40,
+              backgroundColor: "transparent",
+            }}
+            thumbProps={{
+              children: (
+                <Icon
+                  name="podcast"
+                  type="font-awesome"
+                  size={20}
+                  reverse
+                  containerStyle={{ bottom: 10, right: 20 }}
+                  color="turquoise"
+                />
+              ),
+            }}
+            
+          />
+          <Text style={{alignSelf:"center"}}>Entertain: {this.state.entertained}%</Text>
         </View>
-        <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("tab")}>
-            <Text style={styles.confirmbuttontext}>
-                CONFIRM
-            </Text>
-        </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -144,7 +167,7 @@ const styles = StyleSheet.create({
     fontWeight: "100",
     justifyContent: "flex-start",
   },
-  slider: {
+  main_slider: {
     flex: 1,
     marginBottom: 0,
     justifyContent: "center",
@@ -174,5 +197,14 @@ const styles = StyleSheet.create({
       fontSize: 20,
       fontWeight: "600",
       color: "white"
+  },
+  slider_container: {
+    justifyContent: "center",
+    alignItems: "stretch",
+    flex: 1,
+    padding: 20,
+  },
+  slider: {
+    width: ScreenWidth * 0.8
   },
 });

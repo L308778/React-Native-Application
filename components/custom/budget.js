@@ -2,10 +2,13 @@ import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from "react-native";
 import Constants from "expo-constants";
 import { SliderPicker } from 'react-native-slider-picker';
+import {Slider, Icon} from "react-native-elements"
 
 /*This is our sign-up page. We still have to add database integration (Firebase?)
 So the navigation from the email sign in still has to be adjusted as well as the connections
 to google, apple etc.*/
+
+ScreenWidth = Dimensions.get("window").width
 
 export default class Budget extends React.Component {
   constructor(props) {
@@ -18,40 +21,41 @@ export default class Budget extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-          <View style={styles.slider}>
-        <SliderPicker 
-          minLabel={'0€'}
-          labelFontSize={25}
-          maxLabel={'500€'}
-          maxValue={500}
-          callback={position => {
-            this.setState({ value: position });
-          }}
-          defaultValue={this.state.value}
-          labelFontColor={"turquoise"}
-          style={styles.slider}
-          labelFontWeight={'600'}
-          fillColor={'turquoise'}
-          buttonBackgroundColor={'#fff'}
-          buttonBorderColor={"#6c7682"}
-          buttonBorderWidth={1}
-          scaleNumberFontWeight={'300'}
-          buttonDimensionsPercentage={9}
-          heightPercentage={1}
-          widthPercentage={80}
-        />
-        </View>
+          
         <View style={styles.budgetcontainer}>
             <Text style={styles.moneytext}>YOUR BUDGET IS </Text>
         <Text style={styles.money}>
             {this.state.value} €
         </Text>
         </View>
-        <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("time")}>
-            <Text style={styles.confirmbuttontext}>
-                CONFIRM
-            </Text>
-        </TouchableOpacity>
+        <View style={styles.slider_container}>
+          <Slider
+            style={styles.slider}
+            value={this.state.value}
+            maximumValue={2000}
+            minimumValue={0}
+            step={10}
+            onValueChange={(value) => this.setState({ value })}
+            thumbStyle={{
+              height: 40,
+              width: 40,
+              backgroundColor: "transparent",
+            }}
+            thumbProps={{
+              children: (
+                <Icon
+                  name="money"
+                  type="font-awesome"
+                  size={20}
+                  reverse
+                  containerStyle={{ bottom: 10, right: 20 }}
+                  color="turquoise"
+                />
+              ),
+            }}
+            
+          />
+        </View>
       </View>
     );
   }
@@ -104,5 +108,14 @@ const styles = StyleSheet.create({
       fontSize: 20,
       fontWeight: "600",
       color: "white"
+  },
+  slider_container: {
+    justifyContent: "center",
+    alignItems: "stretch",
+    flex: 1,
+    padding: 20,
+  },
+  slider: {
+    width: ScreenWidth * 0.8
   },
 });

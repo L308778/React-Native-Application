@@ -94,6 +94,7 @@ function Mainfunc() {
           tabBarIcon: () => (
             <Icon name="gear" type="evilicon" color="turquoise" size={50} />
           ),
+          gestureEnabled:false
         }}
       />
     </Tab.Navigator>
