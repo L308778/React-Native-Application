@@ -25,6 +25,7 @@ export default class Location extends React.Component {
 
   render() {
     return (
+      <>
       <View style={styles.container}>
         <Text style={styles.header}>Profile</Text>
         <Image source={require("../logo/profile.jpg")} style={styles.img} />
@@ -48,29 +49,30 @@ export default class Location extends React.Component {
               </Text>
               <View style = {styles.lineStyle} />
               <Text style={styles.maininfo_txt_ans}>
-                  111
+                  123
               </Text>
               <View style = {styles.lineStyle} />
               <Text style={styles.maininfo_txt_ans}> 
-                  Eternally Married
+                  Single
               </Text>
               <View style = {styles.lineStyle} />
               <Text style={styles.maininfo_txt_ans}>
-                  milf_h3nter@wtf.lid
+                  martin.mustermann@gmail.com
               </Text>
               <View style = {styles.lineStyle} />
               <Text style={styles.maininfo_txt_ans}>
-                  I3BJ
+                  Soccer
               </Text>
               <View style = {styles.lineStyle} />
           </View>
         </View>
-        <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("main")}>
+      </View>
+      <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("main")}>
             <Text style={styles.confirmbuttontext}>
                 RETURN TO TRIPPY
             </Text>
         </TouchableOpacity>
-      </View>
+      </>
     );
   }
 }
@@ -107,19 +109,19 @@ const styles = StyleSheet.create({
       paddingTop: 30,
   },
   maininfo_txt: {
-      fontSize: 15,
+      fontSize: 12,
       fontWeight: "300",
       color:"turquoise",
       textAlign: "justify",
       margin: 10,
   },
   maininfo_txt_ans: {
-    fontSize: 15,
+    fontSize: 12,
     fontWeight: "600",
     color:"turquoise",
     textAlign:"center",
     margin: 10,
-    marginLeft: 50
+    marginLeft: 20
 },
   confirmbutton: {
     color: "turquoise",
@@ -130,6 +132,8 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems:"center",
     marginTop: 15,
+    position:"absolute",
+    bottom: 0
   },
   confirmbuttontext: {
     fontSize: 20,

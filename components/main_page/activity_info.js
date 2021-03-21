@@ -36,8 +36,7 @@ export default function Activity_Info(props) {
 
     return (
       <View style={{flex:1}}>
-        <View style={{height: 30}}>
-
+        <View style={{height: Constants.statusBarHeight,width: ScreenWidth, backgroundColor:"white" }}>
         </View>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>{data.name}</Text>
