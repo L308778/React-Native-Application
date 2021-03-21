@@ -18,9 +18,6 @@ export default class Time extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-          <Text style={styles.header}>
-              Time ?
-          </Text>
           <View style={styles.slider}>
         <SliderPicker 
           minLabel={'0h'}
@@ -41,6 +38,7 @@ export default class Time extends React.Component {
           scaleNumberFontWeight={'300'}
           buttonDimensionsPercentage={9}
           heightPercentage={1}
+          labelFontSize={25}
           widthPercentage={80}
         />
         </View>
@@ -52,7 +50,7 @@ export default class Time extends React.Component {
         </View>
         <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("people")}>
             <Text style={styles.confirmbuttontext}>
-                NEXT
+                CONFIRM
             </Text>
         </TouchableOpacity>
       </View>
@@ -88,14 +86,14 @@ const styles = StyleSheet.create({
   },
   timetext: {
     paddingTop: Constants.statusBarHeight,
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "100",
     justifyContent: "flex-start",
     color: "turquoise"
   },
   time: {
     paddingTop: Constants.statusBarHeight,
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "500",
     justifyContent: "flex-start",
     color: "turquoise"
@@ -104,12 +102,12 @@ const styles = StyleSheet.create({
       color: "turquoise",
       backgroundColor: "turquoise",
       borderWidth: 0,
-      borderRadius: 4,
+      borderRadius: 60,
       padding: 20,
       marginBottom: 40,
   },
   confirmbuttontext: {
-      fontSize: 30,
+      fontSize: 20,
       fontWeight: "600",
       color: "white"
   },

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from "react-native";
 import Constants from "expo-constants";
 import { SliderPicker } from 'react-native-slider-picker';
 
@@ -18,12 +18,10 @@ export default class Budget extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-          <Text style={styles.header}>
-              BUDGET ?
-          </Text>
           <View style={styles.slider}>
         <SliderPicker 
           minLabel={'0€'}
+          labelFontSize={25}
           maxLabel={'500€'}
           maxValue={500}
           callback={position => {
@@ -34,7 +32,6 @@ export default class Budget extends React.Component {
           style={styles.slider}
           labelFontWeight={'600'}
           fillColor={'turquoise'}
-          labelFontWeight={'bold'}
           buttonBackgroundColor={'#fff'}
           buttonBorderColor={"#6c7682"}
           buttonBorderWidth={1}
@@ -52,7 +49,7 @@ export default class Budget extends React.Component {
         </View>
         <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("time")}>
             <Text style={styles.confirmbuttontext}>
-                NEXT
+                CONFIRM
             </Text>
         </TouchableOpacity>
       </View>
@@ -66,14 +63,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
     justifyContent:"center",
-    flexDirection: "column",
     backgroundColor: "white",
-  },
-  header: {
-    paddingTop: Constants.statusBarHeight,
-    fontSize: 40,
-    fontWeight: "100",
-    justifyContent: "flex-start",
+    width: Dimensions.get("window").width,
+    padding: 30
   },
   slider: {
     flex: 1,
@@ -88,14 +80,14 @@ const styles = StyleSheet.create({
   },
   moneytext: {
     paddingTop: Constants.statusBarHeight,
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "100",
     justifyContent: "flex-start",
     color: "turquoise"
   },
   money: {
     paddingTop: Constants.statusBarHeight,
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "500",
     justifyContent: "flex-start",
     color: "turquoise"
@@ -104,12 +96,12 @@ const styles = StyleSheet.create({
       color: "turquoise",
       backgroundColor: "turquoise",
       borderWidth: 0,
-      borderRadius: 4,
+      borderRadius: 60,
       padding: 20,
       marginBottom: 40,
   },
   confirmbuttontext: {
-      fontSize: 30,
+      fontSize: 20,
       fontWeight: "600",
       color: "white"
   },

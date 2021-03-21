@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from "react-native";
 import Constants from "expo-constants";
 import { SliderPicker } from 'react-native-slider-picker';
 
@@ -21,9 +21,7 @@ export default class Feeling extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-          <Text style={styles.header}>
-              HOW ARE YOU FEELING ?
-          </Text>
+
           <View style={styles.slider}>
               <Text>Romantic</Text>
         <SliderPicker 
@@ -46,6 +44,7 @@ export default class Feeling extends React.Component {
           buttonDimensionsPercentage={9}
           heightPercentage={1}
           widthPercentage={80}
+          labelFontSize={25}
         />
         <Text>Relaxed</Text>
         <SliderPicker 
@@ -68,6 +67,7 @@ export default class Feeling extends React.Component {
           buttonDimensionsPercentage={9}
           heightPercentage={1}
           widthPercentage={80}
+          labelFontSize={25}
         />
         <Text>Active</Text>
         <SliderPicker 
@@ -90,6 +90,7 @@ export default class Feeling extends React.Component {
           buttonDimensionsPercentage={9}
           heightPercentage={1}
           widthPercentage={80}
+          labelFontSize={25}
         />
         <Text>
             Entertained
@@ -114,11 +115,12 @@ export default class Feeling extends React.Component {
           buttonDimensionsPercentage={9}
           heightPercentage={1}
           widthPercentage={80}
+          labelFontSize={25}
         />
         </View>
         <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("tab")}>
             <Text style={styles.confirmbuttontext}>
-                NEXT
+                CONFIRM
             </Text>
         </TouchableOpacity>
       </View>
@@ -134,6 +136,7 @@ const styles = StyleSheet.create({
     justifyContent:"center",
     flexDirection: "column",
     backgroundColor: "white",
+    width: Dimensions.get("window").width
   },
   header: {
     paddingTop: Constants.statusBarHeight,
@@ -152,16 +155,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: "row"
   },
-  peopletext: {
-    paddingTop: Constants.statusBarHeight,
-    fontSize: 30,
-    fontWeight: "100",
-    justifyContent: "flex-start",
-    color: "turquoise"
-  },
   people: {
     paddingTop: Constants.statusBarHeight,
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "500",
     justifyContent: "flex-start",
     color: "turquoise"
@@ -170,12 +166,12 @@ const styles = StyleSheet.create({
       color: "turquoise",
       backgroundColor: "turquoise",
       borderWidth: 0,
-      borderRadius: 4,
+      borderRadius: 60,
       padding: 20,
       marginBottom: 40,
   },
   confirmbuttontext: {
-      fontSize: 30,
+      fontSize: 20,
       fontWeight: "600",
       color: "white"
   },
