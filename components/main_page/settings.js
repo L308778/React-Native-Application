@@ -12,7 +12,6 @@ import {
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import { Icon, Slider } from "react-native-elements";
-import { SliderPicker } from "react-native-slider-picker";
 import Budget from "../custom/budget.js";
 import People from "../custom/people.js";
 import Time from "../custom/time.js";
