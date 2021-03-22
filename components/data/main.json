@@ -5,6 +5,7 @@
         "key":1,
         "duration": "3h - 8h",
         "price": "60€ / Person",
+        "int_price":"$$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
     },
     {
@@ -13,6 +14,7 @@
         "key":2,
         "duration": "3h - 8h",
         "price": "50€ / Person",
+        "int_price" : "$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
 
     
@@ -23,6 +25,7 @@
         "key":3,
         "duration": "3h - 8h",
         "price": "80€ / Person",
+        "int_price":"$$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
 
     },
@@ -32,6 +35,7 @@
         "key":4,
         "duration": "3h - 8h",
         "price": "40€ / Person",
+        "int_price":"$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
 
     },
@@ -41,6 +45,7 @@
         "key":6,
         "duration": "1h - 3h",
         "price": "20€ / Person",
+        "int_price":"$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
 
     },
@@ -50,6 +55,7 @@
         "key":7,
         "duration": "2h - 4h",
         "price": "200€ / Person",
+        "int_price":"$$$$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
 
     },
@@ -59,6 +65,7 @@
         "key":9,
         "duration": "1h - 3h",
         "price": "Free",
+        "int_price":"FREE",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
 
     },
@@ -68,6 +75,7 @@
         "key":10,
         "duration": "2h - 4h",
         "price": "30€ / Person",
+        "int_price": "$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
 
     },
@@ -77,6 +85,7 @@
         "key":11,
         "duration": "1h - 2h",
         "price": "18€ / Person",
+        "int_price": "$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
 
     },
@@ -86,6 +95,7 @@
         "key":12,
         "duration": "1h - 2h",
         "price": "20€ / Person",
+        "int_price": "$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
 
     },
@@ -95,6 +105,7 @@
         "key":13,
         "duration": "1h - 4h",
         "price": "30€ / Person",
+        "int_price": "$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
 
     },
@@ -104,6 +115,7 @@
         "key":14,
         "duration": "1h - 5h",
         "price": "30€ / Person",
+        "int_price": "$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
     },
     {
@@ -112,6 +124,7 @@
         "key":15,
         "duration": "1h - 5h",
         "price": "150€ / Person",
+        "int_price": "$$$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
     },
     {
@@ -120,6 +133,7 @@
         "key":16,
         "duration": "2h - 4h",
         "price": "170€ / Person",
+        "int_price": "$$$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
     }
 

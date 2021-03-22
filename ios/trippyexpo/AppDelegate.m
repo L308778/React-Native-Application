@@ -11,6 +11,7 @@
 #import <EXSplashScreen/EXSplashScreenService.h>
 #import <UMCore/UMModuleRegistryProvider.h>
 #import <GoogleMaps/GoogleMaps.h>
+#import <Firebase.h>
 
 #if defined(FB_SONARKIT_ENABLED) && __has_include(<FlipperKit/FlipperClient.h>)
 #import <FlipperKit/FlipperClient.h>
@@ -43,6 +44,9 @@ static void InitializeFlipper(UIApplication *application) {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 [GMSServices provideAPIKey:@"AIzaSyD452pDflRsxbucL-a3opbI2kyLH0SEIxY"];
+  if ([FIRApp defaultApp] == nil) {
+      [FIRApp configure];
+    }
 #if defined(FB_SONARKIT_ENABLED) && __has_include(<FlipperKit/FlipperClient.h>)
   InitializeFlipper(application);
 #endif
