@@ -1,48 +1,41 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Alert, Dimensions } from "react-native";
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import auth from '@react-native-firebase/auth';
+import { DataContext } from "../../context/dataContext";
 
 /*This is our sign-up page. We still have to add database integration (Firebase?)
 So the navigation from the email sign in still has to be adjusted as well as the connections
 to google, apple etc.*/
 
-export default class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      password: "",
-      confirmpassword: "",
-      loading: false
-    };
-  }
+export default function Login (props){
 
-  componentDidMount() {
-    console.log(this.props);
-    this.setState({ email: "" });
-    this.setState({ password: "" });
-    this.setState({ password: "" });
-  }
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmpassword, setConfirmpassword] = useState("")
+  const[name, setName] = useState("")
+  const [loading, setLoading] = useState("")
 
-  login = async() => {
-    this.setState({loading:true});
+  const {login} = useContext(DataContext)
+
+
+  handle_login = async() => {
+    setLoading(true);
     try {
-        const doLogin = await auth().signInWithEmailAndPassword(this.state.email, this.state.password);
-        this.setState({loading:false});
+        const doLogin = await login(email, password);
+        setLoading(false);
         if(doLogin.user) {
-            this.props.navigation.navigate('location');
+            props.navigation.navigate('location');
         }
     } catch (e) {
-        this.setState({loading:false});
+        setLoading(false);
         Alert.alert(
             e.message
         );
     }
 };
 
-  render() {
     return (
       <View style={styles.container}>
           <Text style={styles.header}>
@@ -52,31 +45,30 @@ export default class Login extends React.Component {
           <TextInput
             style={styles.inputs}
             placeholder="Enter your Email..."
-            defaultValue={this.state.email}
-            onChangeText={(text) => this.setState({ email: text })}
-            value = {this.state.email}
+            defaultValue={email}
+            onChangeText={(text) => setEmail(text)}
+            value = {email}
           />
           <TextInput
             style={styles.inputs}
             secureTextEntry={true}
             placeholder="Enter a password..."
-            onChangeText={(text) => this.setState({ password: text })}
-            value = {this.state.password}
+            onChangeText={(text) => setPassword(text)}
+            value = {password}
           />
         </View>
-        <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate('location')}>
+        <TouchableOpacity style={styles.confirmbutton} onPress={() => props.navigation.navigate('location')}>
             <Text style={styles.confirmbuttontext}>
                 LOGIN
             </Text>
         </TouchableOpacity>
         <Text
               style={styles.registerTextStyle}
-              onPress={() => this.props.navigation.navigate("email_sign_up")}>
+              onPress={() => props.navigation.navigate("email_sign_up")}>
               New Here ? Register
             </Text>
       </View>
     );
-  }
 }
 
 const styles = StyleSheet.create({

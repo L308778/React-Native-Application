@@ -12,9 +12,6 @@ import HomeScreen from "./components/home.js";
 import Email_Sign_Up from "./components/account_creation/email_sign_up.js";
 import Email_Verification from "./components/account_creation/email_verification.js";
 import Basic_Setup from "./components/account_creation/basic_setup.js";
-import Setup_Culture from "./components/account_creation/setup_culture.js";
-import Setup_Outdoor from "./components/account_creation/setup_outdoor.js";
-import Setup_Food from "./components/account_creation/setup_food.js";
 import Congrats from "./components/account_creation/congrats.js";
 import Location from "./components/location.js";
 import Login from "./components/login/email_login.js";
@@ -28,6 +25,7 @@ import Settings from "./components/main_page/settings.js";
 import Profile from "./components/main_page/profile.js";
 import Activity_info from "./components/main_page/activity_info.js";
 import Saved from "./components/main_page/saved_activity/saved.js";
+import PhoneAuthScreen from "./components/account_creation/phone_verification.js"
 import { screensEnabled } from "react-native-screens";
 
 const Stack = createStackNavigator();
@@ -101,6 +99,13 @@ function Mainfunc() {
   );
 }
 
+function Login_(){
+  <Stack.Screen name="login" component={Login}
+        options={{
+          gestureEnabled:false
+        }} />
+}
+
 function App() {
   return (
     <NavigationContainer>
@@ -116,6 +121,10 @@ function App() {
           gestureEnabled:false
         }}/>
         <Stack.Screen name="home" component={HomeScreen}
+        options={{
+          gestureEnabled:false
+        }} />
+        <Stack.Screen name="phone-verification" component={PhoneAuthScreen}
         options={{
           gestureEnabled:false
         }} />
@@ -139,9 +148,6 @@ function App() {
         options={{
           gestureEnabled:false
         }} />
-        <Stack.Screen name="setup_culture" component={Setup_Culture} />
-        <Stack.Screen name="setup_outdoor" component={Setup_Outdoor} />
-        <Stack.Screen name="setup_food" component={Setup_Food} />
         <Stack.Screen name="congrats" component={Congrats} />
         <Stack.Screen name="location" component={Location} />
         <Stack.Screen name="suggestion" component={Suggestion} />

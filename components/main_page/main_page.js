@@ -26,20 +26,16 @@ export default function Main(props) {
   const {
     data,
     activities,
-    save_activity,
+    saved,
     saved_activities,
     for_info,
     curr_activity,
   } = useContext(DataContext);
   const [saved_activity, setActivity] = useState([]);
 
-  const saved = (index) => {
-    save_activity(index);
-  };
 
   const to_info = (index) => {
     for_info(index);
-
     props.navigation.navigate("activity_info");
   };
 

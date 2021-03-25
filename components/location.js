@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Platform } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Platform, Alert } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { Icon } from 'react-native-elements'
 import Constants from "expo-constants"
@@ -21,7 +21,7 @@ export default function LocationScreen (props){
 
   const[lat, setLatitude] = useState(40)
   const[long, setLongitude] = useState(127)
-  const {change_location} = useContext(DataContext)
+  const {on_location} = useContext(DataContext)
 
   console.log(lat, long)
   const findCoordinates = () => {
@@ -33,8 +33,8 @@ export default function LocationScreen (props){
         console.log(lat, long)
         setLatitude(lat)
         setLongitude(long)
-        change_location({latitude: lat, longitude: long})
-        setTimeout(function(){props.navigation.navigate("suggestion")}, 2000)
+        on_location({latitude: lat, longitude: long})
+        setTimeout(function(){props.navigation.navigate("tab")}, 2000)
 			},
 			error => Alert.alert(error.message),
 			{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }

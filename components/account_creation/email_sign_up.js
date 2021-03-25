@@ -1,95 +1,86 @@
-import React,{useState} from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image, Alert } from "react-native";
+import React,{useState, useContext} from "react";
+import { StyleSheet, Text, View, TouchableOpacity, Image, Alert, Dimensions } from "react-native";
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import auth from '@react-native-firebase/auth';
+import {DataContext} from "../../context/dataContext.js"
 
 
 /*This is our sign-up page. We still have to add database integration (Firebase?)
 So the navigation from the email sign in still has to be adjusted as well as the connections
 to google, apple etc.*/
 
-export default class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      password: "",
-      confirmpassword: "",
-      name: "",
-      loading: false,
-    };
-  }
+SCREEN_HEIGHT=Dimensions.get("window").height
+SCREEN_WIDTH=Dimensions.get("window").width
 
-  componentDidMount() {
-    console.log(this.props);
-    this.setState({ email: "" });
-    this.setState({ password: "" });
-    this.setState({ confirmpassword: "" })
-    this.setState({ name: "" });
-  }
+export default function Sign_Up (props) {
+  
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmpassword, setConfirmpassword] = useState("")
+  const [loading, setLoading] = useState("")
+
+  const {signup} = useContext(DataContext)
 
   register = async() => {
-    this.setState({loading:true});
+    setLoading(true);
     try {
-        const doRegister = await auth().createUserWithEmailAndPassword(this.state.email, this.state.password);
-        this.setState({loading:false});
+        const doRegister = await signup(email, password);
+        setLoading(false);
+
         if(doRegister.user) {
-            this.props.navigation.navigate("location");
+            props.navigation.navigate("location");
         }
     } catch (e) {
-      this.setState({loading:false});
+      setLoading(false);
         Alert.alert(
             e.message
         );
     }
 };
 
-  render() {
     return (
       <View style={styles.container}>
-        <View style={{ flex: 1, width: '100%' }}>
-        <View style={styles.inputcontainer}>
         <Image source={require("../logo/interim_logo.png")} style={styles.logo}/>
+        <View style={styles.inputcontainer}>
         <TextInput
             style={styles.inputs}
             placeholder="Full Name"
-            defaultValue={this.state.name}
-            onChangeText={(text) => this.setState({ name: text })}
-            value = {this.state.name}
+            defaultValue={name}
+            onChangeText={(text) => setName(text)}
+            value = {name}
           />
           <TextInput
             style={styles.inputs}
             placeholder="E-mail"
-            defaultValue={this.state.email}
-            onChangeText={(text) => this.setState({ email: text })}
-            value = {this.state.email}
+            defaultValue={email}
+            onChangeText={(text) => setEmail(text)}
+            value = {email}
           />
           <TextInput
             style={styles.inputs}
             secureTextEntry
             placeholder="Password"
-            onChangeText={(text) => this.setState({ password: text })}
-            value = {this.state.password}
+            onChangeText={(text) => setPassword(text)}
+            value = {password}
           />
           <TextInput
             style={styles.inputs}
             secureTextEntry
             placeholder="Confirm Password"
-            onChangeText={(text) => this.setState({ confirmpassword: text })}
-            value = {this.state.confirmpassword}
+            onChangeText={(text) => setConfirmpassword(text)}
+            value = {confirmpassword}
           />
-          <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("location")}>
+          <TouchableOpacity style={styles.confirmbutton} onPress={() => register()}>
             <Text style={styles.confirmbuttontext}>
                 SIGN UP
             </Text>
         </TouchableOpacity>
         </View>
-        </View>
       </View>
     );
   }
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -136,9 +127,6 @@ const styles = StyleSheet.create({
       color: "white"
   },
   logo: {
-    flex: 1,
-    height: 150,
-    width: 120,
     alignSelf: "center",
     margin: 30,
     marginTop: 60

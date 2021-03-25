@@ -21,9 +21,16 @@ to google, apple etc.*/
 
 function Saved(props) {
   
-  const { activities, saved_activities } = useContext(DataContext);
+  const { curr_activity,activities, saved_activities } = useContext(DataContext);
   const [search, setSearch] = useState("");
   const [displayData, setDisplayData] = useState(saved_activities);
+
+
+  const to_info = (index) => {
+    for_info(index);
+    console.log(curr_activity)
+    props.navigation.navigate("activity_info");
+  };
 
   const handle_search = (text) => {
     if (text) {
@@ -56,7 +63,7 @@ function Saved(props) {
       return (
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={(index) => handle_delete(index)}
+          onPress={() => handle_delete(item.key)}
         >
           <View style={styles.delete}>
             <Animated.Text
@@ -78,11 +85,7 @@ function Saved(props) {
     return (
       <Swipeable renderLeftActions={leftSwipe}>
         <TouchableOpacity
-          onPress={() =>
-            props.navigation.navigate("activity_info", {
-              params: { activity: item.key - 1 },
-            })
-          }
+          onPress={() => to_info(item.key)}
         >
           <View style={styles.listItem}>
             <Image

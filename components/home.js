@@ -17,7 +17,7 @@ export default class Home extends React.Component {
             <View style={styles.container}>
                 <Image source={require("./logo/interim_logo.png")} style={styles.image}/>
                 <View style={styles.buttoncontainer}>
-                    <TouchableOpacity style={styles.touchables} onPress={() => this.props.navigation.navigate("email_sign_up")}>
+                    <TouchableOpacity style={styles.touchables} onPress={() => this.props.navigation.navigate("phone_verification")}>
                         <Text style={styles.touchable_text}>
                             NEW TO TRIPPY
                 </Text>
