@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import HomeScreen from "./home.js"
+import HomeScreen from "../discarded/home.js"
 import auth from '@react-native-firebase/auth';
 import Login from "./login/email_login.js"
 
@@ -22,7 +22,7 @@ export default function Welcome (props) {
 
     const timeoutHandle = setTimeout(()=>{
         // Add your logic for the transition
-        props.navigation.navigate("home")
+        props.navigation.navigate("login")
     }, 3000);
 
 

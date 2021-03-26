@@ -15,7 +15,7 @@ export default class Home extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Image source={require("./logo/interim_logo.png")} style={styles.image}/>
+                <Image style={styles.image}/>
                 <View style={styles.buttoncontainer}>
                     <TouchableOpacity style={styles.touchables} onPress={() => this.props.navigation.navigate("phone_verification")}>
                         <Text style={styles.touchable_text}>

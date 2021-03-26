@@ -8,7 +8,6 @@ import { Icon } from "react-native-elements";
 // Import all Screens for navigation
 import WelcomeScreen from "./components/welcome.js";
 import Account_Creator from "./components/account_creation/create_account.js";
-import HomeScreen from "./components/home.js";
 import Email_Sign_Up from "./components/account_creation/email_sign_up.js";
 import Email_Verification from "./components/account_creation/email_verification.js";
 import Basic_Setup from "./components/account_creation/basic_setup.js";
@@ -99,12 +98,6 @@ function Mainfunc() {
   );
 }
 
-function Login_(){
-  <Stack.Screen name="login" component={Login}
-        options={{
-          gestureEnabled:false
-        }} />
-}
 
 function App() {
   return (
@@ -120,15 +113,11 @@ function App() {
         options={{
           gestureEnabled:false
         }}/>
-        <Stack.Screen name="home" component={HomeScreen}
+        <Stack.Screen name="login" component={Login}
         options={{
           gestureEnabled:false
         }} />
         <Stack.Screen name="phone-verification" component={PhoneAuthScreen}
-        options={{
-          gestureEnabled:false
-        }} />
-        <Stack.Screen name="login" component={Login}
         options={{
           gestureEnabled:false
         }} />

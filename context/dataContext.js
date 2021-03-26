@@ -62,6 +62,10 @@ function DataContextProvider ({children}){
         setSavedActivities(saved_activities.concat(Data[index]));
     }
 
+    update_saved = (data) => {
+        setSavedActivities(data)
+    }
+
     on_location = (loc) => {
         setLocation(loc)
     }
@@ -86,7 +90,8 @@ function DataContextProvider ({children}){
             updatePassword,
             saved,
             on_location,
-            for_info
+            for_info,
+            update_saved
             }}>
                 {children}
             </DataContext.Provider>

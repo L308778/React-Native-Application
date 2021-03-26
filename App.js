@@ -1,8 +1,6 @@
-import React,{useState, useEffect} from 'react';
-import {View} from "react-native"
+import React from 'react';
 import DataContextProvider from './context/dataContext.js';
 import MainStack from "./mainnav.js"
-import auth from '@react-native-firebase/auth';
 
 function App() {
 

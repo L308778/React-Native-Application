@@ -13,27 +13,29 @@ export default function Login (props){
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [confirmpassword, setConfirmpassword] = useState("")
-  const[name, setName] = useState("")
   const [loading, setLoading] = useState("")
+  const [error, setError] = useState("")
 
   const {login} = useContext(DataContext)
 
 
   handle_login = async() => {
     setLoading(true);
-    try {
-        const doLogin = await login(email, password);
-        setLoading(false);
-        if(doLogin.user) {
-            props.navigation.navigate('location');
-        }
-    } catch (e) {
-        setLoading(false);
-        Alert.alert(
-            e.message
-        );
-    }
+      try {
+          setError("")
+          setLoading(true)
+          const doLogin = await login(email, password);
+          setLoading(false);
+          if(doLogin.user) {
+              props.navigation.navigate('location');
+          }
+      } catch (e) {
+          setError("Account could not be created");
+          Alert.alert(
+              e
+          );
+      }
+      setLoading(false)
 };
 
     return (
@@ -57,7 +59,7 @@ export default function Login (props){
             value = {password}
           />
         </View>
-        <TouchableOpacity style={styles.confirmbutton} onPress={() => props.navigation.navigate('location')}>
+        <TouchableOpacity disabled={loading} style={styles.confirmbutton} onPress={() => props.navigation.navigate('location')}>
             <Text style={styles.confirmbuttontext}>
                 LOGIN
             </Text>

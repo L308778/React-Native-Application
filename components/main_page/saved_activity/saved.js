@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Constants from "expo-constants";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { DataContext } from "../../../context/dataContext";
 import Images from "../../images/image_loader.js";
 import { SearchBar } from "react-native-elements";
@@ -21,36 +21,40 @@ to google, apple etc.*/
 
 function Saved(props) {
   
-  const { curr_activity,activities, saved_activities } = useContext(DataContext);
+  const {saved_activities } = useContext(DataContext);
   const [search, setSearch] = useState("");
-  const [displayData, setDisplayData] = useState(saved_activities);
+  const [displayData, setDisplayData] = useState(null);
 
 
   const to_info = (index) => {
     for_info(index);
-    console.log(curr_activity)
     props.navigation.navigate("activity_info");
   };
 
+  useEffect(() => {
+    if (displayData!=saved_activities){
+    setDisplayData(saved_activities)}}, [displayData])
+
   const handle_search = (text) => {
-    if (text) {
-      const newData = displayData.filter(function (item) {
-        const itemData = item.name ? item.name.toLowerCase() : "".toLowerCase();
-        const textData = text.toLowerCase();
+    if (text.length > 1) {
+      const newData = displayData.filter(item => {
+        const itemData = item.name.toUpperCase();
+        const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
-      setDisplayData(newData);
-      setSearch(text);
-    } else {
+        setDisplayData(newData);
+        setSearch(text);
+    } 
+    else {
       setDisplayData(saved_activities);
       setSearch(text);
     }
-  };
+  }
 
   const Item = ({ item }) => {
     const handle_delete = (index) => {
       const arr = [...displayData];
-      arr.splice(index, 1);
+      arr.splice(index , 1);
       setDisplayData(arr);
     };
 
