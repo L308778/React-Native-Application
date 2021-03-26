@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useContext} from "react";
 import {
   StyleSheet,
   Text,
@@ -7,7 +7,7 @@ import {
   Switch,
   ScrollView,
   Dimensions,
-  Animated,
+  Animated, Alert
 } from "react-native";
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
@@ -16,6 +16,7 @@ import Budget from "../custom/budget.js";
 import People from "../custom/people.js";
 import Time from "../custom/time.js";
 import Feeling from "../custom/feeling.js";
+import {DataContext} from "../../context/dataContext.js"
 
 /*This is our sign-up page. We still have to add database integration (Firebase?)
 So the navigation from the email sign in still has to be adjusted as well as the connections
@@ -23,24 +24,28 @@ to google, apple etc.*/
 
 const ScreenWidth = Dimensions.get("window").width;
 
-export default class Settings extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: 0,
-      isEnabled: false,
-    };
+export default function Settings (props) {
+  const[value, setValue] = useState(0)
+  const[isEnabled, setEnabled] = useState(false)
+
+  const{logout} = useContext(DataContext)
+
+  const toggleSwitch = () => {
+    if (isEnabled) {
+      setEnabled(false);
+    } else {
+      setEnabled(true);
+    }
   }
 
-  toggleSwitch = () => {
-    if (this.state.isEnabled == true) {
-      this.setState({ isEnabled: false });
-    } else {
-      this.setState({ isEnabled: true });
+  const handle_logout = async() => {
+    try {
+      await logout()
+    } catch {
+      Alert.alert("Failed to log out")
     }
-  };
+  }
 
-  render() {
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.lineStyle} />
@@ -49,9 +54,9 @@ export default class Settings extends React.Component {
           <Switch
             style={styles.pushbutton}
             trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={this.state.isEnabled ? "turquoise" : "#f4f3f4"}
-            onValueChange={this.toggleSwitch}
-            value={this.state.isEnabled}
+            thumbColor={isEnabled ? "turquoise" : "#f4f3f4"}
+            onValueChange={toggleSwitch}
+            value={isEnabled}
             ios_backgroundColor="#3e3e3e"
           ></Switch>
         </View>
@@ -60,11 +65,11 @@ export default class Settings extends React.Component {
         <View style={styles.slider_container}>
           <Slider
             style={styles.slider}
-            value={this.state.value}
+            value={value}
             maximumValue={300}
             minimumValue={0}
             step={10}
-            onValueChange={(value) => this.setState({ value })}
+            onValueChange={(value) => setValue( value )}
             thumbStyle={{
               height: 40,
               width: 40,
@@ -84,7 +89,7 @@ export default class Settings extends React.Component {
             }}
             
           />
-          <Text style={{alignSelf:"center"}}>Distance: {this.state.value}km</Text>
+          <Text style={{alignSelf:"center"}}>Distance: {value}km</Text>
         </View>
         <View style={styles.lineStyle} />
         <Budget />
@@ -95,15 +100,19 @@ export default class Settings extends React.Component {
         <Feeling />
         <View style={styles.lineStyle} />
 
-        <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("tab")}>
+        <TouchableOpacity style={styles.confirmbutton} onPress={() => props.navigation.navigate("tab")}>
             <Text style={styles.confirmbuttontext}>
                 CONFIRM SETTINGS
+            </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.logout} onPress={handle_logout}>
+            <Text style={styles.logoutText}>
+                LOGOUT
             </Text>
         </TouchableOpacity>
 
       </ScrollView>
     );
-  }
 }
 
 const styles = StyleSheet.create({
@@ -143,7 +152,20 @@ const styles = StyleSheet.create({
   },
   confirmbuttontext: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: "700",
+    color: "white",
+  },
+  logout: {
+    color: "red",
+    backgroundColor: "red",
+    borderWidth: 0,
+    borderRadius: 0,
+    padding: 20,
+    marginBottom: 40
+  },
+  logoutText: {
+    fontSize: 20,
+    fontWeight: "500",
     color: "white",
   },
   lineStyle: {
