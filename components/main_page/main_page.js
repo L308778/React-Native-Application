@@ -7,6 +7,7 @@ import {
   Image,
   SafeAreaView,
   Dimensions,
+  TouchableOpacity
 } from "react-native";
 import Constants from "expo-constants";
 import Swiper from "react-native-deck-swiper";
@@ -14,9 +15,10 @@ import { Icon } from "react-native-elements";
 import Activities from "../data/main.json";
 import Images from "../images/image_loader.js";
 import { DataContext } from "../../context/dataContext.js";
+import FlipCard from "react-native-flip-card";
 
-SCREEN_WIDTH=Dimensions.get("window").width
-SCREEN_HEIGHT=Dimensions.get("window").width
+SCREEN_WIDTH = Dimensions.get("window").width;
+SCREEN_HEIGHT = Dimensions.get("window").width;
 
 /*
 Change the price to int and add*/
@@ -33,7 +35,6 @@ export default function Main(props) {
   } = useContext(DataContext);
   const [saved_activity, setActivity] = useState([]);
 
-
   const to_info = (index) => {
     for_info(index);
     props.navigation.navigate("activity_info");
@@ -45,13 +46,40 @@ export default function Main(props) {
         cards={Activities}
         renderCard={(card, index) => {
           return (
-            <SafeAreaView style={styles.card}>
-              <Image source={activities[index]} style={styles.image} />
-              <View style={styles.innerCard}>
-                <Text style={styles.dollar}> {card.int_price} </Text>
-                <Text style={styles.text}>{card.name}</Text>
+            <FlipCard
+              friction={10}
+              perspective={3000}
+              flipHorizontal={true}
+              flipVertical={false}
+              flip={false}
+              clickable={true}
+              useNativeDriver={true}
+              alignHeight={true}
+            >
+              {/* Face Side */}
+              <SafeAreaView style={styles.card}>
+                <Image source={activities[index]} style={styles.image} />
+                <View style={styles.innerCard}>
+                  <Text style={styles.dollar}> {card.int_price} </Text>
+                  <Text style={styles.text}>{card.name}</Text>
                 </View>
-            </SafeAreaView>
+              </SafeAreaView>
+
+              {/* Back Side */}
+              <SafeAreaView style={styles.backCard}>
+                <View style={styles.backContainer}>
+                  <Text style={styles.backHeader}>{card.name}</Text>
+                  <Text style={styles.backText}>{card.longdescription}</Text>
+                  <Text style={styles.price}> {card.price} </Text>
+                  <TouchableOpacity
+                    style={styles.confirmbutton}
+                    onPress={() => props.navigation.navigate("main")}
+                  >
+                    <Text style={styles.confirmbuttontext}>BOOK</Text>
+                  </TouchableOpacity>
+                </View>
+              </SafeAreaView>
+            </FlipCard>
           );
         }}
         onSwipedRight={(index) => saved(index)}
@@ -114,29 +142,22 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   circle: {
-    borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
-      width: Dimensions.get('window').width * 0.2,
-      height: Dimensions.get('window').width * 0.2,
-      backgroundColor:'turquoise',
-      justifyContent: 'center',
-      alignSelf:"center",
-      alignItems: "center"
-    
+    borderRadius:
+      Math.round(
+        Dimensions.get("window").width + Dimensions.get("window").height
+      ) / 2,
+    width: Dimensions.get("window").width * 0.2,
+    height: Dimensions.get("window").width * 0.2,
+    backgroundColor: "turquoise",
+    justifyContent: "center",
+    alignSelf: "center",
+    alignItems: "center",
   },
   dollar: {
     fontSize: 30,
     padding: 10,
     color: "turquoise",
-    fontWeight:"700"
-  },
-  price: {
-    textAlign: "center",
-    fontSize: 30,
-    fontWeight: "200",
-    color: "turquoise",
-    backgroundColor: "transparent",
-    marginTop: 15,
-    fontFamily: "system font",
+    fontWeight: "700",
   },
   profile: {
     top: 10,
@@ -149,14 +170,64 @@ const styles = StyleSheet.create({
   save: {
     top: 10,
   },
-  innerCard:{
-    flexDirection:"row",
-    alignItems:"center",
-    backgroundColor:"rgba(0,0,0,0.3)",
-    position:"absolute",
+  innerCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.3)",
+    position: "absolute",
     bottom: SCREEN_HEIGHT * 0.2,
-    width:"100%",
-    textAlign:"center"
-  }
-
+    width: "100%",
+    textAlign: "center",
+  },
+  backCard: {
+    borderRadius: 40,
+    borderWidth: 2,
+    marginTop:SCREEN_HEIGHT * 0.05,
+    borderColor: "#E8E8E8",
+    justifyContent: "center",
+    backgroundColor: "turquoise",
+    minHeight: "93%",
+  },
+  backHeader: {
+    padding: 20,
+    fontSize: 30,
+    fontWeight: "400",
+    color: "white",
+  },
+  backText: {
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "300",
+    color: "white",
+    backgroundColor: "transparent",
+    width: "80%",
+    textAlign: "center",
+  },
+  backContainer: {
+    alignItems: "center",
+    backgroundColor: "turquoise",
+  },
+  price: {
+    padding: 30,
+    color: "white",
+    fontSize: 25,
+    fontWeight:"700"
+  },
+  confirmbutton: {
+    color: "turquoise",
+    backgroundColor: "turquoise",
+    borderRadius: 30,
+    alignItems: "center",
+    padding: 10,
+    width:"50%",
+    marginTop: 30,
+    alignSelf:"center",
+    borderColor:"white",
+    borderWidth:2
+  },
+  confirmbuttontext: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "white",
+  },
 });
