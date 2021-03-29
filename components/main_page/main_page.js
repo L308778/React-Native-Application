@@ -47,9 +47,9 @@ export default function Main(props) {
           return (
             <SafeAreaView style={styles.card}>
               <Image source={activities[index]} style={styles.image} />
-                <Text style={styles.text}>{card.name}</Text>
-                <View style={styles.circle}>
+              <View style={styles.innerCard}>
                 <Text style={styles.dollar}> {card.int_price} </Text>
+                <Text style={styles.text}>{card.name}</Text>
                 </View>
             </SafeAreaView>
           );
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   card: {
-    borderRadius: 20,
+    borderRadius: 40,
     borderWidth: 2,
     marginBottom: 50,
     borderColor: "#E8E8E8",
@@ -102,19 +102,16 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    fontSize: 40,
-    fontWeight: "500",
+    fontSize: 30,
+    fontWeight: "400",
     color: "turquoise",
     backgroundColor: "transparent",
-    fontFamily: "system font",
-    margin: 30
   },
   image: {
-    height: 350,
-    width: 250,
+    height: "100%",
+    width: "100%",
     alignSelf: "center",
     borderRadius: 40,
-    marginBottom: 20,
   },
   circle: {
     borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
@@ -127,14 +124,14 @@ const styles = StyleSheet.create({
     
   },
   dollar: {
-    fontSize: 17,
+    fontSize: 30,
     padding: 10,
-    color: "white",
+    color: "turquoise",
     fontWeight:"700"
   },
   price: {
     textAlign: "center",
-    fontSize: 25,
+    fontSize: 30,
     fontWeight: "200",
     color: "turquoise",
     backgroundColor: "transparent",
@@ -152,4 +149,14 @@ const styles = StyleSheet.create({
   save: {
     top: 10,
   },
+  innerCard:{
+    flexDirection:"row",
+    alignItems:"center",
+    backgroundColor:"rgba(0,0,0,0.3)",
+    position:"absolute",
+    bottom: SCREEN_HEIGHT * 0.2,
+    width:"100%",
+    textAlign:"center"
+  }
+
 });
