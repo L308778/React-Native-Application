@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   confirmbuttontext: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: "800",
     color: "white",
     alignItems: "center",
     textAlign: "center",
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   },
 
   delete: {
-    backgroundColor: "darksalmon",
+    backgroundColor: "darkred",
     justifyContent: "center",
     alignItems: "center",
     alignSelf:"center",

@@ -69,7 +69,7 @@ function Mainfunc() {
           tabBarLabel: "PROFILE",
           tabBarVisible: false,
           tabBarIcon: () => (
-            <Icon name="user" type="evilicon" color="turquoise" size={50} />
+            <Icon name="user" type="evilicon" color="turquoise" size={43} />
           ),
         }}
       />
@@ -79,7 +79,7 @@ function Mainfunc() {
         options={{
           tabBarLabel: "STORED",
           tabBarIcon: () => (
-            <Icon name="like" type="evilicon" color="turquoise" size={50} />
+            <Icon name="like" type="evilicon" color="turquoise" size={43} />
           ),
         }}
       />
@@ -87,9 +87,10 @@ function Mainfunc() {
         name="settings"
         component={Settings}
         options={{
+
           tabBarLabel: "SETTINGS",
           tabBarIcon: () => (
-            <Icon name="gear" type="evilicon" color="turquoise" size={50} />
+            <Icon name="gear" type="evilicon" color="turquoise" size={43}/>
           ),
           gestureEnabled:false
         }}

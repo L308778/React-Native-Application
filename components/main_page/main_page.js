@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     padding: 10,
     color: "turquoise",
-    fontWeight: "700",
+    fontWeight: "400",
   },
   profile: {
     top: 10,
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   innerCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.3)",
+    backgroundColor: "rgba(0,0,0,0.35)",
     position: "absolute",
     bottom: SCREEN_HEIGHT * 0.2,
     width: "100%",
