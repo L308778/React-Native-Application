@@ -22,7 +22,7 @@ to google, apple etc.*/
 
 export default function Saved(props) {
   
-  const {saved_activities} = useContext(DataContext);
+  const {saved_activities, update_saved} = useContext(DataContext);
   const [search, setSearch] = useState("");
   const [displayData, setDisplayData] = useState(saved_activities);
 
@@ -39,7 +39,9 @@ export default function Saved(props) {
     }},[saved_activities])
 
 
-
+  /* 
+  Search function which maps the users searched activities
+  */
   const handle_search = (new_text) => {
 
     setSearch(new_text)
@@ -50,8 +52,6 @@ export default function Saved(props) {
       let filterData = saved_activities.filter((item) => {
         return item.name.toLowerCase().match(text)
       })
-
-      console.log(filterData)
 
       if (!text || text == ""){
         setDisplayData(saved_activities)
@@ -71,10 +71,15 @@ export default function Saved(props) {
 }
 
   const Item = ({ item }) => {
+
     const handle_delete = (index) => {
-      const arr = [...displayData];
-      arr.splice(index , 1);
-      setDisplayData(arr);
+      let arr = displayData.filter((item) => {
+        return item.key !== index
+      })
+
+      setDisplayData(arr)
+      update_saved(arr)
+
     };
 
     const leftSwipe = (progress, dragX) => {
