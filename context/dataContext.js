@@ -6,6 +6,15 @@ import auth from '@react-native-firebase/auth';
 
 export const DataContext = createContext()
 
+/*
+Here we define the context which will be used throughout the application.
+Methods are concerned with the authentication State of the user. Data
+is initialized to default to our main.json, where our testing data is 
+contained. activities contain the images for each activity. Location is
+only relevant for the location screen at this point but will be integrated
+into the user json. Curr_Activity is used for subscribing to the selected
+acitvity in the activity_info screen. 
+*/
 
 function DataContextProvider ({children}){
     const[data, setData]=useState(Data)

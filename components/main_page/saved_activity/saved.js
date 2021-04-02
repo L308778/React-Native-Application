@@ -14,16 +14,17 @@ import React, { useState, useContext, useEffect } from "react";
 import { DataContext } from "../../../context/dataContext";
 import Images from "../../images/image_loader.js";
 import { SearchBar } from "react-native-elements";
+import { useIsFocused} from '@react-navigation/native'; 
 
 /*This is our sign-up page. We still have to add database integration (Firebase?)
 So the navigation from the email sign in still has to be adjusted as well as the connections
 to google, apple etc.*/
 
-function Saved(props) {
+export default function Saved(props) {
   
-  const {saved_activities } = useContext(DataContext);
+  const {saved_activities} = useContext(DataContext);
   const [search, setSearch] = useState("");
-  const [displayData, setDisplayData] = useState(null);
+  const [displayData, setDisplayData] = useState(saved_activities);
 
 
   const to_info = (index) => {
@@ -32,24 +33,42 @@ function Saved(props) {
   };
 
   useEffect(() => {
-    if (displayData!=saved_activities){
-    setDisplayData(saved_activities)}}, [displayData])
 
-  const handle_search = (text) => {
-    if (text.length > 1) {
-      const newData = displayData.filter(item => {
-        const itemData = item.name.toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-        setDisplayData(newData);
-        setSearch(text);
-    } 
-    else {
-      setDisplayData(saved_activities);
-      setSearch(text);
+    if (displayData){
+      setDisplayData(saved_activities)
+    }},[saved_activities])
+
+
+
+  const handle_search = (new_text) => {
+
+    setSearch(new_text)
+
+    if (new_text.length > 1){
+      let text = new_text.toString().toLowerCase()
+      console.log(text)
+      let filterData = saved_activities.filter((item) => {
+        return item.name.toLowerCase().match(text)
+      })
+
+      console.log(filterData)
+
+      if (!text || text == ""){
+        setDisplayData(saved_activities)
+      }
+
+      else if (!Array.isArray(filterData) && !filterData.length){
+        setDisplayData([])
+      }
+
+      else if(Array.isArray(filterData)) {
+        setDisplayData(filterData);
+      }
     }
-  }
+    else{
+      setDisplayData(saved_activities)
+    }
+}
 
   const Item = ({ item }) => {
     const handle_delete = (index) => {
@@ -152,8 +171,6 @@ function Saved(props) {
   );
 }
 
-export default Saved;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -173,7 +190,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#FFF",
     justifyContent: "center",
-    width: "80%",
+    width: "95%",
     flex: 1,
     alignSelf: "center",
     flexDirection: "row",
@@ -188,7 +205,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   confirmbuttontext: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: "800",
     color: "white",
     alignItems: "center",
