@@ -6,14 +6,9 @@ import DataContextProvider from './context/dataContext.js';
 
 // Import all Screens for navigation
 import WelcomeScreen from "./components/welcome.js";
-import Account_Creator from "./components/account_creation/create_account.js";
-import Email_Verification from "./components/account_creation/email_verification.js";
-import Basic_Setup from "./components/account_creation/basic_setup.js";
 import Email_Sign_Up from "./components/account_creation/email_sign_up.js"
 import Login from "./components/login/email_login.js"
-import Congrats from "./components/account_creation/congrats.js";
 import Location from "./components/location.js";
-import Suggestion from "./components/suggestion.js";
 import Budget from "./components/custom/budget";
 import Time from "./components/custom/time.js";
 import People from "./components/custom/people.js";
@@ -23,8 +18,17 @@ import Settings from "./components/main_page/settings.js";
 import Profile from "./components/main_page/profile.js";
 import Activity_info from "./components/main_page/activity_info.js";
 import Saved from "./components/main_page/saved_activity/saved.js";
-import PhoneAuthScreen from "./components/account_creation/phone_verification.js"
 import { screensEnabled } from "react-native-screens";
+
+
+/*
+Here all the main screens of the application are listed. The MainStack are screens which
+are navigated through a Stack Navigator. Basically that means the screens are switched on
+an event. The Tab navigator is the one on the mainpage where you swipe. This navigator is
+positioned at the bottom of the screen. The config is used to customize the navigator, which
+is used when you swipe upwards the card will appear from the bottom instead of the side. 
+The DataContextProvider comes from the context, where the data flow is centralized.
+*/
 
 const MainStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -122,25 +126,7 @@ function App() {
         options={{
           gestureEnabled:false
         }} />
-        <MainStack.Screen name="phone-verification" component={PhoneAuthScreen}
-        options={{
-          gestureEnabled:false
-        }} />
-        <MainStack.Screen name="account_creator" component={Account_Creator}
-        options={{
-          gestureEnabled:false
-        }} />
-        <MainStack.Screen
-          name="email_verification"
-          component={Email_Verification}
-        />
-        <MainStack.Screen name="basic_setup" component={Basic_Setup}
-        options={{
-          gestureEnabled:false
-        }} />
-        <MainStack.Screen name="congrats" component={Congrats} />
         <MainStack.Screen name="location" component={Location} />
-        <MainStack.Screen name="suggestion" component={Suggestion} />
         <MainStack.Screen name="budget" component={Budget} />
         <MainStack.Screen name="time" component={Time} />
         <MainStack.Screen name="people" component={People} />

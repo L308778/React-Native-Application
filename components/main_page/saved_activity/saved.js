@@ -16,9 +16,15 @@ import Images from "../../images/image_loader.js";
 import { SearchBar } from "react-native-elements";
 import { useIsFocused} from '@react-navigation/native'; 
 
-/*This is our sign-up page. We still have to add database integration (Firebase?)
-So the navigation from the email sign in still has to be adjusted as well as the connections
-to google, apple etc.*/
+/*
+This is our saved_screen. It is pretty messy. I am sorry for that. So we retrieve
+all the saved activity from the context. Then we have a delete method which deletes
+a saved activity. I think through the logic we should go through together, but if 
+you get it by just looking at the code the better. But dont worry about that.
+Here we definitely have to fix some bugs, such as that sometimes the images are not in order.
+Also you should not swipe through the whole cards twice, because then you have two children with
+the same key, which then messes with things
+*/
 
 export default function Saved(props) {
   
@@ -28,7 +34,7 @@ export default function Saved(props) {
 
 
   const to_info = (index) => {
-    for_info(index);
+    for_info(index - 1);
     props.navigation.navigate("activity_info");
   };
 

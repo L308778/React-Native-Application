@@ -13,10 +13,14 @@ is initialized to default to our main.json, where our testing data is
 contained. activities contain the images for each activity. Location is
 only relevant for the location screen at this point but will be integrated
 into the user json. Curr_Activity is used for subscribing to the selected
-acitvity in the activity_info screen. 
+acitvity in the activity_info screen. All methods are either used to send
+information between the mainpage and other screens or are used to store 
+and execute authentication. Here we should create a user object where we
+store all information to the current user
 */
 
 function DataContextProvider ({children}){
+
     const[data, setData]=useState(Data)
     const[activities, setActivities]=useState(Images)
     const[saved_activities,setSavedActivities]= useState([])

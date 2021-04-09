@@ -4,6 +4,12 @@ import HomeScreen from "../discarded/home.js"
 import auth from '@react-native-firebase/auth';
 import Login from "./login/email_login.js"
 
+/*
+This screen could potentially used as a loading screen. However,
+we should figure out whether we actually have to use it. Here the
+logo of our application gets displayed.
+*/
+
 export default function Welcome (props) {
 
     const [initializing, setInitializing] = useState(true);

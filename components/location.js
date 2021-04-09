@@ -7,9 +7,13 @@ import GeoLocation from "@react-native-community/geolocation"
 import MapView,{PROVIDER_GOOGLE} from "react-native-maps";
 import {DataContext} from "../context/dataContext.js"
 
-/*This is our sign-up page. We still have to add database integration (Firebase?)
-So the navigation from the email sign in still has to be adjusted as well as the connections
-to google, apple etc.*/
+/*
+This is the location screen. The user will be asked through the 
+Geolocation package whether he agrees to share location. If yes
+a marker will appear on the map and the user continues to the mainpage.
+Here we have to implement a dropdown or something where the user can choose in which
+area he or she is, in the case they do not allow location
+*/
 
 
 const LATITUDE = 37.78825;

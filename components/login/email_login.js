@@ -5,9 +5,11 @@ import { TextInput } from "react-native-gesture-handler";
 import auth from '@react-native-firebase/auth';
 import { DataContext } from "../../context/dataContext";
 
-/*This is our sign-up page. We still have to add database integration (Firebase?)
-So the navigation from the email sign in still has to be adjusted as well as the connections
-to google, apple etc.*/
+/*
+This is our login screen. The method to actually login is used right now
+when pressing login, because otherwise we would have to login everytime we update the
+application. However, the handle_login function works.
+*/
 
 export default function Login (props){
 

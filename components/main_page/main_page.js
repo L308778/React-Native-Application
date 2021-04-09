@@ -21,8 +21,16 @@ SCREEN_WIDTH = Dimensions.get("window").width;
 SCREEN_HEIGHT = Dimensions.get("window").width;
 
 /*
-Change the price to int and add*/
-//let data = ['Opera', 'Theater', "Museum", "Cuisine Culture", "Cinema"]
+This is our main_page where the user mainly interacts. Here we retrieve
+methods and data from the context. When the user swipes right the saved
+method gets invoked in the context, which is used to display the saved
+activity in the saved screen. This is live. So basically every time
+an activity gets saved it will appear in the save screen. The to_info
+method invokes the for_info method in the context. This is used to display
+the relevant information in the activity_info screen. I use a library called
+Flipcard which flips the card when the user clicks it.
+
+*/
 
 export default function Main(props) {
   const {
@@ -33,7 +41,7 @@ export default function Main(props) {
     for_info,
     curr_activity,
   } = useContext(DataContext);
-  
+
   const [saved_activity, setActivity] = useState([]);
 
   const to_info = (index) => {

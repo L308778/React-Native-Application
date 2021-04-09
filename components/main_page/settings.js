@@ -18,9 +18,12 @@ import Time from "../custom/time.js";
 import Feeling from "../custom/feeling.js";
 import {DataContext} from "../../context/dataContext.js"
 
-/*This is our sign-up page. We still have to add database integration (Firebase?)
-So the navigation from the email sign in still has to be adjusted as well as the connections
-to google, apple etc.*/
+/*
+This is our settings page. Here we have to add simulation
+data to our main.json in the data folder to simulate
+the location. Because we want the user to only show cards according to
+his or her settings. The same applies to all the other metrics in custom
+*/
 
 const ScreenWidth = Dimensions.get("window").width;
 

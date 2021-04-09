@@ -4,9 +4,10 @@ import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import { Icon } from "react-native-elements";
 
-/*This is our sign-up page. We still have to add database integration (Firebase?)
-So the navigation from the email sign in still has to be adjusted as well as the connections
-to google, apple etc.*/
+/*
+This is our profile page and it is a bit rushed, because I think
+we can use a react native table or something for that.
+*/
 
 export default class Location extends React.Component {
   constructor(props) {

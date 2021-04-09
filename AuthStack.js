@@ -6,6 +6,8 @@ import DataContextProvider from './context/dataContext.js';
 import Login from "./components/login/email_login.js";
 import Email_Sign_Up from "./components/account_creation/email_sign_up.js";
 
+//AuthStack should be used for authentication of the user
+
 const AuthStack = createStackNavigator()
 export default function AuthStacker() {
     return(

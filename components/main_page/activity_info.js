@@ -7,12 +7,10 @@ import Activities from "../data/main.json"
 import Images from "../images/image_loader.js"
 import {DataContext} from "../../context/dataContext.js"
 
-/* This is the page containing the specific data related to the individual activity.
-To do:
-
-1. Change it to a function
-2. Use context to call everything
-
+/* 
+This is the page containing the specific data related to the individual activity.
+It is invoked when clicking on a saved activity in the saved screen as well as
+when a user swipes a card upwards.
 */
 
 

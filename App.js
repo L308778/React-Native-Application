@@ -7,6 +7,12 @@ import { NavigationContainer} from "@react-navigation/native";
 import auth from '@react-native-firebase/auth';
 import DataContextProvider from './context/dataContext.js';
 
+
+/*
+Here I reverted the navigation. As you can see from the commented part below,
+the MainStack (which was before not containing login and signup) should be split
+into mainstack and authstack. Otherwise this is the entry point of the application
+*/
 function App() {
 
 

@@ -7,9 +7,11 @@ import {DataContext} from "../../context/dataContext.js"
 import { set } from "react-native-reanimated";
 
 
-/*This is our sign-up page. We still have to add database integration (Firebase?)
-So the navigation from the email sign in still has to be adjusted as well as the connections
-to google, apple etc.*/
+/*
+This is our email sign up page. We could also do something like
+a phone number sign up and forward the user to a form where
+he or she fill in their name etc. 
+*/
 
 SCREEN_HEIGHT=Dimensions.get("window").height
 SCREEN_WIDTH=Dimensions.get("window").width
