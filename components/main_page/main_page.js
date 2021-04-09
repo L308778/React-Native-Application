@@ -33,6 +33,7 @@ export default function Main(props) {
     for_info,
     curr_activity,
   } = useContext(DataContext);
+  
   const [saved_activity, setActivity] = useState([]);
 
   const to_info = (index) => {

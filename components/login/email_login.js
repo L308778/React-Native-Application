@@ -27,7 +27,7 @@ export default function Login (props){
           const doLogin = await login(email, password);
           setLoading(false);
           if(doLogin.user) {
-              props.navigation.navigate('location');
+              props.navigation.navigate("location");
           }
       } catch (e) {
           setError("Account could not be created");

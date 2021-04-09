@@ -1,19 +1,18 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { NavigationContainer, Route } from "@react-navigation/native";
 import { createStackNavigator, TransitionSpecs, CardStyleInterpolators } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Icon } from "react-native-elements";
+import DataContextProvider from './context/dataContext.js';
 
 // Import all Screens for navigation
 import WelcomeScreen from "./components/welcome.js";
 import Account_Creator from "./components/account_creation/create_account.js";
-import Email_Sign_Up from "./components/account_creation/email_sign_up.js";
 import Email_Verification from "./components/account_creation/email_verification.js";
 import Basic_Setup from "./components/account_creation/basic_setup.js";
+import Email_Sign_Up from "./components/account_creation/email_sign_up.js"
+import Login from "./components/login/email_login.js"
 import Congrats from "./components/account_creation/congrats.js";
 import Location from "./components/location.js";
-import Login from "./components/login/email_login.js";
 import Suggestion from "./components/suggestion.js";
 import Budget from "./components/custom/budget";
 import Time from "./components/custom/time.js";
@@ -27,8 +26,9 @@ import Saved from "./components/main_page/saved_activity/saved.js";
 import PhoneAuthScreen from "./components/account_creation/phone_verification.js"
 import { screensEnabled } from "react-native-screens";
 
-const Stack = createStackNavigator();
+const MainStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
 
 const config = {
   animation: 'timing',
@@ -102,59 +102,59 @@ function Mainfunc() {
 
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
+      <DataContextProvider>
+      <MainStack.Navigator
         screenOptions={{ headerShown: false }}
         initialRouteName="welcome"
         options={{
           gestureEnabled:false
         }}
       >
-        <Stack.Screen name="welcome" component={WelcomeScreen} 
+        <MainStack.Screen name="welcome" component={WelcomeScreen} 
         options={{
           gestureEnabled:false
         }}/>
-        <Stack.Screen name="login" component={Login}
+        <MainStack.Screen name="email_sign_up" component={Email_Sign_Up}
         options={{
           gestureEnabled:false
         }} />
-        <Stack.Screen name="phone-verification" component={PhoneAuthScreen}
+        <MainStack.Screen name="login" component={Login}
         options={{
           gestureEnabled:false
         }} />
-        <Stack.Screen name="account_creator" component={Account_Creator}
+        <MainStack.Screen name="phone-verification" component={PhoneAuthScreen}
         options={{
           gestureEnabled:false
         }} />
-        <Stack.Screen name="email_sign_up" component={Email_Sign_Up}
+        <MainStack.Screen name="account_creator" component={Account_Creator}
         options={{
           gestureEnabled:false
         }} />
-        <Stack.Screen
+        <MainStack.Screen
           name="email_verification"
           component={Email_Verification}
         />
-        <Stack.Screen name="basic_setup" component={Basic_Setup}
+        <MainStack.Screen name="basic_setup" component={Basic_Setup}
         options={{
           gestureEnabled:false
         }} />
-        <Stack.Screen name="congrats" component={Congrats} />
-        <Stack.Screen name="location" component={Location} />
-        <Stack.Screen name="suggestion" component={Suggestion} />
-        <Stack.Screen name="budget" component={Budget} />
-        <Stack.Screen name="time" component={Time} />
-        <Stack.Screen name="people" component={People} />
-        <Stack.Screen name="feeling" component={Feeling} />
-        <Stack.Screen name="activity_info" 
+        <MainStack.Screen name="congrats" component={Congrats} />
+        <MainStack.Screen name="location" component={Location} />
+        <MainStack.Screen name="suggestion" component={Suggestion} />
+        <MainStack.Screen name="budget" component={Budget} />
+        <MainStack.Screen name="time" component={Time} />
+        <MainStack.Screen name="people" component={People} />
+        <MainStack.Screen name="feeling" component={Feeling} />
+        <MainStack.Screen name="activity_info" 
         component={Activity_info} 
         options={{
           gestureEnabled:false,
           cardStyleInterpolator:
             CardStyleInterpolators.forRevealFromBottomAndroid
         }}/>
-        <Stack.Screen name="tab" component={Mainfunc} />
-      </Stack.Navigator>
-    </NavigationContainer>
+        <MainStack.Screen name="tab" component={Mainfunc} />
+      </MainStack.Navigator>
+      </DataContextProvider>
   );
 }
 export default App;

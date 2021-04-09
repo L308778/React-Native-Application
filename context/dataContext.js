@@ -4,7 +4,7 @@ import Data from "../components/data/main.json"
 import auth from '@react-native-firebase/auth';
 
 
-export const DataContext = createContext()
+export const DataContext = createContext({data:"Hey"})
 
 /*
 Here we define the context which will be used throughout the application.
@@ -24,10 +24,8 @@ function DataContextProvider ({children}){
                 latitude: "",
                 longitude:""
             })
-
     const[curr_activity, setCurrActivity] = useState({})
-    const[currentUser, setCurrentUser] = useState(null)
-    const[loading, setLoading] = useState(false)
+    const[user, setUser] = useState(false)
 
 
 
@@ -56,15 +54,6 @@ function DataContextProvider ({children}){
     return currentUser().updatePassword(password)
     }
 
-    useEffect(() => {
-    const unsubscribe = auth().onAuthStateChanged(user => {
-        setCurrentUser(user)
-        setLoading(false)
-    })
-
-    return unsubscribe
-    }, [])
-
 
     //These are unrelated to auth context
     saved = (index) => {
@@ -90,7 +79,8 @@ function DataContextProvider ({children}){
             saved_activities,
             location,
             curr_activity,
-            currentUser, 
+            user, 
+            setUser,
             signup,
             login,
             logout,
