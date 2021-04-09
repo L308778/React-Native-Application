@@ -23,7 +23,7 @@ a saved activity. I think through the logic we should go through together, but i
 you get it by just looking at the code the better. But dont worry about that.
 Here we definitely have to fix some bugs, such as that sometimes the images are not in order.
 Also you should not swipe through the whole cards twice, because then you have two children with
-the same key, which then messes with things
+the same key, which then messes with things.
 */
 
 export default function Saved(props) {
