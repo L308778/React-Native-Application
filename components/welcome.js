@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import HomeScreen from "../discarded/home.js"
 import auth from '@react-native-firebase/auth';
 import Login from "./login/email_login.js"
+import Activities from "./data/main.js"
 
 /*
 This screen could potentially used as a loading screen. However,
@@ -22,6 +23,7 @@ export default function Welcome (props) {
 
     useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    console.log(Activities)
     return subscriber; // unsubscribe on unmount
     }, []);
 

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, Dimensions
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import { Icon } from 'react-native-elements'
-import Activities from "../data/main.json"
+import Activities from "../data/main"
 import Images from "../images/image_loader.js"
 import {DataContext} from "../../context/dataContext.js"
 
@@ -24,9 +24,6 @@ export default function Activity_Info(props) {
 
 
     const [data, setData] = useState(curr_activity.data);
-    const [image, setImage] = useState(curr_activity.image);
-    
-    const c = 2
 
     const logger = () => {
       console.log(data)
@@ -38,7 +35,7 @@ export default function Activity_Info(props) {
         </View>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>{data.name}</Text>
-        <Image style={styles.image} source={image}/>
+        <Image style={styles.image} source={data.image}/>
         <View style={styles.long_cont}>
         <Text style={styles.long_text}>{data.longdescription}</Text>
         </View>
@@ -85,7 +82,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "relative",
     backgroundColor: "white",
-    
   },
   header: {
     fontSize: 40,

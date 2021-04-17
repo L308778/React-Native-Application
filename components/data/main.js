@@ -1,7 +1,7 @@
-[
+const Activities = [
     {
         "name": "Skiing",
-        "image": "../../assets/images/skiing.jpg",
+        "image": require('../images/skiing.jpg'),
         "key":1,
         "duration": "3h - 8h",
         "price": "60€ / Person",
@@ -10,18 +10,16 @@
     },
     {
         "name": "Wakeboarding",
-        "image":"none",
+        "image":require("../images/wakeboard.jpg"),
         "key":2,
         "duration": "3h - 8h",
         "price": "50€ / Person",
         "int_price" : "$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
-
-    
     },
     {
         "name": "Bungee Jumping",
-        "image":"none",
+        "image":require("../images/bungee.jpg"),
         "key":3,
         "duration": "3h - 8h",
         "price": "80€ / Person",
@@ -31,7 +29,7 @@
     },
     {
         "name": "Rafting",
-        "image":"none",
+        "image":require("../images/rafting.jpg"),
         "key":4,
         "duration": "3h - 8h",
         "price": "40€ / Person",
@@ -41,8 +39,8 @@
     },
     {
         "name": "Ice-Skating",
-        "image":"none",
-        "key":6,
+        "image":require("../images/iceskating.jpg"),
+        "key":5,
         "duration": "1h - 3h",
         "price": "20€ / Person",
         "int_price":"$",
@@ -51,8 +49,8 @@
     },
     {
         "name": "Opera",
-        "image": "none",
-        "key":7,
+        "image": require("../images/opera.jpg"),
+        "key":6,
         "duration": "2h - 4h",
         "price": "200€ / Person",
         "int_price":"$$$$$",
@@ -61,8 +59,8 @@
     },
     {
         "name": "Museum",
-        "image":"none",
-        "key":9,
+        "image":require("../images/museum.jpg"),
+        "key":7,
         "duration": "1h - 3h",
         "price": "Free",
         "int_price":"FREE",
@@ -71,8 +69,8 @@
     },
     {
         "name": "Cuisine Culture",
-        "image":"none",
-        "key":10,
+        "image":require("../images/cuisine_culture.jpg"),
+        "key":8,
         "duration": "2h - 4h",
         "price": "30€ / Person",
         "int_price": "$$",
@@ -81,8 +79,8 @@
     },
     {
         "name": "Cinema",
-        "image":"none",
-        "key":11,
+        "image":require("../images/cinema.jpg"),
+        "key":9,
         "duration": "1h - 2h",
         "price": "18€ / Person",
         "int_price": "$",
@@ -91,8 +89,8 @@
     },
     {
         "name": "Boat Restaurant",
-        "image":"none",
-        "key":12,
+        "image":require("../images/boat_restaurant.jpg"),
+        "key":10,
         "duration": "1h - 2h",
         "price": "20€ / Person",
         "int_price": "$",
@@ -101,8 +99,8 @@
     },
     {
         "name": "Beer Garden",
-        "image":"none",
-        "key":13,
+        "image":require("../images/beer_garden.jpg"),
+        "key":11,
         "duration": "1h - 4h",
         "price": "30€ / Person",
         "int_price": "$$",
@@ -111,8 +109,8 @@
     },
     {
         "name": "Food Festivals",
-        "image":"none",
-        "key":14,
+        "image":require("../images/food_festival.jpg"),
+        "key":12,
         "duration": "1h - 5h",
         "price": "30€ / Person",
         "int_price": "$$",
@@ -120,8 +118,8 @@
     },
     {
         "name": "Paragliding",
-        "image":"none",
-        "key":15,
+        "image":require("../images/paragliding.jpg"),
+        "key":13,
         "duration": "1h - 5h",
         "price": "150€ / Person",
         "int_price": "$$$$",
@@ -129,12 +127,13 @@
     },
     {
         "name": "Concert",
-        "image":"none",
-        "key":16,
+        "image":require("../images/concert.jpg"),
+        "key":14,
         "duration": "2h - 4h",
         "price": "170€ / Person",
         "int_price": "$$$$",
         "longdescription":"This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description.This is a long description."
     }
+]
 
-  ]
+export default Activities
