@@ -1,9 +1,9 @@
-import React, {createContext, useContext, useEffect, useState} from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import Data from "../components/data/main.js"
 import auth from '@react-native-firebase/auth';
 
 
-export const DataContext = createContext({data:"Hey"})
+export const DataContext = createContext({})
 
 /*
 Here we define the context which will be used throughout the application.
@@ -18,18 +18,15 @@ and execute authentication. Here we should create a user object where we
 store all information to the current user
 */
 
-function DataContextProvider ({children}){
-
-    const[data, setData]=useState(Data)
-    const[saved_activities,setSavedActivities]= useState([])
-    const[location, setLocation] = useState({
-                latitude: "",
-                longitude:""
-            })
-    const[curr_activity, setCurrActivity] = useState({})
-    const[user, setUser] = useState(false)
-
-
+const DataContextProvider = ({ children }) => {
+    const [data, setData] = useState(Data)
+    const [saved_activities, setSavedActivities] = useState([])
+    const [location, setLocation] = useState({
+        latitude: "",
+        longitude: ""
+    })
+    const [curr_activity, setCurrActivity] = useState({})
+    const [user, setUser] = useState(false)
 
     //Most of the functions here except on_location, saved and for_info are used for auth state
     function signup(email, password) {
@@ -37,23 +34,23 @@ function DataContextProvider ({children}){
     }
 
     function login(email, password) {
-    return auth().signInWithEmailAndPassword(email, password)
+        return auth().signInWithEmailAndPassword(email, password)
     }
 
     function logout() {
-    return auth().signOut()
+        return auth().signOut()
     }
 
     function resetPassword(email) {
-    return auth().sendPasswordResetEmail(email)
+        return auth().sendPasswordResetEmail(email)
     }
 
     function updateEmail(email) {
-    return currentUser().updateEmail(email)
+        return currentUser().updateEmail(email)
     }
 
     function updatePassword(password) {
-    return currentUser().updatePassword(password)
+        return currentUser().updatePassword(password)
     }
 
 
@@ -71,16 +68,16 @@ function DataContextProvider ({children}){
     }
 
     for_info = (index) => {
-        setCurrActivity({data: Data[index]})
+        setCurrActivity({ data: Data[index] })
     }
 
-        return (
-            <DataContext.Provider value={{
+    return (
+        <DataContext.Provider value={{
             data,
             saved_activities,
             location,
             curr_activity,
-            user, 
+            user,
             setUser,
             signup,
             login,
@@ -92,10 +89,10 @@ function DataContextProvider ({children}){
             on_location,
             for_info,
             update_saved
-            }}>
-                {children}
-            </DataContext.Provider>
-        );
+        }}>
+            {children}
+        </DataContext.Provider>
+    );
 }
 
 export default DataContextProvider;

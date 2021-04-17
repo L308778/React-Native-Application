@@ -11,68 +11,64 @@ when pressing login, because otherwise we would have to login everytime we updat
 application. However, the handle_login function works.
 */
 
-export default function Login (props){
+export default function Login(props) {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState("")
   const [error, setError] = useState("")
 
-  const {login} = useContext(DataContext)
+  const { login } = useContext(DataContext)
 
-
-  handle_login = async() => {
+  const handle_login = async () => {
     setLoading(true);
-      try {
-          setError("")
-          setLoading(true)
-          const doLogin = await login(email, password);
-          setLoading(false);
-          if(doLogin.user) {
-              props.navigation.navigate("location");
-          }
-      } catch (e) {
-          setError("Account could not be created");
-          Alert.alert(
-              e
-          );
-      }
-      setLoading(false)
-};
+    try {
+      setError("")
+      setLoading(true)
+      await login(email, password);
+      setLoading(false);
+    } catch (e) {
+      setError("Login failed");
+      Alert.alert(
+        e
+      );
+    }
+    setLoading(false)
+  };
 
-    return (
-      <View style={styles.container}>
-          <Text style={styles.header}>
-              TRIPPY
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>
+        TRIPPY
           </Text>
-        <View style={styles.inputcontainer}>
-          <TextInput
-            style={styles.inputs}
-            placeholder="Enter your Email..."
-            defaultValue={email}
-            onChangeText={(text) => setEmail(text)}
-            value = {email}
-          />
-          <TextInput
-            style={styles.inputs}
-            secureTextEntry={true}
-            placeholder="Enter a password..."
-            onChangeText={(text) => setPassword(text)}
-            value = {password}
-          />
-        </View>
-        <TouchableOpacity disabled={loading} style={styles.confirmbutton} onPress={() => props.navigation.navigate('location')}>
-            <Text style={styles.confirmbuttontext}>
-                LOGIN
-            </Text>
-        </TouchableOpacity>
-        <Text
-              style={styles.registerTextStyle}
-              onPress={() => props.navigation.navigate("email_sign_up")}>
-              New Here ? Register
-            </Text>
+      <View style={styles.inputcontainer}>
+        <TextInput
+          style={styles.inputs}
+          placeholder="Enter your Email..."
+          defaultValue={email}
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+        />
+        <TextInput
+          style={styles.inputs}
+          secureTextEntry={true}
+          placeholder="Enter a password..."
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+        />
       </View>
-    );
+      <TouchableOpacity disabled={loading} style={styles.confirmbutton} onPress={handle_login}>
+        <Text style={styles.confirmbuttontext}>
+          LOGIN
+            </Text>
+      </TouchableOpacity>
+      <Text
+        style={styles.registerTextStyle}
+        onPress={() => props.navigation.navigate("email_sign_up")}>
+        New Here ? Register
+            </Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -86,11 +82,11 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     fontSize: 68,
     top: 100,
-    justifyContent:"center",
+    justifyContent: "center",
     fontWeight: "100",
     borderWidth: 2,
     borderRadius: 90,
-    color:"turquoise",
+    color: "turquoise",
     borderColor: "turquoise"
   },
   inputcontainer: {
@@ -111,20 +107,20 @@ const styles = StyleSheet.create({
     height: "auto",
   },
   confirmbutton: {
-      color: "turquoise",
-      backgroundColor: "turquoise",
-      borderWidth: 0,
-      borderRadius: 80,
-      padding: 20,
-      textAlign:"center",
-      bottom: 180,
-      width:"90%"
+    color: "turquoise",
+    backgroundColor: "turquoise",
+    borderWidth: 0,
+    borderRadius: 80,
+    padding: 20,
+    textAlign: "center",
+    bottom: 180,
+    width: "90%"
   },
   confirmbuttontext: {
-      fontSize: 20,
-      fontWeight: "600",
-      color: "white",
-      textAlign:"center"
+    fontSize: 20,
+    fontWeight: "600",
+    color: "white",
+    textAlign: "center"
   },
   registerTextStyle: {
     color: 'turquoise',

@@ -5,9 +5,6 @@ import { Icon } from "react-native-elements";
 import DataContextProvider from './context/dataContext.js';
 
 // Import all Screens for navigation
-import WelcomeScreen from "./components/welcome.js";
-import Email_Sign_Up from "./components/account_creation/email_sign_up.js"
-import Login from "./components/login/email_login.js"
 import Location from "./components/location.js";
 import Budget from "./components/custom/budget";
 import Time from "./components/custom/time.js";
@@ -62,7 +59,7 @@ function Mainfunc() {
           tabBarButton: () => null,
           tabBarButtonComponent: () => null,
           tabBarLabel: () => null,
-          gestureEnabled:false
+          gestureEnabled: false
         }}
         component={Main}
       />
@@ -94,9 +91,9 @@ function Mainfunc() {
 
           tabBarLabel: "SETTINGS",
           tabBarIcon: () => (
-            <Icon name="gear" type="evilicon" color="turquoise" size={43}/>
+            <Icon name="gear" type="evilicon" color="turquoise" size={43} />
           ),
-          gestureEnabled:false
+          gestureEnabled: false
         }}
       />
     </Tab.Navigator>
@@ -104,43 +101,32 @@ function Mainfunc() {
 }
 
 
-function App() {
+const MainStacker = () => {
   return (
-      <DataContextProvider>
+    <DataContextProvider>
       <MainStack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName="welcome"
+        initialRouteName="location"
         options={{
-          gestureEnabled:false
+          gestureEnabled: false
         }}
       >
-        <MainStack.Screen name="welcome" component={WelcomeScreen} 
-        options={{
-          gestureEnabled:false
-        }}/>
-        <MainStack.Screen name="email_sign_up" component={Email_Sign_Up}
-        options={{
-          gestureEnabled:false
-        }} />
-        <MainStack.Screen name="login" component={Login}
-        options={{
-          gestureEnabled:false
-        }} />
         <MainStack.Screen name="location" component={Location} />
         <MainStack.Screen name="budget" component={Budget} />
         <MainStack.Screen name="time" component={Time} />
         <MainStack.Screen name="people" component={People} />
         <MainStack.Screen name="feeling" component={Feeling} />
-        <MainStack.Screen name="activity_info" 
-        component={Activity_info} 
-        options={{
-          gestureEnabled:false,
-          cardStyleInterpolator:
-            CardStyleInterpolators.forRevealFromBottomAndroid
-        }}/>
+        <MainStack.Screen name="activity_info"
+          component={Activity_info}
+          options={{
+            gestureEnabled: false,
+            cardStyleInterpolator:
+              CardStyleInterpolators.forRevealFromBottomAndroid
+          }} />
         <MainStack.Screen name="tab" component={Mainfunc} />
       </MainStack.Navigator>
-      </DataContextProvider>
+    </DataContextProvider>
   );
 }
-export default App;
+
+export default MainStacker;
