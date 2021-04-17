@@ -34,12 +34,11 @@ export default function Saved(props) {
 
 
   const to_info = (index) => {
-    for_info(index - 1);
+    for_info(index);
     props.navigation.navigate("activity_info");
   };
 
   useEffect(() => {
-
     if (displayData){
       setDisplayData(saved_activities)
     }},[saved_activities])
@@ -119,11 +118,11 @@ export default function Saved(props) {
     return (
       <Swipeable renderLeftActions={leftSwipe}>
         <TouchableOpacity
-          onPress={() => to_info(item.key)}
+          onPress={() => to_info(item.key - 1)}
         >
           <View style={styles.listItem}>
             <Image
-              source={Images[item.key - 1]}
+              source={item.image}
               style={{ width: 60, height: 60, borderRadius: 30 }}
             />
             <View

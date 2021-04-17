@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,13 +12,13 @@ import {
 import Constants from "expo-constants";
 import Swiper from "react-native-deck-swiper";
 import { Icon } from "react-native-elements";
-import Activities from "../data/main.json";
+import Activities from "../data/main.js";
 import Images from "../images/image_loader.js";
 import { DataContext } from "../../context/dataContext.js";
 import FlipCard from "react-native-flip-card";
 
 SCREEN_WIDTH = Dimensions.get("window").width;
-SCREEN_HEIGHT = Dimensions.get("window").width;
+SCREEN_HEIGHT = Dimensions.get("window").height;
 
 /*
 This is our main_page where the user mainly interacts. Here we retrieve
@@ -30,12 +30,13 @@ method invokes the for_info method in the context. This is used to display
 the relevant information in the activity_info screen. I use a library called
 Flipcard which flips the card when the user clicks it.
 
+https://github.com/leecade/react-native-swiper
+
 */
 
 export default function Main(props) {
   const {
     data,
-    activities,
     saved,
     saved_activities,
     for_info,
@@ -49,9 +50,17 @@ export default function Main(props) {
     props.navigation.navigate("activity_info");
   };
 
+  useEffect(() => {
+    console.log(Activities)
+
+  }, [])
+
+
+
   return (
     <SafeAreaView style={styles.container}>
       <Swiper
+
         cards={Activities}
         renderCard={(card, index) => {
           return (
@@ -67,7 +76,7 @@ export default function Main(props) {
             >
               {/* Face Side */}
               <SafeAreaView style={styles.card}>
-                <Image source={activities[index]} style={styles.image} />
+                <Image source={card.image} style={styles.image} />
                 <View style={styles.innerCard}>
                   <Text style={styles.dollar}> {card.int_price} </Text>
                   <Text style={styles.text}>{card.name}</Text>

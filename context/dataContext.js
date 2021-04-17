@@ -1,6 +1,5 @@
 import React, {createContext, useContext, useEffect, useState} from 'react'
-import Images from '../components/images/image_loader.js';
-import Data from "../components/data/main.json"
+import Data from "../components/data/main.js"
 import auth from '@react-native-firebase/auth';
 
 
@@ -22,7 +21,6 @@ store all information to the current user
 function DataContextProvider ({children}){
 
     const[data, setData]=useState(Data)
-    const[activities, setActivities]=useState(Images)
     const[saved_activities,setSavedActivities]= useState([])
     const[location, setLocation] = useState({
                 latitude: "",
@@ -73,13 +71,12 @@ function DataContextProvider ({children}){
     }
 
     for_info = (index) => {
-        setCurrActivity({image: Images[index], data: Data[index]})
+        setCurrActivity({data: Data[index]})
     }
 
         return (
             <DataContext.Provider value={{
             data,
-            activities, 
             saved_activities,
             location,
             curr_activity,

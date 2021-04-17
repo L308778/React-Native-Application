@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {View} from "react-native"
-import {DataContext} from "./context/dataContext.js"
-import MainStack from "./mainnav.js"
-import AuthStack from "./AuthStack.js"
+import {View} from "react-native";
+import {DataContext} from "./context/dataContext.js";
+import MainStack from "./mainnav.js";
+import AuthStack from "./AuthStack.js";
 import { NavigationContainer} from "@react-navigation/native";
 import auth from '@react-native-firebase/auth';
 import DataContextProvider from './context/dataContext.js';
@@ -18,7 +18,7 @@ function App() {
 
     return(
     <NavigationContainer>
-    <MainStack/>
+      <MainStack/>
     </NavigationContainer>
     )
 }
