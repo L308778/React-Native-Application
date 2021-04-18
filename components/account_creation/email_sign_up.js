@@ -84,9 +84,7 @@ export default function Sign_Up(props) {
         </TouchableOpacity>
         <Text
           style={styles.registerTextStyle}
-          onPress={() => props.navigation.navigate("login", {
-            error: ""
-          })}>
+          onPress={() => props.navigation.navigate("login")}>
           Already have an account? Log In
             </Text>
       </ScrollView>
