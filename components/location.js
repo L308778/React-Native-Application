@@ -38,9 +38,14 @@ export default function LocationScreen(props) {
         setLatitude(lat)
         setLongitude(long)
         on_location({ latitude: lat, longitude: long })
-        setTimeout(function () { props.navigation.navigate("tab") }, 2000)
+        setTimeout(function () {
+          props.navigation.navigate("tab");
+        }, 2000)
       },
-      error => Alert.alert(error.message),
+      error => {
+        Alert.alert(error.message);
+        props.navigation.navigate("tab");
+      },
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
   };
