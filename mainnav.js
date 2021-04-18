@@ -15,6 +15,7 @@ import Settings from "./components/main_page/settings.js";
 import Profile from "./components/main_page/profile.js";
 import Activity_info from "./components/main_page/activity_info.js";
 import Saved from "./components/main_page/saved_activity/saved.js";
+import Chat from "./components/main_page/messaging/chat.js";
 import { screensEnabled } from "react-native-screens";
 
 
@@ -81,6 +82,16 @@ function Mainfunc() {
           tabBarLabel: "STORED",
           tabBarIcon: () => (
             <Icon name="like" type="evilicon" color="turquoise" size={43} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="chat"
+        component={Chat}
+        options={{
+          tabBarLabel: "STORED",
+          tabBarIcon: () => (
+            <Icon name="comment" type="evilicon" color="turquoise" size={43} />
           ),
         }}
       />
