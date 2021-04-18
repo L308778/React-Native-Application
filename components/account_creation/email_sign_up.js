@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image, Alert, Dimensions } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Alert, Dimensions } from "react-native";
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import auth from '@react-native-firebase/auth';
@@ -28,9 +28,8 @@ export default function Sign_Up(props) {
   const { signup } = useContext(DataContext)
 
   const register = async () => {
-    if (password !== confirmpassword) {
-      return setError("Passwords do not match")
-    }
+    if (!name || !email || !password) return setError("Please fill in all required fields")
+    if (password !== confirmpassword) return setError("Passwords do not match")
     try {
       setLoading(true);
       await signup(email, password);
@@ -44,53 +43,59 @@ export default function Sign_Up(props) {
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={require("../logo/interim_logo.png")} style={styles.logo} />
-      <TextInput
-        style={styles.inputs}
-        placeholder="Full Name"
-        defaultValue={name}
-        onChangeText={(text) => setName(text)}
-        value={name}
-      />
-      <TextInput
-        style={styles.inputs}
-        placeholder="E-mail"
-        defaultValue={email}
-        onChangeText={(text) => setEmail(text)}
-        value={email}
-      />
-      <TextInput
-        style={styles.inputs}
-        secureTextEntry
-        placeholder="Password"
-        onChangeText={(text) => setPassword(text)}
-        value={password}
-      />
-      <TextInput
-        style={styles.inputs}
-        secureTextEntry
-        placeholder="Confirm Password"
-        onChangeText={(text) => setConfirmpassword(text)}
-        value={confirmpassword}
-      />
-      <TouchableOpacity disabled={loading} style={styles.confirmbutton} onPress={() => register()}>
-        <Text style={styles.confirmbuttontext}>
-          SIGN UP
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Image source={require("../logo/interim_logo.png")} style={styles.logo} />
+        <TextInput
+          style={styles.inputs}
+          placeholder="Full Name"
+          defaultValue={name}
+          onChangeText={(text) => setName(text)}
+          value={name}
+        />
+        <TextInput
+          style={styles.inputs}
+          placeholder="E-mail"
+          defaultValue={email}
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+        />
+        <TextInput
+          style={styles.inputs}
+          secureTextEntry
+          placeholder="Password"
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+        />
+        <TextInput
+          style={styles.inputs}
+          secureTextEntry
+          placeholder="Confirm Password"
+          onChangeText={(text) => setConfirmpassword(text)}
+          value={confirmpassword}
+        />
+        {error != "" && <Text style={styles.errorText}>
+          {error}
+        </Text>}
+        <TouchableOpacity disabled={loading} style={styles.confirmbutton} onPress={() => register()}>
+          <Text style={styles.confirmbuttontext}>
+            SIGN UP
             </Text>
-      </TouchableOpacity>
-      <Text
-        style={styles.registerTextStyle}
-        onPress={() => props.navigation.navigate("login")}>
-        Already have an account? Log In
+        </TouchableOpacity>
+        <Text
+          style={styles.registerTextStyle}
+          onPress={() => props.navigation.navigate("login", {
+            error: ""
+          })}>
+          Already have an account? Log In
             </Text>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     backgroundColor: "white"
   },
@@ -106,7 +111,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     color: "turquoise",
     borderColor: "turquoise",
-    margin: 20,
+    margin: 15,
     borderWidth: 2,
     width: 300,
     borderRadius: 30,
@@ -118,7 +123,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 40,
     padding: 20,
-    marginTop: 30,
+    marginTop: 15,
     width: "80%",
     alignItems: "center"
   },
@@ -140,4 +145,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 30,
   },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    paddingHorizontal: 20
+  }
 });
