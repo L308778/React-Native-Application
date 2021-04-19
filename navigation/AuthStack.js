@@ -1,11 +1,11 @@
 import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from '@react-navigation/native'
-import DataContextProvider from './context/dataContext.js';
+import DataContextProvider from '../context/dataContext.js';
 
-import WelcomeScreen from "./components/welcome.js";
-import Login from "./components/login/email_login.js";
-import Email_Sign_Up from "./components/account_creation/email_sign_up.js";
+import SplashScreen from "../components/splashscreen.js";
+import Login from "../components/login/email_login.js";
+import Email_Sign_Up from "../components/account_creation/email_sign_up.js";
 
 //AuthStack should be used for authentication of the user
 
@@ -14,9 +14,9 @@ export default function AuthStacker() {
   return (
     <DataContextProvider>
       <AuthStack.Navigator
-        initialRouteName="welcome"
+        initialRouteName="splash"
         screenOptions={{ headerShown: false }}>
-        <AuthStack.Screen name="welcome" component={WelcomeScreen}
+        <AuthStack.Screen name="splash" component={SplashScreen}
           options={{
             gestureEnabled: false
           }} />

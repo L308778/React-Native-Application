@@ -3,7 +3,7 @@ import MainStack from "./mainnav.js";
 import AuthStack from "./AuthStack.js";
 import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { DataContext } from "./context/dataContext.js";
+import { DataContext } from "../context/dataContext.js";
 import auth from '@react-native-firebase/auth';
 
 const Routes = () => {
@@ -12,6 +12,7 @@ const Routes = () => {
 
     // Handle user state changes
     const onAuthStateChanged = (user) => {
+        console.log(user)
         setUser(user);
         if (initializing) setInitializing(false)
     }

@@ -1,20 +1,22 @@
-import React from "react";
+import React, { useRef, useContext } from "react";
 import { createStackNavigator, TransitionSpecs, CardStyleInterpolators } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Icon } from "react-native-elements";
-import DataContextProvider from './context/dataContext.js';
+import DataContextProvider, { DataContext } from '../context/dataContext.js';
 
 // Import all Screens for navigation
-import Location from "./components/location.js";
-import Budget from "./components/custom/budget";
-import Time from "./components/custom/time.js";
-import People from "./components/custom/people.js";
-import Feeling from "./components/custom/feeling.js";
-import Main from "./components/main_page/main_page.js";
-import Settings from "./components/main_page/settings.js";
-import Profile from "./components/main_page/profile.js";
-import Activity_info from "./components/main_page/activity_info.js";
-import Saved from "./components/main_page/saved_activity/saved.js";
+import Location from "../components/location.js";
+import Budget from "../components/custom/budget";
+import Time from "../components/custom/time.js";
+import People from "../components/custom/people.js";
+import Feeling from "../components/custom/feeling.js";
+import Main from "../components/main_page/main_page.js";
+import Settings from "../components/main_page/settings.js";
+import Profile from "../components/main_page/profile.js";
+import Activity_info from "../components/main_page/activity_info.js";
+import Saved from "../components/main_page/saved_activity/saved.js";
+import Welcome from "../components/welcome.js"
+import Profile_Creator from "../components/account_creation/profile.js"
 import { screensEnabled } from "react-native-screens";
 
 
@@ -100,17 +102,29 @@ function Mainfunc() {
   );
 }
 
+profile_checker = () => {
+  const {user} = useContext(DataContext)
+  if(user.displayName){
+    return "welcome"
+  }
+  else{
+    return "profileCreator"
+  }
+}
+
 
 const MainStacker = () => {
   return (
     <DataContextProvider>
       <MainStack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName="location"
+        initialRouteName = {profile_checker()}
         options={{
           gestureEnabled: false
         }}
       >
+        <MainStack.Screen name="profileCreator" component={Profile_Creator} />
+        <MainStack.Screen name="welcome" component={Welcome} />
         <MainStack.Screen name="location" component={Location} />
         <MainStack.Screen name="budget" component={Budget} />
         <MainStack.Screen name="time" component={Time} />
