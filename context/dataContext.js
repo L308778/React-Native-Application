@@ -27,6 +27,7 @@ const DataContextProvider = ({ children }) => {
     })
     const [curr_activity, setCurrActivity] = useState({})
     const [user, setUser] = useState(false)
+    const [messages, setMessages] = useState([])
 
     //Most of the functions here except on_location, saved and for_info are used for auth state
     function signup(email, password) {
@@ -78,6 +79,7 @@ const DataContextProvider = ({ children }) => {
             location,
             curr_activity,
             user,
+            messages,
             setUser,
             signup,
             login,
@@ -85,6 +87,7 @@ const DataContextProvider = ({ children }) => {
             resetPassword,
             updateEmail,
             updatePassword,
+            setMessages,
             saved,
             on_location,
             for_info,

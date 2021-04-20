@@ -89,7 +89,7 @@ function Mainfunc() {
         name="chat"
         component={Chat}
         options={{
-          tabBarLabel: "STORED",
+          tabBarLabel: "CHAT",
           tabBarIcon: () => (
             <Icon name="comment" type="evilicon" color="turquoise" size={43} />
           ),
@@ -114,29 +114,27 @@ function Mainfunc() {
 
 const MainStacker = () => {
   return (
-    <DataContextProvider>
-      <MainStack.Navigator
-        screenOptions={{ headerShown: false }}
-        initialRouteName="location"
+    <MainStack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="location"
+      options={{
+        gestureEnabled: false
+      }}
+    >
+      <MainStack.Screen name="location" component={Location} />
+      <MainStack.Screen name="budget" component={Budget} />
+      <MainStack.Screen name="time" component={Time} />
+      <MainStack.Screen name="people" component={People} />
+      <MainStack.Screen name="feeling" component={Feeling} />
+      <MainStack.Screen name="activity_info"
+        component={Activity_info}
         options={{
-          gestureEnabled: false
-        }}
-      >
-        <MainStack.Screen name="location" component={Location} />
-        <MainStack.Screen name="budget" component={Budget} />
-        <MainStack.Screen name="time" component={Time} />
-        <MainStack.Screen name="people" component={People} />
-        <MainStack.Screen name="feeling" component={Feeling} />
-        <MainStack.Screen name="activity_info"
-          component={Activity_info}
-          options={{
-            gestureEnabled: false,
-            cardStyleInterpolator:
-              CardStyleInterpolators.forRevealFromBottomAndroid
-          }} />
-        <MainStack.Screen name="tab" component={Mainfunc} />
-      </MainStack.Navigator>
-    </DataContextProvider>
+          gestureEnabled: false,
+          cardStyleInterpolator:
+            CardStyleInterpolators.forRevealFromBottomAndroid
+        }} />
+      <MainStack.Screen name="tab" component={Mainfunc} />
+    </MainStack.Navigator>
   );
 }
 

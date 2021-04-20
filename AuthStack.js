@@ -12,23 +12,21 @@ import Email_Sign_Up from "./components/account_creation/email_sign_up.js";
 const AuthStack = createStackNavigator()
 export default function AuthStacker() {
   return (
-    <DataContextProvider>
-      <AuthStack.Navigator
-        initialRouteName="welcome"
-        screenOptions={{ headerShown: false }}>
-        <AuthStack.Screen name="welcome" component={WelcomeScreen}
-          options={{
-            gestureEnabled: false
-          }} />
-        <AuthStack.Screen name="login" component={Login}
-          options={{
-            gestureEnabled: false
-          }} />
-        <AuthStack.Screen name="email_sign_up" component={Email_Sign_Up}
-          options={{
-            gestureEnabled: false
-          }} />
-      </AuthStack.Navigator>
-    </DataContextProvider>
+    <AuthStack.Navigator
+      initialRouteName="welcome"
+      screenOptions={{ headerShown: false }}>
+      <AuthStack.Screen name="welcome" component={WelcomeScreen}
+        options={{
+          gestureEnabled: false
+        }} />
+      <AuthStack.Screen name="login" component={Login}
+        options={{
+          gestureEnabled: false
+        }} />
+      <AuthStack.Screen name="email_sign_up" component={Email_Sign_Up}
+        options={{
+          gestureEnabled: false
+        }} />
+    </AuthStack.Navigator>
   )
 }

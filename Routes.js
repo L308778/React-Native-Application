@@ -5,15 +5,20 @@ import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { DataContext } from "./context/dataContext.js";
 import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 
 const Routes = () => {
     const [initializing, setInitializing] = useState(true);
-    const { user, setUser } = useContext(DataContext);
+    const { user, setUser, messages, setMessages } = useContext(DataContext);
 
     // Handle user state changes
-    const onAuthStateChanged = (user) => {
+    const onAuthStateChanged = async (user) => {
         setUser(user);
-        if (initializing) setInitializing(false)
+        setInitializing(false)
+    }
+
+    const onReceiveMessage = (remoteMessage) => {
+        setMessages([...messages, remoteMessage.notification.body]);
     }
 
     useEffect(() => {
@@ -21,12 +26,19 @@ const Routes = () => {
         return subscriber; // unsubscribe on unmount
     }, []);
 
+    useEffect(() => {
+        const unsubscribe = messaging().onMessage(onReceiveMessage);
+        return unsubscribe;
+    }, [messages]);
+
     if (initializing) {
         return (
             <View>
             </View>
         )
     };
+
+    console.log(messages);
 
     return (
         <NavigationContainer>
