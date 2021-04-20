@@ -38,8 +38,6 @@ const Routes = () => {
         )
     };
 
-    console.log(messages);
-
     return (
         <NavigationContainer>
             {user ? <MainStack /> : <AuthStack />}
