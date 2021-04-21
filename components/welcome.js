@@ -15,28 +15,32 @@ SCREEN_HEIGHT = Dimensions.get("window").height
 SCREEN_WIDTH = Dimensions.get("window").width
 export default function Welcome(props) {
 
-    const {user, setUser} = useContext(DataContext)
-    const timeoutHandle = setTimeout(() => {
-        // Add your logic for the transition
-        props.navigation.navigate("location")
-    }, 4000);
-
+    const { user, setUser, welcomeShown, setWelcomeShown } = useContext(DataContext)
 
     useEffect(() => {
         setUser(auth().currentUser)
-    }, [])
 
-    return(
+        if (!welcomeShown) {
+            setTimeout(() => {
+                // Add your logic for the transition
+                props.navigation.navigate("location")
+            }, 4000);
+        }
+
+        setWelcomeShown(true)
+    }, [welcomeShown]) 
+
+    return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.header}>
-          TRIPPY
+                TRIPPY
           </Text>
             <View style={styles.textContainer}>
-            <Text style = {styles.welcome}>
-                Welcome
+                <Text style={styles.welcome}>
+                    Welcome
             </Text>
-            <Text style={styles.name}>
-             {user.displayName} :)
+                <Text style={styles.name}>
+                    {user.displayName} :)
             </Text>
             </View>
         </SafeAreaView>
@@ -49,23 +53,23 @@ const styles = StyleSheet.create({
         alignItems: "center",
         height: SCREEN_HEIGHT * 0.9,
         backgroundColor: "turquoise",
-        flexDirection:"column"
+        flexDirection: "column"
     },
-    textContainer:{
-        flexDirection:"column",
-        marginVertical:SCREEN_HEIGHT * 0.2,
-        alignItems:"center"
+    textContainer: {
+        flexDirection: "column",
+        marginVertical: SCREEN_HEIGHT * 0.2,
+        alignItems: "center"
     },
     welcome: {
         fontSize: 50,
         fontWeight: "300",
-        color:"white",
-        marginVertical:SCREEN_HEIGHT * 0.05
+        color: "white",
+        marginVertical: SCREEN_HEIGHT * 0.05
     },
-    name:{
+    name: {
         fontSize: 40,
         fontWeight: "800",
-        color:"white"
+        color: "white"
     },
     header: {
         paddingTop: Constants.statusBarHeight,
@@ -78,5 +82,5 @@ const styles = StyleSheet.create({
         color: "white",
         borderColor: "white",
         marginBottom: 120
-      },
+    },
 });
