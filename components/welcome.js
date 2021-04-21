@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth';
 import Activities from "./data/main.js"
 import { DataContext } from "../context/dataContext";
 import Constants from "expo-constants";
+import firestore from "@react-native-firebase/firestore"
 
 /*
 This screen could potentially used as a loading screen. However,
@@ -15,6 +16,11 @@ SCREEN_HEIGHT = Dimensions.get("window").height
 SCREEN_WIDTH = Dimensions.get("window").width
 export default function Welcome(props) {
 
+    const getUser = async() => {
+        const userDocument = await firestore().collection("users").doc("Fj7yyYPwMt00pCVUoMkv").get()
+        console.log(userDocument)
+    }
+
     const {user, setUser} = useContext(DataContext)
     const timeoutHandle = setTimeout(() => {
         // Add your logic for the transition
@@ -24,6 +30,7 @@ export default function Welcome(props) {
 
     useEffect(() => {
         setUser(auth().currentUser)
+        getUser()
     }, [])
 
     return(

@@ -27,14 +27,12 @@ export default function LocationScreen(props) {
   const [long, setLongitude] = useState(127)
   const { on_location } = useContext(DataContext)
 
-  console.log(lat, long)
   const findCoordinates = () => {
     GeoLocation.getCurrentPosition(
       position => {
         const location = JSON.stringify(position.coords);
         var lat = parseFloat(position.coords.latitude)
         var long = parseFloat(position.coords.longitude)
-        console.log(lat, long)
         setLatitude(lat)
         setLongitude(long)
         on_location({ latitude: lat, longitude: long })
