@@ -3,7 +3,7 @@ import MainStack from "./mainnav.js";
 import AuthStack from "./AuthStack.js";
 import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { DataContext } from "./context/dataContext.js";
+import { DataContext } from "../context/dataContext.js";
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 
@@ -12,7 +12,8 @@ const Routes = () => {
     const { user, setUser, messages, setMessages } = useContext(DataContext);
 
     // Handle user state changes
-    const onAuthStateChanged = async (user) => {
+    const onAuthStateChanged = (user) => {
+        console.log(user)
         setUser(user);
         setInitializing(false)
     }
