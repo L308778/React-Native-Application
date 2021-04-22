@@ -46,7 +46,7 @@ export default function LocationScreen(props) {
         Alert.alert(error.message);
         props.navigation.navigate("tab");
       },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 1000 }
     );
   };
 

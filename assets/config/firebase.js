@@ -5,6 +5,7 @@ import '@firebase/firestore';
 const firebaseConfig = {
     apiKey: "AIzaSyC_VlYGQxkF4LvA_01-2NNCan2SCQlGKVg",
     authDomain: "trippy-2f4ef.firebaseapp.com",
+    databaseURL: "https://trippy-2f4ef-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "trippy-2f4ef",
     storageBucket: "trippy-2f4ef.appspot.com",
     messagingSenderId: "726179378587",
