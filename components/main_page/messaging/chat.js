@@ -5,15 +5,17 @@ import messaging from '@react-native-firebase/messaging';
 import { GiftedChat } from 'react-native-gifted-chat';
 import database from '@react-native-firebase/database';
 
+const dbRef = database().ref("/messaging")
+
 const Chat = () => {
     const { user } = useContext(DataContext);
     const [messages, setMessages] = useState([])
-    const [thisUser, setThisUser] = useState({
+    const thisUser = {
         name: user.displayName,
-        email: user.email,
         avatar: user.photoURL,
         _id: user.uid
-    })
+    }
+    const [lastID, setLastID] = useState("")
 
     const requestUserPermission = async () => {
         const authStatus = await messaging().requestPermission();
@@ -25,15 +27,36 @@ const Chat = () => {
     requestUserPermission();
 
     useEffect(() => {
-        database().ref().on("child_added", message => setMessages([...messages, message]))
-        return () => database().ref().off("child_added")
-    }, [messages]);
+        dbRef.on("child_added", (message) => {
+            console.log("-------------- New msg added ---------------")
+            console.log(message)
+            console.log(lastID)
+            console.log(lastID === message.val()._id)
+            //setMessages(lastID === message.val()._id ? messages : [...messages, message.val()])
+            setLastID(message.val()._id)
+        })
+        return () => dbRef.off("child_added")
+    }, [messages, lastID]);
 
     return (
         <GiftedChat
             messages={messages}
-            onSend={(message) => database().ref().push(message.text, () => {})}
-            user={user}
+            onSend={(message) => {
+                const theMsg = message[0]
+                const msg = {
+                    _id: theMsg._id,
+                    text: theMsg.text,
+                    createdAt: theMsg.createdAt,
+                    user: {
+                        _id: theMsg.user.uid,
+                        name: theMsg.user.displayName,
+                        avatar: ""
+                    }
+                }
+                const newRef = dbRef.push()
+                newRef.set(msg)
+            }}
+            user={thisUser}
         />
     )
 }
