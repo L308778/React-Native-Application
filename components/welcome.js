@@ -14,23 +14,19 @@ logo of our application gets displayed.
 
 SCREEN_HEIGHT = Dimensions.get("window").height
 SCREEN_WIDTH = Dimensions.get("window").width
+
 export default function Welcome(props) {
 
-    const getUser = async() => {
-        const userDocument = await firestore().collection("users").doc("Fj7yyYPwMt00pCVUoMkv").get()
-        console.log(userDocument)
-    }
-
     const {user, setUser} = useContext(DataContext)
-    const timeoutHandle = setTimeout(() => {
-        // Add your logic for the transition
-        props.navigation.navigate("location")
-    }, 4000);
 
 
     useEffect(() => {
+        console.log(auth().currentUser)
         setUser(auth().currentUser)
-        getUser()
+        setTimeout(() => {
+            // Add your logic for the transition
+            props.navigation.navigate("location")
+        }, 4000);
     }, [])
 
     return(
