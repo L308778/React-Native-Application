@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth';
 import Activities from "./data/main.js"
 import { DataContext } from "../context/dataContext";
 import Constants from "expo-constants";
+import firestore from "@react-native-firebase/firestore"
 
 /*
 This screen could potentially used as a loading screen. However,
@@ -13,22 +14,20 @@ logo of our application gets displayed.
 
 SCREEN_HEIGHT = Dimensions.get("window").height
 SCREEN_WIDTH = Dimensions.get("window").width
+
 export default function Welcome(props) {
 
-    const { user, setUser, welcomeShown, setWelcomeShown } = useContext(DataContext)
+    const {user, setUser} = useContext(DataContext)
+
 
     useEffect(() => {
+        console.log(auth().currentUser)
         setUser(auth().currentUser)
-
-        if (!welcomeShown) {
-            setTimeout(() => {
-                // Add your logic for the transition
-                props.navigation.navigate("location")
-            }, 2000);
-        }
-
-        setWelcomeShown(true)
-    }, [welcomeShown]) 
+        setTimeout(() => {
+            // Add your logic for the transition
+            props.navigation.navigate("location")
+        }, 4000);
+    }, [])
 
     return (
         <SafeAreaView style={styles.container}>

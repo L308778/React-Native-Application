@@ -2369,10 +2369,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/geolocation/-/geolocation-2.0.2.tgz#ba8b40f560ead8d014740d1cdea970b33f19312e"
   integrity sha512-tTNXRCgnhJBu79mulQwzabXRpDqfh/uaDqfHVpvF0nX4NTpolpy6mvTRiFg7eWFPGRArsnZz1EYp6rHfJWGgEA==
 
-"@react-native-firebase/app@^11.1.2":
-  version "11.3.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-11.3.0.tgz#253ec961223da022a7004150fab0e4d39fd915cb"
-  integrity sha512-hOo4hTfa7b2huJq0ahATUmyk4qQM0lrWH+1xXgvWMh6sG65orJIKgLfJPaVI2qAfXq06T9GbA+h0ZcfC8rDtfg==
+"@react-native-firebase/app@^11.3.2":
+  version "11.3.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-11.3.2.tgz#43971445306cde2d09ce3022e0efae5549b47095"
+  integrity sha512-6W+Wrnj9X3zCicwWs/fMRMPhdSCNDASeypltmqAGr0jupdB5eV3dd0BoQa10xT6yw8U5QBvZSS0jXHrPWcIIdA==
   dependencies:
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
@@ -2387,10 +2387,15 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/database/-/database-11.3.2.tgz#88a196e80ddbf89012083fcc1f52d87073fe1d65"
   integrity sha512-u8KxbhMzJM4pWj+Djcc7Dv3Rze/g8j54MzzaBFVJkRHzkwOSJlQKZEZSW/8Z8j2EpZP3L1/bcfHty/euqE/u7g==
 
-"@react-native-firebase/messaging@^11.3.0":
-  version "11.3.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-11.3.0.tgz#a2a387aace2c76a896752b6d6841b789a8844e13"
-  integrity sha512-P4eM0l3Zh+p2gipkpJSAKSbctXiVREYysFbpX8A1IO12oWzosoruBrS6ULxr9THSSuQPL8byxfXnL1L/Z5g9Sg==
+"@react-native-firebase/messaging@^11.3.2":
+  version "11.3.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-11.3.2.tgz#0bc90672ffd3b8f0ea905cc591ae2c0c09f0f784"
+  integrity sha512-/syhrRJccE0MuWiNYY95AVyNbmc8qZVOH0CY2qJKdwhCAIfc6b6h3RqztoFqv9phdWpdSvhBKscNUx2Ejm17Tg==
+
+"@react-native-firebase/firestore@^11.3.2":
+  version "11.3.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-11.3.2.tgz#35ab35b9606bd39d53f3494e60685b4166b13295"
+  integrity sha512-ThwjyQOWrrER2QNQ8hb0GvayQXDffBwsv7oMcjeA4dI1QbwmsH9x9Tg5aXQL4olMIP+il2BjHyPZSFBK5/F4Hw==
 
 "@react-navigation/bottom-tabs@^5.11.8":
   version "5.11.10"

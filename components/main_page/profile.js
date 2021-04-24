@@ -1,30 +1,33 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView } from "react-native";
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import { Icon } from "react-native-elements";
+import firestore from "@react-native-firebase/firestore"
+import auth from '@react-native-firebase/auth';
 
 /*
 This is our profile page and it is a bit rushed, because I think
 we can use a react native table or something for that.
 */
 
-export default class Location extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      location: "",
-    };
-  }
+export default function Profile (props){
 
-  componentDidMount() {
-    console.log(this.props);
-    this.setState({ email: "" });
-    this.setState({ password: "" });
-    this.setState({ password: "" });
-  }
 
-  render() {
+  const [name, setName] = useState("")
+  const [age, setAge] = useState("")
+  const [relation, setRelation] = useState("")
+
+  useEffect(() => {
+    console.log(auth().currentUser.uid)
+    user = firestore()
+            .collection('Users')
+            // Filter results
+            .where("name","==",auth().currentUser.displayName)
+            .get()
+    console.log(user)
+  }, [])
+
     return (
       <>
       <View style={styles.container}>
@@ -68,14 +71,13 @@ export default class Location extends React.Component {
           </View>
         </View>
       </View>
-      <TouchableOpacity style={styles.confirmbutton} onPress={() => this.props.navigation.navigate("main")}>
+      <TouchableOpacity style={styles.confirmbutton} onPress={() => props.navigation.navigate("main")}>
             <Text style={styles.confirmbuttontext}>
                 RETURN TO TRIPPY
             </Text>
         </TouchableOpacity>
       </>
     );
-  }
 }
 
 const styles = StyleSheet.create({
