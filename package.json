@@ -20,7 +20,7 @@
     "expo-splash-screen": "~0.8.0",
     "expo-status-bar": "~1.0.3",
     "expo-updates": "^0.4.2",
-    "firebase": "7.9.0",
+    "firebase": "8.4.2",
     "jestify": "^1.0.10",
     "react": "16.13.1",
     "react-dom": "16.13.1",

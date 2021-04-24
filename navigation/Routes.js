@@ -8,8 +8,6 @@ import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import database from '@react-native-firebase/database';
 
-const dbRef = database().ref("/messaging")
-
 const Routes = () => {
     const [initializing, setInitializing] = useState(true);
     const { user, setUser, messages, setMessages } = useContext(DataContext);
@@ -21,29 +19,30 @@ const Routes = () => {
         setInitializing(false)
     }
 
-    const onReceiveMessage = (remoteMessage) => {
-        //setMessages([...messages, remoteMessage.notification.body]);
-    }
-
     useEffect(() => {
         const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
         return subscriber; // unsubscribe on unmount
     }, []);
 
     useEffect(() => {
-        const unsubscribe = messaging().onMessage(onReceiveMessage);
-        return unsubscribe;
-    }, [messages]);
-
-    useEffect(() => {
+        setMessages({})
+        const dbRef = database().ref("/messaging/" + user.uid)
         dbRef.on("child_added", (message, lastID) => {
             console.log(message)
             const newMsg = message.val()
             newMsg.createdAt = Date.parse(newMsg.createdAt)
-            setMessages(messages => lastID === newMsg._id ? messages : [...messages, newMsg])
+            setMessages(messages => {
+                if (lastID == newMsg._id) {
+                    return messages
+                } else {
+                    const copyMsg = Object.create(messages)
+                    copyMsg[newMsg.sentTo] ? copyMsg[newMsg.sentTo].push(newMsg) : copyMsg[newMsg.sentTo] = [newMsg]
+                    return copyMsg
+                }
+            })
         })
         return () => dbRef.off("child_added")
-    }, []);
+    }, [user]);
 
     if (initializing) {
         return (

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "726179378587",
+    "firebase_url": "https://trippy-2f4ef-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "trippy-2f4ef",
     "storage_bucket": "trippy-2f4ef.appspot.com"
   },
@@ -9,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:726179378587:android:9f6c72f5e8d87327fc5d3e",
         "android_client_info": {
-          "package_name": "com.trippyexpo"
+          "package_name": "com.trippy"
         }
       },
       "oauth_client": [
@@ -34,7 +35,7 @@
               "client_id": "726179378587-0g1dbu5stanev0cqoaqpj3abqk85ujj0.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.trippyexpo"
+                "bundle_id": "com.trippy"
               }
             }
           ]

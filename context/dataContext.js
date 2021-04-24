@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import Data from "../components/data/main.js"
 import auth from '@react-native-firebase/auth';
-
+import { database } from '../assets/config/firebase.js';
 
 export const DataContext = createContext({})
 
@@ -28,7 +28,7 @@ const DataContextProvider = ({ children }) => {
     const [curr_activity, setCurrActivity] = useState({})
     const [user, setUser] = useState(false)
     const [welcomeShown, setWelcomeShown] = useState(false)
-    const [messages, setMessages] = useState([])
+    const [messages, setMessages] = useState({})
     const [lastID, setLastID] = useState("")
 
     //Most of the functions here except on_location, saved and for_info are used for auth state
@@ -56,6 +56,26 @@ const DataContextProvider = ({ children }) => {
         return currentUser().updatePassword(password)
     }
 
+    function sendMsg(message, otherUID) {
+        const theMsg = message[0]
+        const msg = {
+            _id: theMsg._id,
+            text: theMsg.text,
+            createdAt: theMsg.createdAt.toString(),
+            sentTo: otherUID,
+            user: {
+                _id: theMsg.user._id,
+                name: theMsg.user.name,
+                avatar: ""
+            }
+        }
+        database.ref("/messaging/" + otherUID).push(msg)
+        database.ref("/messaging/" + user.uid).push(msg).then(snapshot => {
+            const msgCopy = Object.create(messages)
+            messages[otherUID] ? messages[otherUID].push(msg) : messages[otherUID] = [msg]
+            setMessages(msgCopy)
+        })
+    }
 
     //These are unrelated to auth context
     saved = (index) => {
@@ -91,6 +111,7 @@ const DataContextProvider = ({ children }) => {
             resetPassword,
             updateEmail,
             updatePassword,
+            sendMsg,
             setWelcomeShown,
             setMessages,
             setLastID,

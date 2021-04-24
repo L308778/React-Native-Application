@@ -90,6 +90,7 @@ function Mainfunc() {
       <Tab.Screen
         name="chat"
         component={Chat}
+        initialParams={{otherUID: "PJqYaX9yPmcQ8SoF5TinZDzMNzs1"}}
         options={{
           tabBarLabel: "CHAT",
           tabBarIcon: () => (
