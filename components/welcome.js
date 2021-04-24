@@ -24,7 +24,7 @@ export default function Welcome(props) {
             setTimeout(() => {
                 // Add your logic for the transition
                 props.navigation.navigate("location")
-            }, 4000);
+            }, 2000);
         }
 
         setWelcomeShown(true)

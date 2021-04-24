@@ -1,21 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { DataContext } from "../../../context/dataContext.js";
 import messaging from '@react-native-firebase/messaging';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { Bubble, GiftedChat } from 'react-native-gifted-chat';
 import database from '@react-native-firebase/database';
 
 const dbRef = database().ref("/messaging")
 
 const Chat = () => {
-    const { user } = useContext(DataContext);
-    const [messages, setMessages] = useState([])
-    const thisUser = {
-        name: user.displayName,
-        avatar: user.photoURL,
-        _id: user.uid
+    const { user, messages } = useContext(DataContext);
+    const getUser = () => {
+        return {
+            name: user.displayName,
+            avatar: user.photoURL,
+            _id: user.uid
+        }
     }
-    const [lastID, setLastID] = useState("")
 
     const requestUserPermission = async () => {
         const authStatus = await messaging().requestPermission();
@@ -26,39 +26,49 @@ const Chat = () => {
 
     requestUserPermission();
 
-    useEffect(() => {
-        dbRef.on("child_added", (message) => {
-            console.log("-------------- New msg added ---------------")
-            console.log(message)
-            console.log(lastID)
-            console.log(lastID === message.val()._id)
-            //setMessages(lastID === message.val()._id ? messages : [...messages, message.val()])
-            setLastID(message.val()._id)
-        })
-        return () => dbRef.off("child_added")
-    }, [messages, lastID]);
-
     return (
         <GiftedChat
             messages={messages}
             onSend={(message) => {
                 const theMsg = message[0]
+                console.log(theMsg)
                 const msg = {
                     _id: theMsg._id,
                     text: theMsg.text,
-                    createdAt: theMsg.createdAt,
+                    createdAt: theMsg.createdAt.toString(),
                     user: {
-                        _id: theMsg.user.uid,
-                        name: theMsg.user.displayName,
+                        _id: theMsg.user._id,
+                        name: theMsg.user.name,
                         avatar: ""
                     }
                 }
                 const newRef = dbRef.push()
                 newRef.set(msg)
             }}
-            user={thisUser}
+            user={getUser()}
+            inverted={false}
         />
     )
 }
 
 export default Chat
+
+const styles = StyleSheet.create({
+    confirmbutton: {
+        backgroundColor: "turquoise",
+        borderWidth: 0,
+        borderRadius: 10,
+        padding: 20,
+        marginTop: 20,
+    },
+    confirmbuttontext: {
+        fontSize: 20,
+        fontWeight: "400",
+        color: "white"
+    },
+    map: {
+        height: 300,
+        width: 350,
+        borderRadius: 30
+    }
+});

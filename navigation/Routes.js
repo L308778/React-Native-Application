@@ -6,6 +6,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { DataContext } from "../context/dataContext.js";
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
+import database from '@react-native-firebase/database';
+
+const dbRef = database().ref("/messaging")
 
 const Routes = () => {
     const [initializing, setInitializing] = useState(true);
@@ -19,7 +22,7 @@ const Routes = () => {
     }
 
     const onReceiveMessage = (remoteMessage) => {
-        setMessages([...messages, remoteMessage.notification.body]);
+        //setMessages([...messages, remoteMessage.notification.body]);
     }
 
     useEffect(() => {
@@ -31,6 +34,16 @@ const Routes = () => {
         const unsubscribe = messaging().onMessage(onReceiveMessage);
         return unsubscribe;
     }, [messages]);
+
+    useEffect(() => {
+        dbRef.on("child_added", (message, lastID) => {
+            console.log(message)
+            const newMsg = message.val()
+            newMsg.createdAt = Date.parse(newMsg.createdAt)
+            setMessages(messages => lastID === newMsg._id ? messages : [...messages, newMsg])
+        })
+        return () => dbRef.off("child_added")
+    }, []);
 
     if (initializing) {
         return (

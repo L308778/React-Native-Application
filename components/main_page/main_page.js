@@ -51,7 +51,7 @@ export default function Main(props) {
   };
 
   useEffect(() => {
-    console.log(Activities)
+    //console.log(Activities)
 
   }, [])
 
