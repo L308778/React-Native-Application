@@ -69,12 +69,8 @@ const DataContextProvider = ({ children }) => {
                 avatar: ""
             }
         }
-        database.ref("/messaging/" + otherUID).push(msg)
-        database.ref("/messaging/" + user.uid).push(msg).then(snapshot => {
-            const msgCopy = Object.create(messages)
-            messages[otherUID] ? messages[otherUID].push(msg) : messages[otherUID] = [msg]
-            setMessages(msgCopy)
-        })
+        database.ref("/messaging/" + otherUID + "/" + user.uid).push(msg)
+        database.ref("/messaging/" + user.uid + "/" + otherUID).push(msg)
     }
 
     //These are unrelated to auth context

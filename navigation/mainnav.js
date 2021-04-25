@@ -15,9 +15,9 @@ import Settings from "../components/main_page/settings.js";
 import Profile from "../components/main_page/profile.js";
 import Activity_info from "../components/main_page/activity_info.js";
 import Saved from "../components/main_page/saved_activity/saved.js";
-import Welcome from "../components/welcome.js"
-import Profile_Creator from "../components/account_creation/profile.js"
-import Chat from "../components/main_page/messaging/chat.js";
+import Welcome from "../components/welcome.js";
+import Profile_Creator from "../components/account_creation/profile_creator.js";
+import ConnectStack from "./ConnectStack.js";
 import { screensEnabled } from "react-native-screens";
 
 
@@ -88,11 +88,10 @@ function Mainfunc() {
         }}
       />
       <Tab.Screen
-        name="chat"
-        component={Chat}
-        initialParams={{otherUID: "PJqYaX9yPmcQ8SoF5TinZDzMNzs1"}}
+        name="connect"
+        component={ConnectStack}
         options={{
-          tabBarLabel: "CHAT",
+          tabBarLabel: "CONNECT",
           tabBarIcon: () => (
             <Icon name="comment" type="evilicon" color="turquoise" size={43} />
           ),

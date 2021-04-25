@@ -25,22 +25,27 @@ const Routes = () => {
         return subscriber; // unsubscribe on unmount
     }, []);
 
-    const subscribeToAllChats = (dbRef, chats) => {
-        console.log(chats)
-        chats.forEach(element => {
-            dbRef.child(element).limitToLast(MSG_LOAD_LIMIT).on("child_added", (message, lastID) => {
-                const newMsg = message.val()
-                newMsg.createdAt = Date.parse(newMsg.createdAt)
-                setMessages(messages => {
-                    if (lastID == newMsg._id) {
-                        return messages
-                    } else {
-                        const copyMsg = Object.create(messages)
-                        copyMsg[newMsg.sentTo] ? copyMsg[newMsg.sentTo].push(newMsg) : copyMsg[newMsg.sentTo] = [newMsg]
-                        return copyMsg
-                    }
-                })
+    const subscribeToChat = (dbRef, element) => {
+        dbRef.child(element).limitToLast(MSG_LOAD_LIMIT).on("child_added", (message, lastID) => {
+            const newMsg = message.val()
+            newMsg.createdAt = Date.parse(newMsg.createdAt)
+            setMessages(messages => {
+                if (lastID == newMsg._id) {
+                    return messages
+                } else {
+                    const copyMsg = Object.create(messages)
+                    copyMsg[newMsg.sentTo] ? copyMsg[newMsg.sentTo].push(newMsg) : copyMsg[newMsg.sentTo] = [newMsg]
+                    return copyMsg
+                }
             })
+        })
+    }
+
+    const subscribeToAllChats = (dbRef, chats) => {
+        //console.log(chats)
+        chats.forEach(element => {
+            console.log("Initial subscribe to", element)
+            subscribeToChat(dbRef, element)
         });
     }
 
@@ -48,7 +53,9 @@ const Routes = () => {
         if (!dbRef) return
         chats.forEach(element => {
             dbRef.child(element).off("child_added")
+            console.log("Unsubscribed from", element)
         });
+        setChats([])
     }
 
     useEffect(() => {
@@ -62,18 +69,33 @@ const Routes = () => {
             if (!userLoaded) {
                 dbRef = database.ref("/messaging/" + user.uid)
                 dbRef.once("value", snapshot => {
-                    console.log(snapshot)
-                    const newChats = Object.keys(snapshot.val())
+                    const newChats = snapshot.exists() ? Object.keys(snapshot.val()) : []
                     setChats(newChats)
                     subscribeToAllChats(dbRef, newChats)
+
+                    dbRef.on("child_added", newUser => {
+                        setChats(chats => {
+                            console.log("Chats is", chats)
+                            const needsUpdate = !chats.includes(newUser.key)
+                            const newChats = !needsUpdate ? chats : [...chats, newUser.key]
+                            if (needsUpdate) {
+                                subscribeToChat(dbRef, newUser.key)
+                                console.log("Incremental subscribe to", newUser.key)
+                            }
+                            return newChats
+                        })
+                    })
                 })
                 userLoaded = true
-            } else {
-                setChats(chats)
             }
         }
+
         return () => {
-            unsubscribeFromAllChats(dbRef)
+            if (dbRef) {
+                console.log("Unsubscribed from child add")
+                dbRef.off("child_added")
+                unsubscribeFromAllChats(dbRef)
+            }
         }
     }, [user]);
 
