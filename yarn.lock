@@ -2387,15 +2387,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/database/-/database-11.3.2.tgz#88a196e80ddbf89012083fcc1f52d87073fe1d65"
   integrity sha512-u8KxbhMzJM4pWj+Djcc7Dv3Rze/g8j54MzzaBFVJkRHzkwOSJlQKZEZSW/8Z8j2EpZP3L1/bcfHty/euqE/u7g==
 
-"@react-native-firebase/messaging@^11.3.2":
-  version "11.3.2"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-11.3.2.tgz#0bc90672ffd3b8f0ea905cc591ae2c0c09f0f784"
-  integrity sha512-/syhrRJccE0MuWiNYY95AVyNbmc8qZVOH0CY2qJKdwhCAIfc6b6h3RqztoFqv9phdWpdSvhBKscNUx2Ejm17Tg==
-
 "@react-native-firebase/firestore@^11.3.2":
-  version "11.3.2"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-11.3.2.tgz#35ab35b9606bd39d53f3494e60685b4166b13295"
-  integrity sha512-ThwjyQOWrrER2QNQ8hb0GvayQXDffBwsv7oMcjeA4dI1QbwmsH9x9Tg5aXQL4olMIP+il2BjHyPZSFBK5/F4Hw==
+  version "11.3.3"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-11.3.3.tgz#f77e42221437158d4190b6fa5f24300916d59f21"
+  integrity sha512-tuJJm3+SxuxDWdnyHpPE8b7aeFo8/V6mkgiaPcuZGipOuxUDqsQUNk9pMc9xynR81tD/wKVPLQ0NO9AgHZkuTw==
 
 "@react-navigation/bottom-tabs@^5.11.8":
   version "5.11.10"
@@ -4378,6 +4373,11 @@ escodegen@^1.11.1:
     optionator "^0.8.1"
   optionalDependencies:
     source-map "~0.6.1"
+
+eslint-plugin-react-hooks@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.2.0.tgz#8c229c268d468956334c943bb45fc860280f5556"
+  integrity sha512-623WEiZJqxR7VdxFCKLI6d6LLpwJkGPYKODnkH3D7WpOG5KM8yWueBd8TLsNAetEJNF5iJmolaAKO3F8yzyVBQ==
 
 esprima@^4.0.0, esprima@^4.0.1:
   version "4.0.1"

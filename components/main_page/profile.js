@@ -25,7 +25,7 @@ export default function Profile (props){
             // Filter results
             .where("name","==",auth().currentUser.displayName)
             .get()
-    console.log(user)
+    //console.log(user)
   }, [])
 
     return (

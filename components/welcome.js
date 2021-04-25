@@ -21,8 +21,6 @@ export default function Welcome(props) {
 
 
     useEffect(() => {
-        console.log(auth().currentUser)
-        setUser(auth().currentUser)
         setTimeout(() => {
             // Add your logic for the transition
             props.navigation.navigate("location")

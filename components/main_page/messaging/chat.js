@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from "react-native";
 import { DataContext } from "../../../context/dataContext.js";
-import messaging from '@react-native-firebase/messaging';
-import { Bubble, GiftedChat } from 'react-native-gifted-chat';
+import { GiftedChat } from 'react-native-gifted-chat';
 
 const Chat = ({ route }) => {
     const { user, messages, setMessages, sendMsg } = useContext(DataContext);
@@ -14,15 +13,6 @@ const Chat = ({ route }) => {
         }
     }
     const otherUID = route.params.otherUID
-
-    const requestUserPermission = async () => {
-        const authStatus = await messaging().requestPermission();
-        const enabled =
-            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    }
-
-    requestUserPermission();
 
     return (
         <GiftedChat
