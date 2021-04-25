@@ -62,7 +62,6 @@ const DataContextProvider = ({ children }) => {
             _id: theMsg._id,
             text: theMsg.text,
             createdAt: theMsg.createdAt.toString(),
-            sentTo: otherUID,
             user: {
                 _id: theMsg.user._id,
                 name: theMsg.user.name,

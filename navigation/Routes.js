@@ -34,14 +34,14 @@ const Routes = () => {
                     return messages
                 } else {
                     const copyMsg = Object.create(messages)
-                    copyMsg[newMsg.sentTo] ? copyMsg[newMsg.sentTo].push(newMsg) : copyMsg[newMsg.sentTo] = [newMsg]
+                    copyMsg[element] ? copyMsg[element].push(newMsg) : copyMsg[element] = [newMsg]
                     return copyMsg
                 }
             })
         })
     }
 
-    const subscribeToAllChats = (dbRef, chats) => {
+    const subscribeToAllChats = async (dbRef, chats) => {
         //console.log(chats)
         chats.forEach(element => {
             console.log("Initial subscribe to", element)
@@ -68,10 +68,10 @@ const Routes = () => {
         } else {
             if (!userLoaded) {
                 dbRef = database.ref("/messaging/" + user.uid)
-                dbRef.once("value", snapshot => {
+                dbRef.once("value", async (snapshot) => {
                     const newChats = snapshot.exists() ? Object.keys(snapshot.val()) : []
                     setChats(newChats)
-                    subscribeToAllChats(dbRef, newChats)
+                    await subscribeToAllChats(dbRef, newChats)
 
                     dbRef.on("child_added", newUser => {
                         setChats(chats => {
