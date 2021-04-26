@@ -55,7 +55,7 @@
     ]
   },
   "private": true,
-  "eslintConfig" : {
+  "eslintConfig": {
     "extends": [
       "plugin:react-hooks/recommended"
     ]
