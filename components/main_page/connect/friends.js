@@ -36,6 +36,10 @@ const friends = (props) => {
         firestore().collection('Users').doc(friendUID).update({ friends: theirNewFriends })
     }
 
+    const updateFriendsInStorage = (newFriends) => {
+
+    }
+
     const changeFriendState = (friend) => {
         if (friend._data.friends.includes(user.uid)) {
             //Is already friend, remove

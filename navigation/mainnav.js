@@ -2,7 +2,7 @@ import React, { useRef, useContext } from "react";
 import { createStackNavigator, TransitionSpecs, CardStyleInterpolators } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Icon } from "react-native-elements";
-import DataContextProvider, { DataContext } from '../context/dataContext.js';
+import { DataContext } from '../context/dataContext.js';
 
 // Import all Screens for navigation
 import Location from "../components/location.js";

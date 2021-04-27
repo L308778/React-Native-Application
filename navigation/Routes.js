@@ -6,9 +6,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { DataContext } from "../context/dataContext.js";
 import auth from '@react-native-firebase/auth';
 import { database } from '../assets/config/firebase.js';
+import MMKVStorage from 'react-native-mmkv-storage';
 
 const MSG_LOAD_LIMIT = 20
 let userLoaded = false
+
+const mmkvInstances = {}
 
 const Routes = () => {
     const [initializing, setInitializing] = useState(true);
@@ -17,6 +20,15 @@ const Routes = () => {
     // Handle user state changes
     const onAuthStateChanged = (user) => {
         setUser(user);
+        if (user && !mmkvInstances.hasOwnProperty(user.uid)) {
+            //If MMKV instance for user not present, create new instance
+            mmkvInstances[user.uid] = new MMKVStorage.Loader()
+                .withInstanceID(user.uid)
+                .withEncryption()
+                .initialize()
+            mmkvInstances[user.uid].setString("Test", "This is a test string")
+            console.log(mmkvInstances[user.uid].getString("Test"))
+        }
         setInitializing(false)
     }
 
