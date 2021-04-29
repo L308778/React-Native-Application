@@ -11,7 +11,7 @@ import MMKVStorage from 'react-native-mmkv-storage';
 const MSG_LOAD_LIMIT = 20
 let userLoaded = false
 
-const mmkvInstances = {}
+export const mmkvInstances = {}
 
 const Routes = () => {
     const [initializing, setInitializing] = useState(true);
@@ -26,8 +26,11 @@ const Routes = () => {
                 .withInstanceID(user.uid)
                 .withEncryption()
                 .initialize()
-            mmkvInstances[user.uid].setString("Test", "This is a test string")
-            console.log(mmkvInstances[user.uid].getString("Test"))
+        }
+        if (user) {
+            const msgs = mmkvInstances[user.uid].getMap("messages")
+            console.log(msgs)
+            setMessages(msgs)
         }
         setInitializing(false)
     }
@@ -38,9 +41,10 @@ const Routes = () => {
     }, []);
 
     const subscribeToChat = (dbRef, element) => {
-        dbRef.child(element).limitToLast(MSG_LOAD_LIMIT).on("child_added", (message, lastID) => {
+        dbRef.child(element).on("child_added", (message, lastID) => {
             const newMsg = message.val()
-            newMsg.createdAt = Date.parse(newMsg.createdAt)
+            const sth = new Date()
+            newMsg.createdAt = new Date(newMsg.createdAt) - sth.getTimezoneOffset() * 60000
             setMessages(messages => {
                 if (lastID == newMsg._id) {
                     return messages

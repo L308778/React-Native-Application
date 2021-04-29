@@ -4,11 +4,11 @@ import { Icon } from "react-native-elements";
 import { FlatList, TouchableOpacity, TextInput } from 'react-native-gesture-handler'
 import firestore from "@react-native-firebase/firestore"
 import { DataContext } from '../../../context/dataContext'
+import { mmkvInstances } from '../../../navigation/Routes';
 
 const friends = (props) => {
     const [friendList, setFriendList] = useState([])
     const [addUserList, setAddUserList] = useState([])
-    const [filterUserList, setFilterUserList] = useState([])
     const [searchUser, setSearchUser] = useState("")
     const [searchFriend, setSearchFriend] = useState("")
     const { user, setUser } = useContext(DataContext)
@@ -37,7 +37,8 @@ const friends = (props) => {
     }
 
     const updateFriendsInStorage = (newFriends) => {
-
+        const mmkvInst = mmkvInstances[user.uid]
+        if (mmkvInst) mmkvInst.setArray("friends", newFriends)
     }
 
     const changeFriendState = (friend) => {
@@ -50,12 +51,14 @@ const friends = (props) => {
             const index2 = friend._data.friends.findIndex(x => x === user.uid)
             if (index2 > -1) friend._data.friends.splice(index2, 1)
             updateFriendsInFirestore(newList, friend._data.uid, friend._data.friends)
+            updateFriendsInStorage(newList)
         } else {
             //Not friend yet, add
             const newList = [...friendList, friend]
             setFriendList(newList)
             friend._data.friends.push(user.uid)
             updateFriendsInFirestore(newList, friend._data.uid, friend._data.friends)
+            updateFriendsInStorage(newList)
         }
     }
 
@@ -82,6 +85,9 @@ const friends = (props) => {
     }
 
     useEffect(() => {
+        const mmkvInst = mmkvInstances[user.uid]
+        if (mmkvInst) setFriendList(mmkvInst.getArray("friends"))
+
         const getUsersFromFirestore = async () => {
             let users = await firestore()
                 .collection('Users')
@@ -97,6 +103,7 @@ const friends = (props) => {
                 .where("friends", "array-contains", user.uid)
                 .get()
             setFriendList(friends._docs)
+            updateFriendsInStorage(friends._docs)
         }
         getFriendsFromFirestore()
     }, [])

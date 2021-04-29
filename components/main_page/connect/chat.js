@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from "react-native";
 import { DataContext } from "../../../context/dataContext.js";
 import { GiftedChat } from 'react-native-gifted-chat';
+import { mmkvInstances } from '../../../navigation/Routes';
 
 const Chat = ({ route }) => {
     const { user, messages, setMessages, sendMsg } = useContext(DataContext);
@@ -13,6 +14,8 @@ const Chat = ({ route }) => {
         }
     }
     const otherUID = route.params.otherUID
+    
+    console.log("Re-rendered", messages)
 
     return (
         <GiftedChat

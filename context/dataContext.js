@@ -58,10 +58,11 @@ const DataContextProvider = ({ children }) => {
 
     function sendMsg(message, otherUID) {
         const theMsg = message[0]
+        const sth = new Date()
         const msg = {
             _id: theMsg._id,
             text: theMsg.text,
-            createdAt: theMsg.createdAt.toString(),
+            createdAt: theMsg.createdAt.getTime() + sth.getTimezoneOffset() * 60000,
             user: {
                 _id: theMsg.user._id,
                 name: theMsg.user.name,
