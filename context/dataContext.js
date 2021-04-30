@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
 import Data from "../components/data/main.js"
 import auth from '@react-native-firebase/auth';
 import { database } from '../assets/config/firebase.js';
@@ -30,6 +30,7 @@ const DataContextProvider = ({ children }) => {
     const [welcomeShown, setWelcomeShown] = useState(false)
     const [messages, setMessages] = useState({})
     const [chats, setChats] = useState([])
+    const mmkvInstances = useRef({})
 
     //Most of the functions here except on_location, saved and for_info are used for auth state
     function signup(email, password) {
@@ -100,6 +101,7 @@ const DataContextProvider = ({ children }) => {
             welcomeShown,
             messages,
             chats,
+            mmkvInstances,
             setUser,
             signup,
             login,

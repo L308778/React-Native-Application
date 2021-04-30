@@ -8,29 +8,27 @@ import auth from '@react-native-firebase/auth';
 import { database } from '../assets/config/firebase.js';
 import MMKVStorage from 'react-native-mmkv-storage';
 
-const MSG_LOAD_LIMIT = 20
 let userLoaded = false
-
-export const mmkvInstances = {}
 
 const Routes = () => {
     const [initializing, setInitializing] = useState(true);
-    const { user, setUser, messages, setMessages, chats, setChats } = useContext(DataContext);
+    const { user, setUser, messages, setMessages, chats, setChats, mmkvInstances } = useContext(DataContext);
 
     // Handle user state changes
-    const onAuthStateChanged = (user) => {
+    const onAuthStateChanged = async (user) => {
         setUser(user);
-        if (user && !mmkvInstances.hasOwnProperty(user.uid)) {
+        if (user && !mmkvInstances.current.hasOwnProperty(user.uid)) {
             //If MMKV instance for user not present, create new instance
-            mmkvInstances[user.uid] = new MMKVStorage.Loader()
+            mmkvInstances.current[user.uid] = new MMKVStorage.Loader()
                 .withInstanceID(user.uid)
                 .withEncryption()
                 .initialize()
         }
         if (user) {
-            const msgs = mmkvInstances[user.uid].getMap("messages")
-            console.log(msgs)
+            const msgs = mmkvInstances.current[user.uid].getMap("messages")
             setMessages(msgs)
+            //mmkvInstances.current[user.uid].setMap("messages", {})
+            //setMessages({})
         }
         setInitializing(false)
     }
@@ -42,17 +40,17 @@ const Routes = () => {
 
     const subscribeToChat = (dbRef, element) => {
         dbRef.child(element).on("child_added", (message, lastID) => {
+            const newKey = message.key
             const newMsg = message.val()
             const sth = new Date()
             newMsg.createdAt = new Date(newMsg.createdAt) - sth.getTimezoneOffset() * 60000
+            newMsg.key = newKey
             setMessages(messages => {
-                if (lastID == newMsg._id) {
-                    return messages
-                } else {
-                    const copyMsg = Object.create(messages)
-                    copyMsg[element] ? copyMsg[element].push(newMsg) : copyMsg[element] = [newMsg]
-                    return copyMsg
+                if ((!messages[element] || (newKey > messages[element][messages[element].length - 1].key))) {
+                    messages[element] ? messages[element].push(newMsg) : messages[element] = [newMsg]
+                    if (userLoaded) mmkvInstances.current[user.uid].setMap("messages", messages)
                 }
+                return messages
             })
         })
     }
@@ -76,7 +74,6 @@ const Routes = () => {
 
     useEffect(() => {
         let dbRef = null
-        setMessages({})
         if (!user) {
             setChats([])
             setMessages({})

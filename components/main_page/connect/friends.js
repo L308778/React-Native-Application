@@ -4,14 +4,13 @@ import { Icon } from "react-native-elements";
 import { FlatList, TouchableOpacity, TextInput } from 'react-native-gesture-handler'
 import firestore from "@react-native-firebase/firestore"
 import { DataContext } from '../../../context/dataContext'
-import { mmkvInstances } from '../../../navigation/Routes';
 
 const friends = (props) => {
     const [friendList, setFriendList] = useState([])
     const [addUserList, setAddUserList] = useState([])
     const [searchUser, setSearchUser] = useState("")
     const [searchFriend, setSearchFriend] = useState("")
-    const { user, setUser } = useContext(DataContext)
+    const { user, setUser, mmkvInstances } = useContext(DataContext)
 
     const ItemSeparatorView = () => {
         return (
@@ -32,32 +31,32 @@ const friends = (props) => {
     }
 
     const updateFriendsInFirestore = (myNewFriends, friendUID, theirNewFriends) => {
-        firestore().collection('Users').doc(user.uid).update({ friends: myNewFriends.map(x => x._data.uid) })
+        firestore().collection('Users').doc(user.uid).update({ friends: myNewFriends.map(x => x.uid) })
         firestore().collection('Users').doc(friendUID).update({ friends: theirNewFriends })
     }
 
     const updateFriendsInStorage = (newFriends) => {
-        const mmkvInst = mmkvInstances[user.uid]
+        const mmkvInst = mmkvInstances.current[user.uid]
         if (mmkvInst) mmkvInst.setArray("friends", newFriends)
     }
 
     const changeFriendState = (friend) => {
-        if (friend._data.friends.includes(user.uid)) {
+        if (friend.friends.includes(user.uid)) {
             //Is already friend, remove
             const newList = [...friendList]
-            const index1 = newList.findIndex(x => x._data.uid === friend._data.uid)
+            const index1 = newList.findIndex(x => x.uid === friend.uid)
             if (index1 > -1) newList.splice(index1, 1)
             setFriendList(newList)
-            const index2 = friend._data.friends.findIndex(x => x === user.uid)
-            if (index2 > -1) friend._data.friends.splice(index2, 1)
-            updateFriendsInFirestore(newList, friend._data.uid, friend._data.friends)
+            const index2 = friend.friends.findIndex(x => x === user.uid)
+            if (index2 > -1) friend.friends.splice(index2, 1)
+            updateFriendsInFirestore(newList, friend.uid, friend.friends)
             updateFriendsInStorage(newList)
         } else {
             //Not friend yet, add
             const newList = [...friendList, friend]
             setFriendList(newList)
-            friend._data.friends.push(user.uid)
-            updateFriendsInFirestore(newList, friend._data.uid, friend._data.friends)
+            friend.friends.push(user.uid)
+            updateFriendsInFirestore(newList, friend.uid, friend.friends)
             updateFriendsInStorage(newList)
         }
     }
@@ -66,8 +65,8 @@ const friends = (props) => {
         return (
             <TouchableOpacity
                 style={styles.friendButton}
-                onPress={() => switchToChatScreen(item._data.uid)}>
-                <Text style={{ alignSelf: "center", fontSize: 25 }}>{item._data.name}</Text>
+                onPress={() => switchToChatScreen(item.uid)}>
+                <Text style={{ alignSelf: "center", fontSize: 25 }}>{item.name}</Text>
             </TouchableOpacity>
         )
     }
@@ -77,23 +76,26 @@ const friends = (props) => {
             <TouchableOpacity
                 style={{ ...styles.friendButton, flexDirection: "row" }}
                 onPress={() => changeFriendState(item)}>
-                <Text style={{ fontSize: 25, width: "80%", marginLeft: "5%" }}>{item._data.name}</Text>
-                <Icon name={item._data.friends.includes(user.uid) ? "person-add-disabled" : "person-add"} type="MaterialIcons" color="turquoise" size={40}
+                <Text style={{ fontSize: 25, width: "80%", marginLeft: "5%" }}>{item.name}</Text>
+                <Icon name={item.friends.includes(user.uid) ? "person-add-disabled" : "person-add"} type="MaterialIcons" color="turquoise" size={40}
                 />
             </TouchableOpacity>
         )
     }
 
     useEffect(() => {
-        const mmkvInst = mmkvInstances[user.uid]
-        if (mmkvInst) setFriendList(mmkvInst.getArray("friends"))
+        const mmkvInst = mmkvInstances.current[user.uid]
+        if (mmkvInst) {
+            setFriendList(mmkvInst.getArray("friends"))
+            console.log(mmkvInst.getArray("friends"))
+        }
 
         const getUsersFromFirestore = async () => {
             let users = await firestore()
                 .collection('Users')
                 .where("uid", "!=", user.uid)
                 .get()
-            setAddUserList(users._docs)
+            setAddUserList(users._docs.map(x => x._data))
         }
         getUsersFromFirestore()
 
@@ -102,8 +104,9 @@ const friends = (props) => {
                 .collection('Users')
                 .where("friends", "array-contains", user.uid)
                 .get()
-            setFriendList(friends._docs)
-            updateFriendsInStorage(friends._docs)
+            const friend = friends._docs.map(x => x._data)
+            setFriendList(friend)
+            updateFriendsInStorage(friend)
         }
         getFriendsFromFirestore()
     }, [])
@@ -118,9 +121,9 @@ const friends = (props) => {
             />
             <FlatList
                 style={styles.friendList}
-                data={searchUser ? addUserList.filter(x => x._data.name.toLowerCase().includes(searchUser)) : addUserList}
+                data={searchUser ? addUserList.filter(x => x.name.toLowerCase().includes(searchUser)) : addUserList}
                 ItemSeparatorComponent={ItemSeparatorView}
-                keyExtractor={(item) => String(item._data.uid)}
+                keyExtractor={(item) => String(item.uid)}
                 renderItem={({ item }) => renderAddFriend(item)}>
             </FlatList>
             <Text style={styles.chatWith}>Chat with:</Text>
@@ -131,9 +134,9 @@ const friends = (props) => {
             />
             <FlatList
                 style={styles.friendList}
-                data={searchFriend ? friendList.filter(x => x._data.name.toLowerCase().includes(searchFriend)) : friendList}
+                data={searchFriend ? friendList.filter(x => x.name.toLowerCase().includes(searchFriend)) : friendList}
                 ItemSeparatorComponent={ItemSeparatorView}
-                keyExtractor={(item) => String(item._data.uid)}
+                keyExtractor={(item) => String(item.uid)}
                 renderItem={({ item }) => renderName(item)}>
             </FlatList>
         </View>
