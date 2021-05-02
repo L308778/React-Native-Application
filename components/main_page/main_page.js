@@ -50,11 +50,6 @@ export default function Main(props) {
     props.navigation.navigate("activity_info");
   };
 
-  useEffect(() => {
-    //console.log(Activities)
-
-  }, [])
-
 
 
   return (

@@ -38,6 +38,9 @@ export default function Sign_Up(props) {
   const [single, setSingle] = useState("white");
   const [relation, setRelation] = useState("white");
   const [relationship, setRelationship] = useState("");
+  const [checker, setChecker] = useState("")
+  
+  const {currUser, setCurrUser} = useContext(DataContext)
 
   const {signup} = useContext(DataContext);
 
@@ -52,6 +55,15 @@ export default function Sign_Up(props) {
     }
   };
 
+  const getUserNames = async(name) => { 
+    let userNames = await firestore()
+      .collection('Users')
+      // Filter results
+      .where('name', '==', name)
+      .get()
+      setChecker(userNames._docs)
+  }
+
   const getRelation = (incom_relation) => {
     setRelationship(incom_relation);
     if (incom_relation == "single") {
@@ -65,28 +77,36 @@ export default function Sign_Up(props) {
 
 
   const addUser = async() => {
-        firestore()
-        .collection('Users')
-        .doc(auth().currentUser.uid)
-        .add({
-          name: name,
-          age: age,
-          gender: gender,
-          relationStatus: relationship,
-          uid: auth().currentUser.uid
-        })
-        .then(() => {
-          console.log('User added!');
-        });
+    uid = auth().currentUser.uid
+      await firestore()
+      .collection('Users')
+      .doc(uid)
+      .set({
+        name: name,
+        age: age,
+        gender: gender,
+        relationStatus: relationship,
+        uid: uid,
+        friends: []
+      })
+      .then(() => {
+        console.log('User added!');
+      });
   }
 
   const confirm_profile = async() => {
+    setChecker("")
+    getUserNames(name)
 
     if (!name || !gender || !age || !relationship){
         return setError("Please fill in all required fields");
     }
-    else{
 
+    else if (checker.length > 0){
+      return setError("Please use a different username")
+    }
+    
+    else{
         const update = {
             displayName: name,
           };
@@ -110,7 +130,7 @@ export default function Sign_Up(props) {
         </Text>
         <TextInput
           style={styles.inputs}
-          placeholder="Name"
+          placeholder="Username"
           defaultValue={name}
           onChangeText={(text) => setName(text)}
           value={name}

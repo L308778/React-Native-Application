@@ -15,6 +15,7 @@ import { DataContext } from "../../../context/dataContext";
 import Images from "../../images/image_loader.js";
 import { SearchBar } from "react-native-elements";
 import { useIsFocused} from '@react-navigation/native'; 
+import { Dimensions } from "react-native";
 
 /*
 This is our saved_screen. It is pretty messy. I am sorry for that. So we retrieve
@@ -25,6 +26,10 @@ Here we definitely have to fix some bugs, such as that sometimes the images are 
 Also you should not swipe through the whole cards twice, because then you have two children with
 the same key, which then messes with things.
 */
+
+SCREEN_WIDTH = Dimensions.get("window").width
+SCREEN_HEIGHT = Dimensions.get("window").height
+
 
 export default function Saved(props) {
   
@@ -155,6 +160,7 @@ export default function Saved(props) {
       />
     );
   };
+  if (displayData.length != 0){
   return (
     <SafeAreaView style={styles.container}>
       <SearchBar
@@ -178,7 +184,22 @@ export default function Saved(props) {
         <Text style={styles.confirmbuttontext}>RETURN TO TRIPPY</Text>
       </TouchableOpacity>
     </SafeAreaView>
-  );
+  );}
+  else{
+    return(
+      <SafeAreaView style={styles.container}>
+      <Text style={{color:"grey", flex:1, alignSelf:"center", top:SCREEN_WIDTH *0.5, fontSize:20}}>
+        No stored activites
+      </Text>
+      <TouchableOpacity
+        style={styles.confirmbutton}
+        onPress={() => props.navigation.navigate("main")}
+      >
+        <Text style={styles.confirmbuttontext}>RETURN TO TRIPPY</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+    )
+  }
 }
 
 const styles = StyleSheet.create({

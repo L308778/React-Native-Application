@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,6 +15,7 @@ import { TextInput } from "react-native-gesture-handler";
 import auth from "@react-native-firebase/auth";
 import { DataContext } from "../../context/dataContext.js";
 import { set } from "react-native-reanimated";
+import firestore from "@react-native-firebase/firestore"
 
 /*
 This is our email sign up page. We could also do something like

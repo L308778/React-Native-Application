@@ -17,7 +17,7 @@ SCREEN_WIDTH = Dimensions.get("window").width
 
 export default function Welcome(props) {
 
-    const {user, setUser} = useContext(DataContext)
+    const {user} = useContext(DataContext)
 
 
     useEffect(() => {
@@ -37,7 +37,7 @@ export default function Welcome(props) {
                     Welcome
             </Text>
                 <Text style={styles.name}>
-                    {user.displayName} :)
+                    {user.displayName}
             </Text>
             </View>
         </SafeAreaView>

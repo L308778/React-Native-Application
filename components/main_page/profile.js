@@ -20,6 +20,10 @@ import { Dimensions } from "react-native";
 /*
 This is our profile page and it is a bit rushed, because I think
 we can use a react native table or something for that.
+
+ToDo:
+
+You should only be able to see edit profile when you look at your own profile
 */
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -85,6 +89,11 @@ export default function Profile(props) {
           </View>
 
           <View style={styles.infoContainer}>
+          <TouchableOpacity style={{paddingBottom: 10}} onPress={() => props.navigation.navigate("edit")}>
+              <Text style={{color:"grey"}}>
+                Edit Profile
+              </Text>
+            </TouchableOpacity>
             <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
               {currUser.name}
             </Text>
