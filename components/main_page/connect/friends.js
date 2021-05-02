@@ -4,6 +4,7 @@ import { Icon } from "react-native-elements";
 import { FlatList, TouchableOpacity, TextInput } from 'react-native-gesture-handler'
 import firestore from "@react-native-firebase/firestore"
 import { DataContext } from '../../../context/dataContext'
+import Constants from "expo-constants";
 
 const friends = (props) => {
     const [friendList, setFriendList] = useState([])
@@ -94,7 +95,7 @@ const friends = (props) => {
                 .collection('Users')
                 .where("uid", "!=", user.uid)
                 .get()
-            setAddUserList(users._docs.map(x => x._data))
+            setAddUserList(users._docs.filter(x => x._data.friends).map(x => x._data))
         }
         getUsersFromFirestore()
 
@@ -150,6 +151,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         flexDirection: "column",
         backgroundColor: "white",
+        paddingTop: Constants.statusBarHeight
     },
     chatWith: {
         fontSize: 30,

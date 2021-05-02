@@ -272,6 +272,9 @@ PODS:
     - FirebaseAuth (~> 7.10.0)
   - Firebase/CoreOnly (7.10.0):
     - FirebaseCore (= 7.10.0)
+  - Firebase/Database (7.10.0):
+    - Firebase/CoreOnly
+    - FirebaseDatabase (~> 7.10.0)
   - Firebase/Firestore (7.10.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 7.10.0)
@@ -289,6 +292,9 @@ PODS:
     - GoogleUtilities/Environment (~> 7.0)
     - GoogleUtilities/Logger (~> 7.0)
     - nanopb (~> 2.30908.0)
+  - FirebaseDatabase (7.10.0):
+    - FirebaseCore (~> 7.0)
+    - leveldb-library (~> 1.22)
   - FirebaseFirestore (7.10.0):
     - abseil/algorithm (= 0.20200225.0)
     - abseil/base (= 0.20200225.0)
@@ -624,17 +630,21 @@ PODS:
   - RNFBApp (11.3.2):
     - Firebase/CoreOnly (= 7.10.0)
     - React-Core
-  - RNFBAuth (11.3.2):
+  - RNFBAuth (11.3.0):
     - Firebase/Auth (= 7.10.0)
     - React-Core
     - RNFBApp
-  - RNFBFirestore (11.3.2):
+  - RNFBDatabase (11.3.2):
+    - Firebase/Database (= 7.10.0)
+    - React-Core
+    - RNFBApp
+  - RNFBFirestore (11.3.3):
     - Firebase/Firestore (= 7.10.0)
     - React-Core
     - RNFBApp
   - RNGestureHandler (1.8.0):
     - React
-  - RNReanimated (1.13.2):
+  - RNReanimated (1.13.3):
     - React-Core
   - RNScreens (2.15.2):
     - React-Core
@@ -708,6 +718,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
+  - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -736,6 +747,7 @@ SPEC REPOS:
     - FirebaseAuth
     - FirebaseCore
     - FirebaseCoreDiagnostics
+    - FirebaseDatabase
     - FirebaseFirestore
     - Google-Maps-iOS-Utils
     - GoogleDataTransport
@@ -841,6 +853,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
     :path: "../node_modules/@react-native-firebase/auth"
+  RNFBDatabase:
+    :path: "../node_modules/@react-native-firebase/database"
   RNFBFirestore:
     :path: "../node_modules/@react-native-firebase/firestore"
   RNGestureHandler:
@@ -903,6 +917,7 @@ SPEC CHECKSUMS:
   FirebaseAuth: 675f2c4eb4426e7c58a78a89965a6530e7863535
   FirebaseCore: ec566d917b2195fc2610aeb148dae99f57a788f9
   FirebaseCoreDiagnostics: 68ad972f99206cef818230f3f3179d52ccfb7f8c
+  FirebaseDatabase: ed9c5fc2568e92a22a40cab1ccaf4e0e9e9c8ae6
   FirebaseFirestore: 0ce9dafe53565dbbd678986d6f0c05086334183b
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
@@ -942,10 +957,11 @@ SPEC CHECKSUMS:
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
   RNFBApp: f3f728097b3f8f51a4afcec01424534a3a6106af
-  RNFBAuth: c29586f2a7e6db860c699adc5fedf6a27fd84992
-  RNFBFirestore: 580c120d8e4c0ba3bac244d8a7977ea9664e0118
+  RNFBAuth: 84b4ce87f3d09aa9d0f4c64658871238e741ac1b
+  RNFBDatabase: aecbe077b88a76209df503f03b9891ce7161787e
+  RNFBFirestore: ba030add4e316ff3e7c80c0f2bddcf7570d3ebea
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
-  RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
+  RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926
   RNScreens: 3d682bcaba69a4f8e55543d90818704f34338db1
   UMAppLoader: 92d044af52626af3d81a69796ad666fc7a9a7d78
   UMBarCodeScannerInterface: 3f6c1b09ef4b867ce752b8c0b3893bcf9cd85f32

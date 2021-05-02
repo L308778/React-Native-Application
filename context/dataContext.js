@@ -32,6 +32,7 @@ const DataContextProvider = ({ children }) => {
     const [chats, setChats] = useState(new Set())
     const mmkvInstances = useRef({})
     const giftedChat = useRef(null)
+    const [currUser, setCurrUser] = useState({})
 
     //Most of the functions here except on_location, saved and for_info are used for auth state
     function signup(email, password) {
@@ -104,6 +105,8 @@ const DataContextProvider = ({ children }) => {
             chats,
             mmkvInstances,
             giftedChat,
+            currUser,
+            setCurrUser,
             setUser,
             signup,
             login,
