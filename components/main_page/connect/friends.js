@@ -87,7 +87,6 @@ const friends = (props) => {
         const mmkvInst = mmkvInstances.current[user.uid]
         if (mmkvInst) {
             setFriendList(mmkvInst.getArray("friends"))
-            console.log(mmkvInst.getArray("friends"))
         }
 
         const getUsersFromFirestore = async () => {
