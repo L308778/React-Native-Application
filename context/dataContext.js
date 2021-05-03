@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
 import Data from "../components/data/main.js"
 import auth from '@react-native-firebase/auth';
 import { database } from '../assets/config/firebase.js';
@@ -29,7 +29,9 @@ const DataContextProvider = ({ children }) => {
     const [user, setUser] = useState(false)
     const [welcomeShown, setWelcomeShown] = useState(false)
     const [messages, setMessages] = useState({})
-    const [chats, setChats] = useState([])
+    const [chats, setChats] = useState(new Set())
+    const mmkvInstances = useRef({})
+    const giftedChat = useRef(null)
     const [currUser, setCurrUser] = useState({})
 
     //Most of the functions here except on_location, saved and for_info are used for auth state
@@ -59,10 +61,11 @@ const DataContextProvider = ({ children }) => {
 
     function sendMsg(message, otherUID) {
         const theMsg = message[0]
+        const sth = new Date()
         const msg = {
             _id: theMsg._id,
             text: theMsg.text,
-            createdAt: theMsg.createdAt.toString(),
+            createdAt: theMsg.createdAt.getTime() + sth.getTimezoneOffset() * 60000,
             user: {
                 _id: theMsg.user._id,
                 name: theMsg.user.name,
@@ -100,6 +103,8 @@ const DataContextProvider = ({ children }) => {
             welcomeShown,
             messages,
             chats,
+            mmkvInstances,
+            giftedChat,
             currUser,
             setCurrUser,
             setUser,

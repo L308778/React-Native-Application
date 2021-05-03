@@ -4,7 +4,7 @@ import { DataContext } from "../../../context/dataContext.js";
 import { GiftedChat } from 'react-native-gifted-chat';
 
 const Chat = ({ route }) => {
-    const { user, messages, setMessages, sendMsg } = useContext(DataContext);
+    const { user, messages, sendMsg, giftedChat } = useContext(DataContext);
     const getUser = () => {
         return {
             name: user.displayName,
@@ -20,6 +20,7 @@ const Chat = ({ route }) => {
             onSend={(message) => sendMsg(message, otherUID)}
             user={getUser()}
             inverted={false}
+            ref={giftedChat}
         />
     )
 }
