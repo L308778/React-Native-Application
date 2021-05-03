@@ -36,6 +36,7 @@ export default function Profile(props) {
   const [relation, setRelation] = useState("");
 
   const { user, currUser, setCurrUser } = useContext(DataContext);
+  const [image, setImage] = useState(auth().currentUser.photoURL);
 
   const test_images = [
     require("../images/profile_9.jpeg"),
@@ -68,7 +69,7 @@ export default function Profile(props) {
           <View style={{ alignSelf: "center" }}>
             <View style={styles.profileImage}>
               <Image
-                source={require("../logo/profile.jpg")}
+                source={{uri:image}}
                 style={styles.image}
                 resizeMode="center"
               />

@@ -59,6 +59,17 @@ const DataContextProvider = ({ children }) => {
         return currentUser().updatePassword(password)
     }
 
+    async function setProfilePic (downloadURL){
+        const update = {
+          photoURL: downloadURL,
+        };
+        try {
+          await auth().currentUser.updateProfile(update);
+        } catch (e) {
+          Alert.alert("Failed to update user\n" + e);
+        }
+      };
+
     function sendMsg(message, otherUID) {
         const theMsg = message[0]
         const sth = new Date()
@@ -114,6 +125,7 @@ const DataContextProvider = ({ children }) => {
             resetPassword,
             updateEmail,
             updatePassword,
+            setProfilePic,
             sendMsg,
             setWelcomeShown,
             setMessages,

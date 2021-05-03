@@ -2293,6 +2293,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-11.3.3.tgz#f77e42221437158d4190b6fa5f24300916d59f21"
   integrity sha512-tuJJm3+SxuxDWdnyHpPE8b7aeFo8/V6mkgiaPcuZGipOuxUDqsQUNk9pMc9xynR81tD/wKVPLQ0NO9AgHZkuTw==
 
+"@react-native-firebase/storage@^11.4.1":
+  version "11.4.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/storage/-/storage-11.4.1.tgz#ae38602b59473564f11b6358d6e6b00bbc1dd757"
+  integrity sha512-unQ66/z7txJhIodR72xzYj9hc0oJM+XozS1NVqTRnbDpBUfUaTJXpXUJPjGdePzLP/zmtSAN1iLnSnFxYDy9rA==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets/-/assets-1.0.0.tgz#c6f9bf63d274bafc8e970628de24986b30a55c8e"
@@ -7827,10 +7832,10 @@ react-native-maps@^0.28.0:
   dependencies:
     "@types/geojson" "^7946.0.7"
 
-react-native-mmkv-storage@^0.5.6:
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/react-native-mmkv-storage/-/react-native-mmkv-storage-0.5.6.tgz#5effa546ec6cb720263be89e6fd6fa8016b92f0c"
-  integrity sha512-XqOU+8J0U1d17NAPUeJhUR6AOKsgQRBsmkeeboVO2oyfkjnfPhQ0JXCNL8qEFOpypS4CuDAfTGPrkKd4U+pe+Q==
+react-native-mmkv-storage@^0.5.7:
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/react-native-mmkv-storage/-/react-native-mmkv-storage-0.5.7.tgz#b3688fc0b9f895482b2bc64e5133a12eac0c5c78"
+  integrity sha512-gLI0UWcu4MyZ21zYhsXNYOCQ8lUNBE9isDSzSHnEI7JjVopvrNiOsSgPdFAmQEP6Z5RZUNZ/KxY7Deo+v+3Kyg==
 
 react-native-parsed-text@0.0.22:
   version "0.0.22"
@@ -8101,6 +8106,11 @@ readable-stream@~2.3.6:
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
+reanimated-bottom-sheet@^1.0.0-alpha.22:
+  version "1.0.0-alpha.22"
+  resolved "https://registry.yarnpkg.com/reanimated-bottom-sheet/-/reanimated-bottom-sheet-1.0.0-alpha.22.tgz#01a200946f1a461f01f1e773e5b4961c2df2e53b"
+  integrity sha512-NxecCn+2iA4YzkFuRK5/b86GHHS2OhZ9VRgiM4q18AC20YE/psRilqxzXCKBEvkOjP5AaAvY0yfE7EkEFBjTvw==
+
 recast@^0.20.3:
   version "0.20.4"
   resolved "https://registry.yarnpkg.com/recast/-/recast-0.20.4.tgz#db55983eac70c46b3fff96c8e467d65ffb4a7abc"
@@ -8117,11 +8127,6 @@ rechoir@^0.6.2:
   integrity sha1-hSBLVNuoLVdC4oyWdW70OvUOM4Q=
   dependencies:
     resolve "^1.1.6"
-
-reanimated-bottom-sheet@^1.0.0-alpha.22:
-  version "1.0.0-alpha.22"
-  resolved "https://registry.yarnpkg.com/reanimated-bottom-sheet/-/reanimated-bottom-sheet-1.0.0-alpha.22.tgz#01a200946f1a461f01f1e773e5b4961c2df2e53b"
-  integrity sha512-NxecCn+2iA4YzkFuRK5/b86GHHS2OhZ9VRgiM4q18AC20YE/psRilqxzXCKBEvkOjP5AaAvY0yfE7EkEFBjTvw==
 
 "recompose@0.27.1 - 0.30.0":
   version "0.30.0"
