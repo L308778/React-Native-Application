@@ -6,18 +6,37 @@ import { NavigationContainer } from "@react-navigation/native";
 import { DataContext } from "../context/dataContext.js";
 import auth from '@react-native-firebase/auth';
 import { database } from '../assets/config/firebase.js';
+import MMKVStorage from 'react-native-mmkv-storage';
+import NetInfo from '@react-native-community/netinfo';
 
-const MSG_LOAD_LIMIT = 20
-let userLoaded = false
+let internetReachable = false
+let currentlySubscribedUser = false
 
 const Routes = () => {
     const [initializing, setInitializing] = useState(true);
-    const { user, setUser, messages, setMessages, chats, setChats } = useContext(DataContext);
+    const { user, setUser, messages, setMessages, chats, setChats, mmkvInstances, giftedChat } = useContext(DataContext);
 
     // Handle user state changes
-    const onAuthStateChanged = (user) => {
+    const onAuthStateChanged = async (user) => {
         setUser(user);
+        if (user && !mmkvInstances.current.hasOwnProperty(user.uid)) {
+            //If MMKV instance for user not present, create new instance
+            mmkvInstances.current[user.uid] = new MMKVStorage.Loader()
+                .withInstanceID(user.uid)
+                .withEncryption()
+                .initialize()
+        }
+        if (user) {
+            let msgs = mmkvInstances.current[user.uid].getMap("messages")
+            if (!msgs) msgs = {}
+            setMessages(msgs)
+            //mmkvInstances.current[user.uid].setMap("messages", {})
+            //setMessages({})
+        }
         setInitializing(false)
+
+        //console.log("Auth state changed", user)
+        setChatListeners(user, "auth")
     }
 
     useEffect(() => {
@@ -25,27 +44,31 @@ const Routes = () => {
         return subscriber; // unsubscribe on unmount
     }, []);
 
-    const subscribeToChat = (dbRef, element) => {
-        dbRef.child(element).limitToLast(MSG_LOAD_LIMIT).on("child_added", (message, lastID) => {
+    const subscribeToChat = (dbRef, element, user) => {
+        dbRef.child(element).on("child_added", async (message) => {
+            const newKey = message.key
             const newMsg = message.val()
-            newMsg.createdAt = Date.parse(newMsg.createdAt)
-            setMessages(messages => {
-                if (lastID == newMsg._id) {
-                    return messages
-                } else {
-                    const copyMsg = Object.create(messages)
-                    copyMsg[element] ? copyMsg[element].push(newMsg) : copyMsg[element] = [newMsg]
-                    return copyMsg
+            const sth = new Date()
+            newMsg.createdAt = new Date(newMsg.createdAt) - sth.getTimezoneOffset() * 60000
+            newMsg.key = newKey
+            let newMsgReceived = false
+            await setMessages(messages => {
+                if ((!messages[element] || (newKey > messages[element][messages[element].length - 1].key))) {
+                    messages[element] ? messages[element].push(newMsg) : messages[element] = [newMsg]
+                    mmkvInstances.current[user.uid].setMap("messages", messages)
+                    newMsgReceived = true
                 }
+                return messages
             })
+            if (newMsgReceived && giftedChat) giftedChat.current.scrollToBottom()
         })
     }
 
-    const subscribeToAllChats = async (dbRef, chats) => {
+    const subscribeToAllChats = async (dbRef, chats, user) => {
         //console.log(chats)
         chats.forEach(element => {
-            console.log("Initial subscribe to", element)
-            subscribeToChat(dbRef, element)
+            //console.log("Initial subscribe to", element)
+            subscribeToChat(dbRef, element, user)
         });
     }
 
@@ -53,51 +76,91 @@ const Routes = () => {
         if (!dbRef) return
         chats.forEach(element => {
             dbRef.child(element).off("child_added")
-            console.log("Unsubscribed from", element)
+            //console.log("Unsubscribed from", element)
         });
-        setChats([])
+        setChats(new Set())
     }
 
-    useEffect(() => {
-        let dbRef = null
-        setMessages({})
-        if (!user) {
-            setChats([])
-            setMessages({})
-            userLoaded = false
-        } else {
-            if (!userLoaded) {
-                dbRef = database.ref("/messaging/" + user.uid)
+    const setChatListeners = (user) => {
+        //console.log("Subscribe to chat for", user, currentlySubscribedUser)
+        if ((user !== currentlySubscribedUser && (!user || !currentlySubscribedUser)) || user.uid !== currentlySubscribedUser.uid) {
+            if (!user) {
+                setChats(new Set())
+                setMessages({})
+            }
+
+            if (currentlySubscribedUser) {
+                //console.log("Unsubscribed from current user", currentlySubscribedUser)
+                unsetChatListeners(currentlySubscribedUser)
+            }
+
+            if (user) {
+                let dbRef = database.ref("/messaging/" + user.uid)
                 dbRef.once("value", async (snapshot) => {
-                    const newChats = snapshot.exists() ? Object.keys(snapshot.val()) : []
+                    const newChats = new Set(snapshot.exists() ? Object.keys(snapshot.val()) : [])
                     setChats(newChats)
-                    await subscribeToAllChats(dbRef, newChats)
+                    await subscribeToAllChats(dbRef, newChats, user)
 
                     dbRef.on("child_added", newUser => {
                         setChats(chats => {
-                            console.log("Chats is", chats)
-                            const needsUpdate = !chats.includes(newUser.key)
-                            const newChats = !needsUpdate ? chats : [...chats, newUser.key]
+                            //console.log("Chats is", chats)
+                            const needsUpdate = !chats.has(newUser.key)
+                            const newChats = !needsUpdate ? chats : new Set([...chats, newUser.key])
                             if (needsUpdate) {
                                 subscribeToChat(dbRef, newUser.key)
-                                console.log("Incremental subscribe to", newUser.key)
+                                //console.log("Incremental subscribe to", newUser.key)
                             }
                             return newChats
                         })
                     })
                 })
-                userLoaded = true
+                currentlySubscribedUser = user
             }
         }
+    }
+
+    const unsetChatListeners = (user) => {
+        //console.log("Unsubscribe from chat for", user)
+        if (user) {
+            let dbRef = database.ref("/messaging/" + user.uid)
+            //console.log("Unsubscribed from child add")
+            dbRef.off("child_added")
+            unsubscribeFromAllChats(dbRef)
+            currentlySubscribedUser = false
+        }
+    }
+
+    useEffect(() => {
+        const unsubscribeNetInfo = NetInfo.addEventListener(state => {
+            if (state.isInternetReachable !== internetReachable) {
+                //Network state changed, set (or unset) listeners
+                internetReachable = state.isInternetReachable
+                //console.log("Network state changed", internetReachable)
+                let times = 0 //I have no idea why this is running twice, so I'll just use a counter to keep track
+                setUser(user => {
+                    times += 1
+                    //console.log("Network ran!", times)
+                    if (times <= 1) {
+                        if (internetReachable) {
+                            setChatListeners(user, "network")
+                        } else {
+                            unsetChatListeners(user)
+                        }
+                    }
+                    return user
+                })
+            }
+        });
 
         return () => {
-            if (dbRef) {
-                console.log("Unsubscribed from child add")
-                dbRef.off("child_added")
-                unsubscribeFromAllChats(dbRef)
-            }
+            unsubscribeNetInfo()
+            setUser(user => {
+                //console.log("Unsubscribe from useEffect")
+                unsetChatListeners(user)
+                return user
+            })
         }
-    }, [user]);
+    }, [])
 
     if (initializing) {
         return (
