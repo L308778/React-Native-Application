@@ -1,17 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Image } from 'react-native'
 import { Icon } from "react-native-elements";
 import { FlatList, TouchableOpacity, TextInput } from 'react-native-gesture-handler'
 import firestore from "@react-native-firebase/firestore"
 import { DataContext } from '../../../context/dataContext'
 import Constants from "expo-constants";
 
-const friends = (props) => {
+const friends = ({ navigation }) => {
     const [friendList, setFriendList] = useState([])
-    const [addUserList, setAddUserList] = useState([])
-    const [searchUser, setSearchUser] = useState("")
     const [searchFriend, setSearchFriend] = useState("")
-    const { user, setUser, mmkvInstances } = useContext(DataContext)
+    const { user, mmkvInstances } = useContext(DataContext)
 
     const ItemSeparatorView = () => {
         return (
@@ -28,12 +26,7 @@ const friends = (props) => {
     };
 
     const switchToChatScreen = (friendUID) => {
-        props.navigation.navigate("chat", { otherUID: friendUID })
-    }
-
-    const updateFriendsInFirestore = (myNewFriends, friendUID, theirNewFriends) => {
-        firestore().collection('Users').doc(user.uid).update({ friends: myNewFriends.map(x => x.uid) })
-        firestore().collection('Users').doc(friendUID).update({ friends: theirNewFriends })
+        navigation.navigate("chat", { otherUID: friendUID })
     }
 
     const updateFriendsInStorage = (newFriends) => {
@@ -41,46 +34,34 @@ const friends = (props) => {
         if (mmkvInst) mmkvInst.setArray("friends", newFriends)
     }
 
-    const changeFriendState = (friend) => {
-        if (friend.friends.includes(user.uid)) {
-            //Is already friend, remove
-            const newList = [...friendList]
-            const index1 = newList.findIndex(x => x.uid === friend.uid)
-            if (index1 > -1) newList.splice(index1, 1)
-            setFriendList(newList)
-            const index2 = friend.friends.findIndex(x => x === user.uid)
-            if (index2 > -1) friend.friends.splice(index2, 1)
-            updateFriendsInFirestore(newList, friend.uid, friend.friends)
-            updateFriendsInStorage(newList)
-        } else {
-            //Not friend yet, add
-            const newList = [...friendList, friend]
-            setFriendList(newList)
-            friend.friends.push(user.uid)
-            updateFriendsInFirestore(newList, friend.uid, friend.friends)
-            updateFriendsInStorage(newList)
-        }
-    }
-
     const renderName = (item) => {
         return (
-            <TouchableOpacity
-                style={styles.friendButton}
-                onPress={() => switchToChatScreen(item.uid)}>
-                <Text style={{ alignSelf: "center", fontSize: 25 }}>{item.name}</Text>
-            </TouchableOpacity>
-        )
-    }
-
-    const renderAddFriend = (item) => {
-        return (
-            <TouchableOpacity
-                style={{ ...styles.friendButton, flexDirection: "row" }}
-                onPress={() => changeFriendState(item)}>
-                <Text style={{ fontSize: 25, width: "80%", marginLeft: "5%" }}>{item.name}</Text>
-                <Icon name={item.friends.includes(user.uid) ? "person-add-disabled" : "person-add"} type="MaterialIcons" color="turquoise" size={40}
-                />
-            </TouchableOpacity>
+            <View style={styles.friendButton}>
+                <View style={styles.profileImageContainer}>
+                    <Image
+                        style={styles.profileImage}
+                        source={require("../../logo/profile.jpg")}
+                        resizeMode="center"
+                    >
+                    </Image>
+                </View>
+                <View style={ styles.friendName }>
+                    <TouchableOpacity style={{  }}>
+                        <Text style={{ fontSize: 25 }}>{item.name}</Text>
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                    onPress={() => switchToChatScreen(item.uid)}
+                    style={styles.chatButton}
+                >
+                    <Text style={{ fontSize: 20, padding: 5 }}>Chat</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.matchedButton}
+                >
+                    <Text style={{ fontSize: 20, padding: 5 }}>3</Text>
+                </TouchableOpacity>
+            </View>
         )
     }
 
@@ -89,15 +70,6 @@ const friends = (props) => {
         if (mmkvInst) {
             setFriendList(mmkvInst.getArray("friends"))
         }
-
-        const getUsersFromFirestore = async () => {
-            let users = await firestore()
-                .collection('Users')
-                .where("uid", "!=", user.uid)
-                .get()
-            setAddUserList(users._docs.filter(x => x._data.friends).map(x => x._data))
-        }
-        getUsersFromFirestore()
 
         const getFriendsFromFirestore = async () => {
             let friends = await firestore()
@@ -113,23 +85,17 @@ const friends = (props) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.chatWith}>Add friends:</Text>
+            <View style={styles.connectWithContainer}>
+                <Text style={styles.connectWith}>       Connect with</Text>
+                <TouchableOpacity 
+                onPress={() => navigation.navigate("addFriend")}
+                style={{ marginLeft: "10%" }}>
+                    <Icon name={"person-add"} type="MaterialIcons" color="black" size={40}></Icon>
+                </TouchableOpacity>
+            </View>
             <TextInput
                 style={styles.search}
-                placeholder="Search name..."
-                onChangeText={(text) => setSearchUser(text.toLowerCase())}
-            />
-            <FlatList
-                style={styles.friendList}
-                data={searchUser ? addUserList.filter(x => x.name.toLowerCase().includes(searchUser)) : addUserList}
-                ItemSeparatorComponent={ItemSeparatorView}
-                keyExtractor={(item) => String(item.uid)}
-                renderItem={({ item }) => renderAddFriend(item)}>
-            </FlatList>
-            <Text style={styles.chatWith}>Chat with:</Text>
-            <TextInput
-                style={styles.search}
-                placeholder="Search friend..."
+                placeholder="Search friends..."
                 onChangeText={(text) => setSearchFriend(text.toLowerCase())}
             />
             <FlatList
@@ -153,9 +119,13 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         paddingTop: Constants.statusBarHeight
     },
-    chatWith: {
-        fontSize: 30,
+    connectWithContainer: {
+        flexDirection: "row",
         marginTop: 10
+    },
+    connectWith: {
+        fontSize: 30,
+        width: "80%"
     },
     friendList: {
         flex: 1,
@@ -164,9 +134,10 @@ const styles = StyleSheet.create({
     },
     friendButton: {
         paddingVertical: 15,
+        flexDirection: "row"
     },
     search: {
-        fontSize: 25,
+        fontSize: 20,
         padding: 10,
         backgroundColor: "white",
         color: "turquoise",
@@ -176,4 +147,35 @@ const styles = StyleSheet.create({
         width: "70%",
         borderRadius: 20
     },
+    profileImageContainer: {
+        flex: 3,
+        marginLeft: 15
+    },
+    profileImage: {
+        flex: 1,
+        borderRadius: 100,
+        height: undefined,
+        width: undefined
+    },
+    chatButton: {
+        flex: 3,
+        borderRadius: 5,
+        color: "turquoise",
+        backgroundColor: "turquoise",
+        marginLeft: 10,
+        alignItems: "center"
+    },
+    matchedButton: {
+        flex: 1,
+        borderRadius: 5,
+        color: "yellow",
+        backgroundColor: "yellow",
+        marginLeft: 15,
+        marginRight: 20
+    },
+    friendName: {
+        flex: 20,
+        justifyContent: "center",
+        marginLeft: 15
+    }
 })
