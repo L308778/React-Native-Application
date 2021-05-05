@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Image } from 'react-native'
 import { Icon } from "react-native-elements";
 import { FlatList, TouchableOpacity, TextInput } from 'react-native-gesture-handler'
 import firestore from "@react-native-firebase/firestore"
 import { DataContext } from '../../../context/dataContext'
 import Constants from "expo-constants";
 
-const addFriends = () => {
+const addFriends = ({ navigation }) => {
     const [friendList, setFriendList] = useState([])
     const [addUserList, setAddUserList] = useState([])
     const [searchUser, setSearchUser] = useState("")
-    const { user, mmkvInstances } = useContext(DataContext)
+    const { user, mmkvInstances, setCurrUser } = useContext(DataContext)
 
     const ItemSeparatorView = () => {
         return (
@@ -59,13 +59,37 @@ const addFriends = () => {
 
     const renderAddFriend = (item) => {
         return (
-            <TouchableOpacity
-                style={{ ...styles.friendButton, flexDirection: "row" }}
-                onPress={() => changeFriendState(item)}>
-                <Text style={{ fontSize: 25, width: "80%", marginLeft: "5%" }}>{item.name}</Text>
-                <Icon name={item.friends.includes(user.uid) ? "person-add-disabled" : "person-add"} type="MaterialIcons" color="turquoise" size={40}
-                />
-            </TouchableOpacity>
+            <View style={styles.friendButton}>
+                <View style={styles.profileImageContainer}>
+                    <Image
+                        style={styles.profileImage}
+                        source={require("../../logo/profile.jpg")}
+                        resizeMode="center"
+                    >
+                    </Image>
+                </View>
+                <View style={styles.userName}>
+                    <TouchableOpacity
+                        onPress={async () => {
+                            if (!item.uid) return
+                            let doc = await firestore()
+                                .collection("Users")
+                                .doc(item.uid)
+                                .get()
+                            setCurrUser(doc.data())
+                            navigation.navigate('profile', { userID: item.uid })
+                        }}
+                    >
+                        <Text style={{ fontSize: 25, width: "80%", marginLeft: "5%" }}>{item.name}</Text>
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                    style={styles.addFriendButton}
+                    onPress={() => { changeFriendState(item) }}
+                >
+                    <Icon name={item.friends.includes(user.uid) ? "person-add-disabled" : "person-add"} type="MaterialIcons" color="turquoise" size={40} />
+                </TouchableOpacity>
+            </View>
         )
     }
 
@@ -131,21 +155,40 @@ const styles = StyleSheet.create({
     },
     friendList: {
         flex: 1,
-        width: "100%",
-        height: "45%"
+        width: "100%"
     },
     friendButton: {
         paddingVertical: 15,
+        flexDirection: "row"
     },
     search: {
-        fontSize: 25,
+        fontSize: 20,
         padding: 10,
         backgroundColor: "white",
         color: "turquoise",
         borderColor: "turquoise",
         margin: 15,
         borderWidth: 2,
-        width: "70%",
+        width: "90%",
         borderRadius: 20
+    },
+    profileImageContainer: {
+        flex: 3,
+        marginLeft: 15
+    },
+    profileImage: {
+        flex: 1,
+        borderRadius: 100,
+        height: undefined,
+        width: undefined
+    },
+    userName: {
+        flex: 20,
+        justifyContent: "center",
+        marginLeft: 15
+    },
+    addFriendButton: {
+        flex: 3,
+        marginRight: 20
     }
 })

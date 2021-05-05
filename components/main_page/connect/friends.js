@@ -9,7 +9,7 @@ import Constants from "expo-constants";
 const friends = ({ navigation }) => {
     const [friendList, setFriendList] = useState([])
     const [searchFriend, setSearchFriend] = useState("")
-    const { user, mmkvInstances } = useContext(DataContext)
+    const { user, mmkvInstances, setCurrUser } = useContext(DataContext)
 
     const ItemSeparatorView = () => {
         return (
@@ -45,8 +45,18 @@ const friends = ({ navigation }) => {
                     >
                     </Image>
                 </View>
-                <View style={ styles.friendName }>
-                    <TouchableOpacity style={{  }}>
+                <View style={styles.friendName}>
+                    <TouchableOpacity
+                        onPress={async () => {
+                            if (!item.uid) return
+                            let doc = await firestore()
+                                .collection("Users")
+                                .doc(item.uid)
+                                .get()
+                            setCurrUser(doc.data())
+                            navigation.navigate('profile', { userID: item.uid })
+                        }}
+                    >
                         <Text style={{ fontSize: 25 }}>{item.name}</Text>
                     </TouchableOpacity>
                 </View>
@@ -66,30 +76,35 @@ const friends = ({ navigation }) => {
     }
 
     useEffect(() => {
-        const mmkvInst = mmkvInstances.current[user.uid]
-        if (mmkvInst) {
-            setFriendList(mmkvInst.getArray("friends"))
-        }
+        const focusListener = navigation.addListener('focus', () => {
+            const mmkvInst = mmkvInstances.current[user.uid]
+            if (mmkvInst) {
+                setFriendList(mmkvInst.getArray("friends"))
+            }
 
-        const getFriendsFromFirestore = async () => {
-            let friends = await firestore()
-                .collection('Users')
-                .where("friends", "array-contains", user.uid)
-                .get()
-            const friend = friends._docs.map(x => x._data)
-            setFriendList(friend)
-            updateFriendsInStorage(friend)
-        }
-        getFriendsFromFirestore()
-    }, [])
+            const getFriendsFromFirestore = async () => {
+                let friends = await firestore()
+                    .collection('Users')
+                    .where("friends", "array-contains", user.uid)
+                    .get()
+                const friend = friends._docs.map(x => x._data)
+                setFriendList(friend)
+                updateFriendsInStorage(friend)
+            }
+            getFriendsFromFirestore()
+        })
+
+        return focusListener
+    }, [navigation])
 
     return (
         <View style={styles.container}>
             <View style={styles.connectWithContainer}>
-                <Text style={styles.connectWith}>       Connect with</Text>
-                <TouchableOpacity 
-                onPress={() => navigation.navigate("addFriend")}
-                style={{ marginLeft: "10%" }}>
+                <Text style={styles.connectWith}>Connect with</Text>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("addFriend")}
+                    style={{ flex: 1, marginRight: "8%", marginTop: "2%" }}
+                >
                     <Icon name={"person-add"} type="MaterialIcons" color="black" size={40}></Icon>
                 </TouchableOpacity>
             </View>
@@ -124,13 +139,14 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     connectWith: {
+        flex: 1,
         fontSize: 30,
-        width: "80%"
+        width: "90%",
+        marginLeft: "5%"
     },
     friendList: {
         flex: 1,
-        width: "100%",
-        height: "45%"
+        width: "100%"
     },
     friendButton: {
         paddingVertical: 15,
@@ -144,7 +160,7 @@ const styles = StyleSheet.create({
         borderColor: "turquoise",
         margin: 15,
         borderWidth: 2,
-        width: "70%",
+        width: "90%",
         borderRadius: 20
     },
     profileImageContainer: {
@@ -162,8 +178,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         color: "turquoise",
         backgroundColor: "turquoise",
-        marginLeft: 10,
-        alignItems: "center"
+        marginLeft: 10
     },
     matchedButton: {
         flex: 1,
