@@ -60,7 +60,7 @@ const Routes = () => {
                 }
                 return messages
             })
-            if (newMsgReceived && giftedChat) giftedChat.current.scrollToBottom()
+            if (newMsgReceived && giftedChat.current) giftedChat.current.scrollToBottom()
         })
     }
 

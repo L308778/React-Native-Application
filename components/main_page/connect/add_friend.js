@@ -77,7 +77,7 @@ const addFriends = ({ navigation }) => {
                                 .doc(item.uid)
                                 .get()
                             setCurrUser(doc.data())
-                            navigation.navigate('profile', { userID: item.uid })
+                            navigation.navigate('profile')
                         }}
                     >
                         <Text style={{ fontSize: 25, width: "80%", marginLeft: "5%" }}>{item.name}</Text>

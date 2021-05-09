@@ -54,7 +54,7 @@ const friends = ({ navigation }) => {
                                 .doc(item.uid)
                                 .get()
                             setCurrUser(doc.data())
-                            navigation.navigate('profile', { userID: item.uid })
+                            navigation.navigate('profile')
                         }}
                     >
                         <Text style={{ fontSize: 25 }}>{item.name}</Text>
