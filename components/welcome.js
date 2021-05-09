@@ -21,6 +21,7 @@ export default function Welcome(props) {
 
 
     useEffect(() => {
+        console.log(user)
         setTimeout(() => {
             // Add your logic for the transition
             props.navigation.navigate("location")

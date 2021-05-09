@@ -9,6 +9,7 @@ import {
   ScrollView,
   FlatList,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
@@ -19,10 +20,11 @@ import { DataContext } from "../../context/dataContext";
 import { Dimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-import ImagePicker from 'react-native-image-picker'
+
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
-import { BottomSheet } from 'react-native-elements'
+import { BottomSheet } from "react-native-elements";
+import storage from "@react-native-firebase/storage";
 
 /*
 This is our profile page and it is a bit rushed, because I think
@@ -33,124 +35,153 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export default function EditProfile(props) {
-  const [filePath, setFilePath] = useState({});
+  const { user, currUser, setCurrUser } = useContext(DataContext);
+
+  const [isVisible, setVisible] = useState(false);
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [relation, setRelation] = useState("");
+  const [gender, setGender] = useState("");
+  const [opacity, setOpacity] = useState(1);
+  const [image, setImage] = useState(auth().currentUser.photoURL);
+  const [uploading, setUploading] = useState(false);
+  const [downloadURL, setDownloadURL] = useState("")
+  const [uploadTaskSnapshot, setUploadTaskSnapshot] = useState({});
 
   const renderInner = () => {
     return (
-    <View style={styles.panel}>
-      <View style={{ alignItems: "center" }}>
-        <Text style={styles.panelTitle}>Upload Photo</Text>
-        <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+      <View style={styles.panel}>
+        {uploading && (
+          <View style={styles.uploading}>
+            <ActivityIndicator size={60} color="#47477b"></ActivityIndicator>
+            <Text style={styles.statusText}>Uploading</Text>
+            <Text style={styles.statusText}>
+              {`${(
+                (uploadTaskSnapshot.bytesTransferred /
+                  uploadTaskSnapshot.totalBytes) *
+                100
+              ).toFixed(2)}% / 100%`}
+            </Text>
+          </View>
+        )}
+        <View style={{ alignItems: "center" }}>
+          <Text style={styles.panelTitle}>Upload Photo</Text>
+          <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+        </View>
+        <TouchableOpacity
+          style={styles.panelButton1}
+          onPress={() => onTakePhoto()}
+        >
+          <Text style={styles.panelButtonTitle}>Take Photo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.panelButton2}
+          onPress={() => onTakeVideo()}
+        >
+          <Text style={styles.panelButtonTitle}>Take Video</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.panelButton2}
+          onPress={() => onSelectImagePress()}
+        >
+          <Text style={styles.panelButtonTitle}>Choose Photo From Library</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.panelButton2}
+          onPress={() => onSelectVideoPress()}
+        >
+          <Text style={styles.panelButtonTitle}>Choose Video From Library</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.panelButton3}
+          onPress={() => photoPopup(false, 1)}
+        >
+          <Text style={styles.panelButtonTitle}>Cancel</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.panelButton1} onPress={() => cameraLaunch()}>
-        <Text style={styles.panelButtonTitle}>Take Photo</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.panelButton2} onPress={() => {}}>
-        <Text style={styles.panelButtonTitle}>Choose From Library</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.panelButton3} onPress={() => photoPopup(false, 1)}>
-        <Text style={styles.panelButtonTitle}>Cancel</Text>
-      </TouchableOpacity>
-    </View>
-  )};
-
-  const { user, currUser, setCurrUser } = useContext(DataContext);
-
-  const [isVisible, setVisible] = useState(false)
-  const [name, setName] = useState("")
-  const [age, setAge] = useState("")
-  const [relation, setRelation] = useState("")
-  const [gender, setGender] = useState("")
-  const [opacity, setOpacity] = useState(1)
-  const [file, setFile] = useState("")
+    );
+  };
 
   const photoPopup = (bool, opacity) => {
-    setOpacity(opacity)
-    setVisible(bool)
-  }
-  const addUser = async() => {
-    uid = auth().currentUser.uid
-      await firestore()
-      .collection('Users')
+    setOpacity(opacity);
+    setVisible(bool);
+  };
+  const addUser = async () => {
+    uid = auth().currentUser.uid;
+    await firestore()
+      .collection("Users")
       .doc(uid)
       .set({
         name: name,
         age: age,
         relationStatus: relation,
-        gender: gender
-
+        gender: gender,
       })
       .then(() => {
-        console.log('User added!');
+        console.log("User added!");
       });
-  }
+  };
 
-  cameraLaunch = () => {
-    let options = {
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    launchCamera(options, (res) => {
-      console.log('Response = ', res);
-
-      if (res.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (res.error) {
-        console.log('ImagePicker Error: ', res.error);
-      } else if (res.customButton) {
-        console.log('User tapped custom button: ', res.customButton);
-        alert(res.customButton);
-      } else {
-        const source = { uri: res.uri };
-        console.log('response', JSON.stringify(res));
-        setFile({
-          filePath: res,
-          fileData: res.data,
-          fileUri: res.uri
-        });
-      }
-    });
-}
-
-  const updateUser = async() => {
-    addUser()
+  const updateUser = async () => {
+    addUser();
     setCurrUser({
-      name:name,
-      age:age,
-      relationStatus:relation,
-      gender:gender
-    })
+      name: name,
+      age: age,
+      relationStatus: relation,
+      gender: gender,
+    });
     const update = {
       displayName: name,
     };
-    try{
-        await auth().currentUser.updateProfile(update);
-    }catch (e) {
-        Alert.alert("Failed to update user\n" + e);
+    try {
+      await auth().currentUser.updateProfile(update);
+    } catch (e) {
+      Alert.alert("Failed to update user\n" + e);
     }
-    props.navigation.navigate("profile")
-  }
+    props.navigation.navigate("profile");
+  };
+
+  const onMediaSelect = async (media) => {
+    setUploading(false)
+    if (!media.didCancel) {
+      setUploading(true);
+      const reference = storage().ref(media.fileName);
+      const task = reference.putFile(media.uri);
+      task.on('state_changed', (taskSnapshot) => {
+        setUploadTaskSnapshot(taskSnapshot);
+      });
+      console.log(uploadTaskSnapshot)
+      task.then(async () => {
+        const downloadURL = await reference.getDownloadURL();
+        setDownloadURL(downloadURL);
+        setUploading(false);
+        setUploadTaskSnapshot({});
+        auth().currentUser.updateProfile({ photoURL: downloadURL })
+        setImage(auth().currentUser.photoURL)
+      });
+    }
+  };
+
+  const onTakePhoto = () => launchCamera({ mediaType: "image" }, onMediaSelect);
+
+  const onTakeVideo = () => launchCamera({ mediaType: "video" }, onMediaSelect);
+
+  const onSelectImagePress = () =>
+    launchImageLibrary({ mediaType: "image" }, onMediaSelect);
+
+  const onSelectVideoPress = () =>
+    launchImageLibrary({ mediaType: "video" }, onMediaSelect);
 
   return (
-    <SafeAreaView style={[styles.container,{opacity: opacity}]}>
-      <ScrollView style={{flexGrow:1}}>
-        <BottomSheet
-        isVisible={isVisible}>
-          {renderInner()}
-        </BottomSheet>
-          <TouchableOpacity onPress={() => photoPopup(true, 0.1)}>
-              <Image
-                source={require("../images/profile_1.jpeg")}
-                style={styles.image}
-              />
-          </TouchableOpacity>
+    <SafeAreaView style={[styles.container, { opacity: opacity }]}>
+      <ScrollView style={{ flexGrow: 1 }}>
+        <BottomSheet isVisible={isVisible}>{renderInner()}</BottomSheet>
+        <TouchableOpacity onPress={() => photoPopup(true, 0.1)}>
+          <Image source={{uri:image}} style={styles.image} />
+        </TouchableOpacity>
 
         <View style={styles.action}>
-          <Text style={styles.headerText}>
-            Username
-          </Text>
+          <Text style={styles.headerText}>Username</Text>
           <TextInput
             placeholder={currUser.name}
             placeholderTextColor="#666666"
@@ -160,9 +191,7 @@ export default function EditProfile(props) {
           />
         </View>
         <View style={styles.action}>
-          <Text style={styles.headerText}>
-            Age
-          </Text>
+          <Text style={styles.headerText}>Age</Text>
           <TextInput
             placeholder={currUser.age}
             placeholderTextColor="#666666"
@@ -172,9 +201,7 @@ export default function EditProfile(props) {
           />
         </View>
         <View style={styles.action}>
-          <Text style={styles.headerText}>
-            Gender
-          </Text>
+          <Text style={styles.headerText}>Gender</Text>
           <TextInput
             placeholder={currUser.gender}
             placeholderTextColor="#666666"
@@ -184,9 +211,7 @@ export default function EditProfile(props) {
           />
         </View>
         <View style={styles.action}>
-          <Text style={styles.headerText}>
-            Love Status
-          </Text>
+          <Text style={styles.headerText}>Love Status</Text>
           <TextInput
             placeholder={currUser.relationStatus}
             placeholderTextColor="#666666"
@@ -195,15 +220,29 @@ export default function EditProfile(props) {
             onChangeText={(text) => setRelation(text)}
           />
         </View>
-        <View style={{flexDirection:"row", width: SCREEN_WIDTH, alignItems:"center", justifyContent:"center", marginTop:20}}>
-        <TouchableOpacity style={styles.commandButton1} onPress={() => props.navigation.navigate("profile")}>
-          <Text style={styles.panelButtonTitle1}>Back</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.commandButton2} onPress={() => updateUser()}>
-          <Text style={styles.panelButtonTitle2}>Save</Text>
-        </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: "row",
+            width: SCREEN_WIDTH,
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 20,
+          }}
+        >
+          <TouchableOpacity
+            style={styles.commandButton1}
+            onPress={() => props.navigation.navigate("profile")}
+          >
+            <Text style={styles.panelButtonTitle1}>Back</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.commandButton2}
+            onPress={() => updateUser()}
+          >
+            <Text style={styles.panelButtonTitle2}>Save</Text>
+          </TouchableOpacity>
         </View>
-        </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -295,8 +334,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#f2f2f2",
     paddingBottom: 5,
-    textAlign:"justify",
-    padding: 12
+    textAlign: "justify",
+    padding: 12,
   },
   actionError: {
     flexDirection: "row",
@@ -307,35 +346,40 @@ const styles = StyleSheet.create({
   },
   textInput: {
     marginTop: 10,
-    fontSize:18,
+    fontSize: 18,
     color: "#05375a",
-    borderColor:"turquoise",
-    paddingTop:20,
+    borderColor: "turquoise",
+    paddingTop: 20,
     paddingBottom: 20,
     paddingRight: 20,
     paddingLeft: 10,
     borderRadius: 30,
-    borderWidth: 2
+    borderWidth: 2,
   },
-  headerText:{
-    fontSize:15,
+  headerText: {
+    fontSize: 15,
     fontFamily: "HelveticaNeue",
   },
   image: {
     borderRadius: 100,
     height: 200,
     width: 200,
-    alignSelf:"center"
-  }
+    alignSelf: "center",
+  },
+  center: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 50,
+  },
+  uploading: {
+    marginTop: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statusText: {
+    marginTop: 20,
+    fontSize: 20,
+  },
 });
-
-/*
-<BottomSheet
-        ref={this.bs}
-        snapPoints={[330, 0]}
-        renderContent={this.renderInner}
-        renderHeader={this.renderHeader}
-        initialSnap={1}
-        callbackNode={this.fall}
-        enabledGestureInteraction={true}
-      />*/
