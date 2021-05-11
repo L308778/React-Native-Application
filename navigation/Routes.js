@@ -8,6 +8,7 @@ import auth from '@react-native-firebase/auth';
 import { database } from '../assets/config/firebase.js';
 import MMKVStorage from 'react-native-mmkv-storage';
 import NetInfo from '@react-native-community/netinfo';
+import messaging from '@react-native-firebase/messaging';
 
 let internetReachable = false
 let currentlySubscribedUser = false
@@ -160,6 +161,31 @@ const Routes = () => {
                 return user
             })
         }
+    }, [])
+
+    useEffect(() => {
+        async function requestUserPermission() {
+            const authStatus = await messaging().requestPermission();
+            const enabled =
+                authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+                authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+            if (enabled) {
+                console.log('Authorization status:', authStatus);
+                console.log('Token:', await messaging().getToken())
+
+                /* messaging().sendMessage({
+                    "notification": {
+                        "title": "Test title",
+                        "body": "Test message"
+                    },
+                    "to": "eEAApMIeSuK7D_zOzmsdv5:APA91bFKyw8CP2lzYM_x_QMcOZFDsmrA5uAv0qX6bqax8JubERFl2qVUC5G7aAIP0dcvDyaE7P6GyrCWe4Dtinp5oicQYBs6fraJMR1SVB9-62lxh8jEeQNa53eNHrMPXfIWTEs8CKZ2",
+
+                }) */
+            }
+        }
+
+        requestUserPermission()
     }, [])
 
     if (initializing) {
