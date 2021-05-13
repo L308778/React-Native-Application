@@ -1,10 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, Text } from "react-native";
 import { DataContext } from "../../../context/dataContext.js";
 import { GiftedChat } from 'react-native-gifted-chat';
+import firestore from "@react-native-firebase/firestore";
+import { sendFcmChatMsg } from "../../../backend/fcm_manager.js";
+import { database } from '../../../assets/config/firebase.js';
 
 const Chat = ({ route }) => {
-    const { user, messages, sendMsg, giftedChat } = useContext(DataContext);
+    const { user, messages, giftedChat } = useContext(DataContext);
+    const tokens = useRef([])
     const getUser = () => {
         return {
             name: user.displayName,
@@ -13,6 +17,34 @@ const Chat = ({ route }) => {
         }
     }
     const otherUID = route.params.otherUID
+
+    useEffect(() => {
+        firestore().collection("Users").doc(otherUID).get().then((doc) => {
+            let tokenData = doc.data().tokens
+            if (tokenData) {
+                tokens.current = tokenData
+            }
+        })
+    }, [])
+
+    const sendMsg = (message, otherUID) => {
+        const theMsg = message[0]
+        const sth = new Date()
+        const msg = {
+            _id: theMsg._id,
+            text: theMsg.text,
+            createdAt: theMsg.createdAt.getTime(),// + sth.getTimezoneOffset() * 60000,
+            user: {
+                _id: theMsg.user._id,
+                name: theMsg.user.name,
+                avatar: ""
+            }
+        }
+        sendFcmChatMsg(theMsg.text, theMsg.user.name, tokens.current)
+        database.ref("/messaging/" + otherUID + "/" + user.uid).push(msg)
+        database.ref("/messaging/" + user.uid + "/" + otherUID).push(msg)
+    }
+
 
     return (
         <GiftedChat

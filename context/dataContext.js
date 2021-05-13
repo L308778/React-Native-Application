@@ -70,23 +70,6 @@ const DataContextProvider = ({ children }) => {
         }
       };
 
-    function sendMsg(message, otherUID) {
-        const theMsg = message[0]
-        const sth = new Date()
-        const msg = {
-            _id: theMsg._id,
-            text: theMsg.text,
-            createdAt: theMsg.createdAt.getTime() + sth.getTimezoneOffset() * 60000,
-            user: {
-                _id: theMsg.user._id,
-                name: theMsg.user.name,
-                avatar: ""
-            }
-        }
-        database.ref("/messaging/" + otherUID + "/" + user.uid).push(msg)
-        database.ref("/messaging/" + user.uid + "/" + otherUID).push(msg)
-    }
-
     //These are unrelated to auth context
     saved = (index) => {
         setSavedActivities(saved_activities.concat(Data[index]));
@@ -126,7 +109,6 @@ const DataContextProvider = ({ children }) => {
             updateEmail,
             updatePassword,
             setProfilePic,
-            sendMsg,
             setWelcomeShown,
             setMessages,
             setChats,

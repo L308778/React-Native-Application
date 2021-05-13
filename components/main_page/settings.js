@@ -16,7 +16,8 @@ import Budget from "../custom/budget.js";
 import People from "../custom/people.js";
 import Time from "../custom/time.js";
 import Feeling from "../custom/feeling.js";
-import {DataContext} from "../../context/dataContext.js"
+import {DataContext} from "../../context/dataContext.js";
+import { removeFirebaseTokenForUser } from "../../backend/fcm_manager.js";
 
 /*
 This is our settings page. Here we have to add simulation
@@ -31,7 +32,7 @@ export default function Settings (props) {
   const[value, setValue] = useState(0)
   const[isEnabled, setEnabled] = useState(false)
 
-  const{logout} = useContext(DataContext)
+  const{logout, user} = useContext(DataContext)
 
   const toggleSwitch = () => {
     if (isEnabled) {
@@ -43,9 +44,12 @@ export default function Settings (props) {
 
   const handle_logout = async() => {
     try {
+      let userID = user.uid
       await logout()
-    } catch {
+      removeFirebaseTokenForUser(userID)
+    } catch (err) {
       Alert.alert("Failed to log out")
+      console.log(err)
     }
   }
 

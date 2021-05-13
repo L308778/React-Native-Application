@@ -8,7 +8,7 @@ import auth from '@react-native-firebase/auth';
 import { database } from '../assets/config/firebase.js';
 import MMKVStorage from 'react-native-mmkv-storage';
 import NetInfo from '@react-native-community/netinfo';
-import { requestUserPermission, checkAndUpdateFirebaseTokens } from "../backend/fcm_manager.js";
+import { requestUserPermission, checkAndUpdateFirebaseTokens, fcmListener } from "../backend/fcm_manager.js";
 
 let internetReachable = false
 let currentlySubscribedUser = false
@@ -50,12 +50,16 @@ const Routes = () => {
         return subscriber; // unsubscribe on unmount
     }, []);
 
+    useEffect(() => {
+        const unsubscribe = fcmListener()
+        return unsubscribe
+    }, [])
+
     const subscribeToChat = (dbRef, element, user) => {
         dbRef.child(element).on("child_added", async (message) => {
             const newKey = message.key
             const newMsg = message.val()
-            const sth = new Date()
-            newMsg.createdAt = new Date(newMsg.createdAt) - sth.getTimezoneOffset() * 60000
+            newMsg.createdAt = new Date(newMsg.createdAt)
             newMsg.key = newKey
             let newMsgReceived = false
             await setMessages(messages => {
