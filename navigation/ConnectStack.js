@@ -8,7 +8,7 @@ import AddFriend from '../components/main_page/connect/add_friend.js'
 //AuthStack should be used for authentication of the user
 
 const ConnectStack = createStackNavigator()
-export default function ConnectStacker() {
+export default function CreatorStacker() {
     return (
         <ConnectStack.Navigator
             initialRouteName="friends"

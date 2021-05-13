@@ -47,21 +47,7 @@ export default function Profile(props) {
     require("../images/profile_14.jpeg"),
     require("../images/profile_15.jpeg"),
   ];
-
-  useEffect(() => {
-    const getProfile = async () => {
-      let userProfile = await firestore()
-        .collection("Users")
-        .doc(user.uid)
-        .get()
-        .then((doc) => {
-          const data = doc.data();
-          setCurrUser(data);
-        });
-    };
-    getProfile();
-  }, []);
-
+  
   return (
     <>
       <SafeAreaView style={styles.container}>

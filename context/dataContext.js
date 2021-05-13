@@ -87,7 +87,7 @@ const DataContextProvider = ({ children }) => {
         database.ref("/messaging/" + user.uid + "/" + otherUID).push(msg)
     }
 
-    //These are unrelated to auth context
+
     saved = (index) => {
         setSavedActivities(saved_activities.concat(Data[index]));
     }

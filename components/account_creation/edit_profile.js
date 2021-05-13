@@ -48,6 +48,71 @@ export default function EditProfile(props) {
   const [downloadURL, setDownloadURL] = useState("")
   const [uploadTaskSnapshot, setUploadTaskSnapshot] = useState({});
 
+  const photoPopup = (bool, opacity) => {
+    setOpacity(opacity);
+    setVisible(bool);
+  };
+  const addUser = async () => {
+    uid = auth().currentUser.uid;
+    await firestore()
+      .collection("Users")
+      .doc(uid)
+      .set({
+        name: name,
+        age: age,
+        relationStatus: relation,
+        gender: gender,
+      })
+      .then(() => {
+        console.log("User added!");
+      });
+  };
+
+  const updateUser = async () => {
+    addUser();
+    setCurrUser({
+      name: name,
+      age: age,
+      relationStatus: relation,
+      gender: gender,
+    });
+    const update = {
+      displayName: name,
+    };
+    try {
+      await auth().currentUser.updateProfile(update);
+    } catch (e) {
+      Alert.alert("Failed to update user\n" + e);
+    }
+    props.navigation.navigate("profile");
+  };
+
+  const onMediaSelect = async (media) => {
+    setUploading(false)
+    if (!media.didCancel) {
+      setUploading(true);
+      const uid = user.uid
+      const reference = storage().ref(`users/avatar/${uid}`);
+      const task = reference.putFile(media.uri);
+      task.on('state_changed', (taskSnapshot) => {
+        setUploadTaskSnapshot(taskSnapshot);
+      });
+      task.then(async () => {
+        const downloadURL = await reference.getDownloadURL();
+        setDownloadURL(downloadURL);
+        setUploading(false);
+        setUploadTaskSnapshot({});
+        auth().currentUser.updateProfile({ photoURL: downloadURL })
+        setImage(auth().currentUser.photoURL)
+      });
+    }
+  };
+
+  const onTakePhoto = () => launchCamera({ mediaType: "image" }, onMediaSelect);
+
+  const onSelectImagePress = () =>
+    launchImageLibrary({ mediaType: "image" }, onMediaSelect);
+
   const renderInner = () => {
     return (
       <View style={styles.panel}>
@@ -101,76 +166,6 @@ export default function EditProfile(props) {
       </View>
     );
   };
-
-  const photoPopup = (bool, opacity) => {
-    setOpacity(opacity);
-    setVisible(bool);
-  };
-  const addUser = async () => {
-    uid = auth().currentUser.uid;
-    await firestore()
-      .collection("Users")
-      .doc(uid)
-      .set({
-        name: name,
-        age: age,
-        relationStatus: relation,
-        gender: gender,
-      })
-      .then(() => {
-        console.log("User added!");
-      });
-  };
-
-  const updateUser = async () => {
-    addUser();
-    setCurrUser({
-      name: name,
-      age: age,
-      relationStatus: relation,
-      gender: gender,
-    });
-    const update = {
-      displayName: name,
-    };
-    try {
-      await auth().currentUser.updateProfile(update);
-    } catch (e) {
-      Alert.alert("Failed to update user\n" + e);
-    }
-    props.navigation.navigate("profile");
-  };
-
-  const onMediaSelect = async (media) => {
-    setUploading(false)
-    if (!media.didCancel) {
-      setUploading(true);
-      const reference = storage().ref(media.fileName);
-      const task = reference.putFile(media.uri);
-      task.on('state_changed', (taskSnapshot) => {
-        setUploadTaskSnapshot(taskSnapshot);
-      });
-      console.log(uploadTaskSnapshot)
-      task.then(async () => {
-        const downloadURL = await reference.getDownloadURL();
-        setDownloadURL(downloadURL);
-        setUploading(false);
-        setUploadTaskSnapshot({});
-        auth().currentUser.updateProfile({ photoURL: downloadURL })
-        setImage(auth().currentUser.photoURL)
-      });
-    }
-  };
-
-  const onTakePhoto = () => launchCamera({ mediaType: "image" }, onMediaSelect);
-
-  const onTakeVideo = () => launchCamera({ mediaType: "video" }, onMediaSelect);
-
-  const onSelectImagePress = () =>
-    launchImageLibrary({ mediaType: "image" }, onMediaSelect);
-
-  const onSelectVideoPress = () =>
-    launchImageLibrary({ mediaType: "video" }, onMediaSelect);
 
   return (
     <SafeAreaView style={[styles.container, { opacity: opacity }]}>

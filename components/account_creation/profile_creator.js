@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -27,7 +27,9 @@ he or she fill in their name etc.
 SCREEN_HEIGHT = Dimensions.get("window").height;
 SCREEN_WIDTH = Dimensions.get("window").width;
 
-export default function Sign_Up(props) {
+export default function ProfileCreator(props) {
+
+  const image = props.route.params.image;
   const [name, setName] = useState("");
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
@@ -75,6 +77,10 @@ export default function Sign_Up(props) {
     }
   };
 
+  useEffect(() => {
+    console.log(image)
+  }, [])
+
 
   const addUser = async() => {
     uid = auth().currentUser.uid
@@ -87,7 +93,8 @@ export default function Sign_Up(props) {
         gender: gender,
         relationStatus: relationship,
         uid: uid,
-        friends: []
+        friends: [],
+        avatar: image
       })
       .then(() => {
         console.log('User added!');

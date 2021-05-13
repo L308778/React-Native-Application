@@ -17,16 +17,23 @@ SCREEN_WIDTH = Dimensions.get("window").width
 
 export default function Welcome(props) {
 
-    const {user} = useContext(DataContext)
-
+    const {user, currUser, setCurrUser} = useContext(DataContext)
 
     useEffect(() => {
-        console.log(user)
-        setTimeout(() => {
-            // Add your logic for the transition
-            props.navigation.navigate("location")
-        }, 4000);
-    }, [])
+        const getProfile = async () => {
+          let userProfile = await firestore()
+            .collection("Users")
+            .doc(user.uid)
+            .get()
+            .then((doc) => {
+              const data = doc.data();
+              setCurrUser(data);
+            });
+        };
+    
+        getProfile();
+        props.navigation.navigate("location")
+      }, []);
 
     return (
         <SafeAreaView style={styles.container}>
