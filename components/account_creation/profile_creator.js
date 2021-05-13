@@ -87,7 +87,8 @@ export default function Sign_Up(props) {
         gender: gender,
         relationStatus: relationship,
         uid: uid,
-        friends: []
+        friends: [],
+        tokens: []
       })
       .then(() => {
         console.log('User added!');

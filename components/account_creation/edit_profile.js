@@ -38,10 +38,10 @@ export default function EditProfile(props) {
   const { user, currUser, setCurrUser } = useContext(DataContext);
 
   const [isVisible, setVisible] = useState(false);
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [relation, setRelation] = useState("");
-  const [gender, setGender] = useState("");
+  const [name, setName] = useState(currUser.name);
+  const [age, setAge] = useState(currUser.age);
+  const [relation, setRelation] = useState(currUser.relationStatus);
+  const [gender, setGender] = useState(currUser.gender);
   const [opacity, setOpacity] = useState(1);
   const [image, setImage] = useState(auth().currentUser.photoURL);
   const [uploading, setUploading] = useState(false);
@@ -111,14 +111,14 @@ export default function EditProfile(props) {
     await firestore()
       .collection("Users")
       .doc(uid)
-      .set({
+      .update({
         name: name,
         age: age,
         relationStatus: relation,
         gender: gender,
       })
       .then(() => {
-        console.log("User added!");
+        console.log("Profile updated!");
       });
   };
 
