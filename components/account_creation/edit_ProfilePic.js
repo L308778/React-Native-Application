@@ -51,7 +51,7 @@ export default function EditProfilePic(props) {
         setUploading(false);
         setUploadTaskSnapshot({});
         auth().currentUser.updateProfile({ photoURL: downloadURL });
-        setFinished(true);
+        setExist(true)
       });
     }
   };
@@ -67,9 +67,10 @@ export default function EditProfilePic(props) {
         ...prevState,
         avatar: downloadURL
      }));
+
      firestore()
     .collection('Users')
-    .doc(currUser.uid)
+    .doc(auth().currentUser.uid)
     .update({
         avatar: downloadURL,
     })

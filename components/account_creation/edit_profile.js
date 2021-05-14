@@ -58,7 +58,7 @@ export default function EditProfile(props) {
     await firestore()
       .collection("Users")
       .doc(uid)
-      .set({
+      .update({
         name: name,
         age: age,
         relationStatus: relation,
