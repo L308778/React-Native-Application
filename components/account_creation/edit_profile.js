@@ -35,6 +35,7 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export default function EditProfile(props) {
+
   const { user, currUser, setCurrUser } = useContext(DataContext);
 
   const [isVisible, setVisible] = useState(false);
@@ -62,6 +63,7 @@ export default function EditProfile(props) {
         age: age,
         relationStatus: relation,
         gender: gender,
+        avatar: downloadURL
       })
       .then(() => {
         console.log("User added!");
@@ -75,6 +77,7 @@ export default function EditProfile(props) {
       age: age,
       relationStatus: relation,
       gender: gender,
+      avatar: downloadURL
     });
     const update = {
       displayName: name,
@@ -103,7 +106,6 @@ export default function EditProfile(props) {
         setUploading(false);
         setUploadTaskSnapshot({});
         auth().currentUser.updateProfile({ photoURL: downloadURL })
-        setImage(auth().currentUser.photoURL)
       });
     }
   };
@@ -119,7 +121,6 @@ export default function EditProfile(props) {
         {uploading && (
           <View style={styles.uploading}>
             <ActivityIndicator size={60} color="#47477b"></ActivityIndicator>
-            <Text style={styles.statusText}>Uploading</Text>
             <Text style={styles.statusText}>
               {`${(
                 (uploadTaskSnapshot.bytesTransferred /

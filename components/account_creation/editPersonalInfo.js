@@ -29,7 +29,6 @@ SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function ProfileCreator(props) {
 
-  const image = props.route.params.image;
   const [name, setName] = useState("");
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
@@ -41,6 +40,11 @@ export default function ProfileCreator(props) {
   const [relation, setRelation] = useState("white");
   const [relationship, setRelationship] = useState("");
   const [checker, setChecker] = useState("")
+
+  
+  const {currUser, setCurrUser} = useContext(DataContext)
+
+  const {signup} = useContext(DataContext);
 
   const getGender = (incom_gender) => {
     setGender(incom_gender);
@@ -73,6 +77,7 @@ export default function ProfileCreator(props) {
     }
   };
 
+
   const addUser = async() => {
     uid = auth().currentUser.uid
       await firestore()
@@ -85,8 +90,7 @@ export default function ProfileCreator(props) {
         relationStatus: relationship,
         uid: uid,
         friends: [],
-        avatar: image,
-        stored_activities:[]
+        avatar: currUser.avatar
       })
       .then(() => {
         console.log('User added!');
@@ -125,18 +129,20 @@ export default function ProfileCreator(props) {
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>
-            Create your Profile
+            EDIT YOUR PROFILE
         </Text>
         <TextInput
           style={styles.inputs}
-          placeholder="Username"
+          placeholder={currUser.name}
+          placeholderTextColor="grey" 
           defaultValue={name}
           onChangeText={(text) => setName(text)}
           value={name}
         />
         <TextInput
           style={styles.inputs}
-          placeholder="Age"
+          placeholder={currUser.age}
+          placeholderTextColor="grey"
           defaultValue={age}
           onChangeText={(text) => setAge(text)}
           value={age}

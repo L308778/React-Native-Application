@@ -20,6 +20,9 @@ import EditProfile from "../components/account_creation/edit_profile.js"
 import ConnectStack from "./ConnectStack.js";
 import { screensEnabled } from "react-native-screens";
 import CreatorStack from "./CreatorStack.js"
+import EditInterim from "../components/account_creation/editInterim.js"
+import EditProfilePic from "../components/account_creation/edit_ProfilePic.js"
+import EditPersonalInfo from "../components/account_creation/editPersonalInfo.js"
 
 
 /*
@@ -150,6 +153,9 @@ const MainStacker = () => {
         }} />
       <MainStack.Screen name="tab" component={Mainfunc} />
       <MainStack.Screen name="creator" component = {CreatorStack}/>
+      <MainStack.Screen name="editInterim" component = {EditInterim}/>
+      <MainStack.Screen name="editProfilePic" component = {EditProfilePic}/>
+      <MainStack.Screen name="editPersonalInfo" component = {EditPersonalInfo}/>
     </MainStack.Navigator>
   );
 }

@@ -52,6 +52,7 @@ export default function PicUpload(props) {
         setUploadTaskSnapshot({});
         auth().currentUser.updateProfile({ photoURL: downloadURL })
         setFinished(true)
+        
       });
     }
   };
