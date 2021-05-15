@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image, Alert } from 'react-native'
 import { Icon } from "react-native-elements";
 import { FlatList, TouchableOpacity, TextInput } from 'react-native-gesture-handler'
 import firestore from "@react-native-firebase/firestore"
 import { DataContext } from '../../../context/dataContext'
 import Constants from "expo-constants";
+import friends from './friends';
 
 const addFriends = ({ navigation }) => {
     const [friendList, setFriendList] = useState([])
@@ -36,8 +37,29 @@ const addFriends = ({ navigation }) => {
         if (mmkvInst) mmkvInst.setArray("friends", newFriends)
     }
 
-    const changeFriendState = (friend) => {
-        if (friend.friends.includes(user.uid)) {
+    const showFriendDialog = (friend) => {
+        const isAlrFriend = friend.friends.includes(user.uid)
+        Alert.alert(
+            isAlrFriend ? "Remove friend" : "Send friend request",
+            isAlrFriend ? "Remove " + friend.name + " from your friend list?" : "Send friend request to " + friend.name + "?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                {
+                    text: isAlrFriend ? "Remove" : "Send",
+                    onPress: () => {
+                        changeFriendState(friend, isAlrFriend)
+                    },
+                    style: "default"
+                }
+            ]
+        )
+    }
+
+    const changeFriendState = (friend, isAlrFriend) => {
+        if (isAlrFriend) {
             //Is already friend, remove
             const newList = [...friendList]
             const index1 = newList.findIndex(x => x.uid === friend.uid)
@@ -55,6 +77,23 @@ const addFriends = ({ navigation }) => {
             updateFriendsInFirestore(newList, friend.uid, friend.friends)
             updateFriendsInStorage(newList)
         }
+        const newUserList = [...addUserList]
+        const index3 = newUserList.findIndex(x => x.uid === friend.uid)
+        newUserList[index3].friends = friend.friends
+        setAddUserList(newUserList)
+    }
+
+    const goToUserProfile = async (userUID) => {
+        let doc = await firestore()
+            .collection("Users")
+            .doc(userUID)
+            .get()
+        setCurrUser(doc.data())
+        navigation.navigate('profile')
+    }
+
+    const handleFriendRequest = (requestUID, accept) => {
+        
     }
 
     const renderAddFriend = (item) => {
@@ -72,12 +111,7 @@ const addFriends = ({ navigation }) => {
                     <TouchableOpacity
                         onPress={async () => {
                             if (!item.uid) return
-                            let doc = await firestore()
-                                .collection("Users")
-                                .doc(item.uid)
-                                .get()
-                            setCurrUser(doc.data())
-                            navigation.navigate('profile')
+                            goToUserProfile(item.uid)
                         }}
                     >
                         <Text style={{ fontSize: 25, width: "80%", marginLeft: "5%" }}>{item.name}</Text>
@@ -85,9 +119,46 @@ const addFriends = ({ navigation }) => {
                 </View>
                 <TouchableOpacity
                     style={styles.addFriendButton}
-                    onPress={() => { changeFriendState(item) }}
+                    onPress={() => { showFriendDialog(item) }}
                 >
                     <Icon name={item.friends.includes(user.uid) ? "person-add-disabled" : "person-add"} type="MaterialIcons" color="turquoise" size={40} />
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
+    const renderFriendRequest = (item) => {
+        return (
+            <View style={styles.friendButton}>
+                <View style={styles.profileImageContainerRequests}>
+                    <Image
+                        style={styles.profileImage}
+                        source={require("../../logo/profile.jpg")}
+                        resizeMode="center"
+                    >
+                    </Image>
+                </View>
+                <View style={styles.userName}>
+                    <TouchableOpacity
+                        onPress={async () => {
+                            if (!item.uid) return
+                            goToUserProfile(item.uid)
+                        }}
+                    >
+                        <Text style={{ fontSize: 25, width: "80%", marginLeft: "5%" }}>{item.name}</Text>
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                    style={styles.addFriendButton}
+                    onPress={() => { handleFriendRequest(item.uid, true) }}
+                >
+                    <Icon name={"check"} type="MaterialIcons" color="turquoise" size={40} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.addFriendButton}
+                    onPress={() => { handleFriendRequest(item.uid, false) }}
+                >
+                    <Icon name={"clear"} type="MaterialIcons" color="turquoise" size={40} />
                 </TouchableOpacity>
             </View>
         )
@@ -122,19 +193,31 @@ const addFriends = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.chatWith}>Find new friends</Text>
-            <TextInput
-                style={styles.search}
-                placeholder="Search users..."
-                onChangeText={(text) => setSearchUser(text.toLowerCase())}
-            />
-            <FlatList
-                style={styles.friendList}
-                data={searchUser ? addUserList.filter(x => x.name.toLowerCase().includes(searchUser)) : addUserList}
-                ItemSeparatorComponent={ItemSeparatorView}
-                keyExtractor={(item) => String(item.uid)}
-                renderItem={({ item }) => renderAddFriend(item)}>
-            </FlatList>
+            <View style={styles.friendContainer}>
+                <Text style={styles.titleText}>Find new friends</Text>
+                <TextInput
+                    style={styles.search}
+                    placeholder="Search users..."
+                    onChangeText={(text) => setSearchUser(text.toLowerCase())}
+                />
+                <FlatList
+                    style={styles.friendList}
+                    data={searchUser ? addUserList.filter(x => x.name.toLowerCase().includes(searchUser)) : addUserList}
+                    ItemSeparatorComponent={ItemSeparatorView}
+                    keyExtractor={(item) => String(item.uid)}
+                    renderItem={({ item }) => renderAddFriend(item)}>
+                </FlatList>
+            </View>
+            <View style={styles.requestContainer}>
+                <Text style={styles.titleText}>Friend requests</Text>
+                <FlatList
+                    style={styles.requestList}
+                    data={addUserList}
+                    ItemSeparatorComponent={ItemSeparatorView}
+                    keyExtractor={(item) => String(item.uid)}
+                    renderItem={({ item }) => renderFriendRequest(item)}>
+                </FlatList>
+            </View>
         </View>
     )
 }
@@ -149,12 +232,25 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         paddingTop: Constants.statusBarHeight
     },
-    chatWith: {
+    titleText: {
         fontSize: 30,
         marginTop: 10
     },
+    friendContainer: {
+        alignItems: "center",
+        flex: 2,
+        width: "100%"
+    },
     friendList: {
+        width: "100%"
+    },
+    requestContainer: {
+        alignItems: "center",
         flex: 1,
+        width: "100%"
+    },
+    requestList: {
+        marginTop: 10,
         width: "100%"
     },
     friendButton: {
@@ -175,6 +271,10 @@ const styles = StyleSheet.create({
     profileImageContainer: {
         flex: 3,
         marginLeft: 15
+    },
+    profileImageContainerRequests: {
+        flex: 3,
+        marginLeft: 19
     },
     profileImage: {
         flex: 1,
