@@ -14,7 +14,7 @@ export const requestUserPermission = async () => {
 
     if (enabled) {
         let fcmToken = await messaging().getToken()
-        console.log('Token:', fcmToken)
+        //console.log('Token:', fcmToken)
         return fcmToken
     }
 }
@@ -76,6 +76,22 @@ export const sendFcmChatMsg = (msg, friendName, tokens) => {
             type: "chat",
             chatName: friendName,
             text: msg,
+            token: JSON.stringify(tokens)
+        }
+    })
+}
+
+/*
+    Sends data for friend request to FCM
+*/
+export const sendFriendRequestMsg = async (friend) => {
+    let tokens = []
+    let doc = await firestore().collection("Users").doc(friend.uid).get()
+    if (doc.data().tokens) tokens = doc.data().tokens
+    messaging().sendMessage({
+        data: {
+            type: "friendRequest",
+            friendName: friend.name,
             token: JSON.stringify(tokens)
         }
     })

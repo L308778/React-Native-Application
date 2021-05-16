@@ -102,7 +102,7 @@ const friends = ({ navigation }) => {
             <View style={styles.connectWithContainer}>
                 <Text style={styles.connectWith}>Connect with</Text>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate("addFriend")}
+                    onPress={() => navigation.navigate("addFriend", { friendsUIDList: friendList.map(x => x.uid) })}
                     style={{ flex: 1, marginRight: "8%", marginTop: "2%" }}
                 >
                     <Icon name={"person-add"} type="MaterialIcons" color="black" size={40}></Icon>

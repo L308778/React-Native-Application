@@ -6,7 +6,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { DataContext } from "../context/dataContext.js";
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
-//import { database } from '../assets/config/firebase.js';
 import MMKVStorage from 'react-native-mmkv-storage';
 import NetInfo from '@react-native-community/netinfo';
 import { requestUserPermission, checkAndUpdateFirebaseTokens, fcmListener } from "../backend/fcm_manager.js";

@@ -4,14 +4,18 @@ import { Icon } from "react-native-elements";
 import { FlatList, TouchableOpacity, TextInput } from 'react-native-gesture-handler'
 import firestore from "@react-native-firebase/firestore"
 import { DataContext } from '../../../context/dataContext'
-import Constants from "expo-constants";
-import friends from './friends';
+import Constants from "expo-constants"
+import { sendFriendRequestMsg } from '../../../backend/fcm_manager.js'
 
-const addFriends = ({ navigation }) => {
+const addFriends = ({ navigation, route }) => {
     const [friendList, setFriendList] = useState([])
     const [addUserList, setAddUserList] = useState([])
     const [searchUser, setSearchUser] = useState("")
+    const [requestList, setRequestList] = useState([])
+    const [myRequests, setMyRequests] = useState([])
     const { user, mmkvInstances, setCurrUser } = useContext(DataContext)
+
+    const friendsUIDList = route.params.friendsUIDList
 
     const ItemSeparatorView = () => {
         return (
@@ -37,21 +41,51 @@ const addFriends = ({ navigation }) => {
         if (mmkvInst) mmkvInst.setArray("friends", newFriends)
     }
 
+    const updateFirestoreRequest = async (friend, send) => {
+        let userRef = firestore().collection("Users").doc(user.uid)
+        if (send) {
+            userRef.update({ sentRequests: [...myRequests, friend.uid] })
+            setMyRequests([...myRequests, friend.uid])
+            sendFriendRequestMsg(friend)
+        } else {
+            let requestList = [...myRequests]
+            let index = requestList.indexOf(friend.uid)
+            if (index > -1) {
+                requestList.splice(index, 1)
+                userRef.update({ sentRequests: requestList })
+                setMyRequests(requestList)
+            }
+        }
+
+        if (!send) {
+            let friendRef = firestore().collection("Users").doc(friend.uid)
+            let fData = await friendRef.get()
+            let fReqList = fData.data().sentRequests
+            if (!fReqList) {
+                friendRef.update({ sentRequests: [] })
+                return
+            }
+            let index = fReqList.indexOf(user.uid)
+            if (index > -1) {
+                fReqList.splice(index, 1)
+                friendRef.update({ sentRequests: fReqList })
+            }
+        }
+    }
+
     const showFriendDialog = (friend) => {
-        const isAlrFriend = friend.friends.includes(user.uid)
+        const requestSent = myRequests.includes(friend.uid)
         Alert.alert(
-            isAlrFriend ? "Remove friend" : "Send friend request",
-            isAlrFriend ? "Remove " + friend.name + " from your friend list?" : "Send friend request to " + friend.name + "?",
+            requestSent ? "Cancel friend request" : "Send friend request",
+            requestSent ? "Cancel friend request to " + friend.name + "?" : "Send friend request to " + friend.name + "?",
             [
                 {
                     text: "Cancel",
                     style: "cancel"
                 },
                 {
-                    text: isAlrFriend ? "Remove" : "Send",
-                    onPress: () => {
-                        changeFriendState(friend, isAlrFriend)
-                    },
+                    text: requestSent ? "Remove" : "Send",
+                    onPress: () => updateFirestoreRequest(friend, !requestSent),
                     style: "default"
                 }
             ]
@@ -83,6 +117,24 @@ const addFriends = ({ navigation }) => {
         setAddUserList(newUserList)
     }
 
+    const showRequestDialog = (friend, accept) => {
+        Alert.alert(
+            (accept ? "Accept" : "Decline") + " friend request",
+            (accept ? "Accept" : "Decline") + " friend request from " + friend.name + "?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                {
+                    text: accept ? "Accept" : "Decline",
+                    onPress: () => handleFriendRequest(friend, accept),
+                    style: "default"
+                }
+            ]
+        )
+    }
+
     const goToUserProfile = async (userUID) => {
         let doc = await firestore()
             .collection("Users")
@@ -92,8 +144,16 @@ const addFriends = ({ navigation }) => {
         navigation.navigate('profile')
     }
 
-    const handleFriendRequest = (requestUID, accept) => {
-        
+    const handleFriendRequest = (friend, accept) => {
+        //If user accepts, change the friend state
+        if (accept) changeFriendState(friend, !accept)
+        //If user rejects, do nothing
+
+        // Remove request from list
+        setRequestList(requestList.filter(x => x.uid !== friend.uid))
+
+        // Remove requests from firestore
+        updateFirestoreRequest(friend.uid, false)
     }
 
     const renderAddFriend = (item) => {
@@ -121,7 +181,7 @@ const addFriends = ({ navigation }) => {
                     style={styles.addFriendButton}
                     onPress={() => { showFriendDialog(item) }}
                 >
-                    <Icon name={item.friends.includes(user.uid) ? "person-add-disabled" : "person-add"} type="MaterialIcons" color="turquoise" size={40} />
+                    <Icon name={myRequests.includes(item.uid) ? "person-add-disabled" : "person-add"} type="MaterialIcons" color="turquoise" size={40} />
                 </TouchableOpacity>
             </View>
         )
@@ -150,13 +210,13 @@ const addFriends = ({ navigation }) => {
                 </View>
                 <TouchableOpacity
                     style={styles.addFriendButton}
-                    onPress={() => { handleFriendRequest(item.uid, true) }}
+                    onPress={() => { showRequestDialog(item, true) }}
                 >
                     <Icon name={"check"} type="MaterialIcons" color="turquoise" size={40} />
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.addFriendButton}
-                    onPress={() => { handleFriendRequest(item.uid, false) }}
+                    onPress={() => { showRequestDialog(item, false) }}
                 >
                     <Icon name={"clear"} type="MaterialIcons" color="turquoise" size={40} />
                 </TouchableOpacity>
@@ -164,11 +224,33 @@ const addFriends = ({ navigation }) => {
         )
     }
 
-    useEffect(() => {
+    useEffect(async () => {
         const mmkvInst = mmkvInstances.current[user.uid]
         if (mmkvInst) {
             setFriendList(mmkvInst.getArray("friends"))
         }
+
+        const getFriendRequestsFromFirestore = async () => {
+            let requests = await firestore()
+                .collection('Users')
+                .where("sentRequests", "array-contains", user.uid)
+                .get()
+            setRequestList(requests._docs.filter(x => x._data.friends).map(x => x._data))
+        }
+        getFriendRequestsFromFirestore()
+
+        const getMyFriendRequests = async () => {
+            let myReq = firestore()
+                .collection("Users")
+                .doc(user.uid)
+            let mySentRequests = (await myReq.get()).data().sentRequests
+            if (!mySentRequests) {
+                mySentRequests = []
+                myReq.update({ sentRequests: mySentRequests })
+            }
+            setMyRequests(mySentRequests)
+        }
+        getMyFriendRequests()
 
         const getUsersFromFirestore = async () => {
             let users = await firestore()
@@ -202,7 +284,7 @@ const addFriends = ({ navigation }) => {
                 />
                 <FlatList
                     style={styles.friendList}
-                    data={searchUser ? addUserList.filter(x => x.name.toLowerCase().includes(searchUser)) : addUserList}
+                    data={(searchUser ? addUserList.filter(x => x.name.toLowerCase().includes(searchUser)) : addUserList).filter(x => !friendsUIDList.includes(x.uid))}
                     ItemSeparatorComponent={ItemSeparatorView}
                     keyExtractor={(item) => String(item.uid)}
                     renderItem={({ item }) => renderAddFriend(item)}>
@@ -212,7 +294,7 @@ const addFriends = ({ navigation }) => {
                 <Text style={styles.titleText}>Friend requests</Text>
                 <FlatList
                     style={styles.requestList}
-                    data={addUserList}
+                    data={requestList}
                     ItemSeparatorComponent={ItemSeparatorView}
                     keyExtractor={(item) => String(item.uid)}
                     renderItem={({ item }) => renderFriendRequest(item)}>

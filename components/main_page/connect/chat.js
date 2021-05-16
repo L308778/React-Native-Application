@@ -5,7 +5,6 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import firestore from "@react-native-firebase/firestore";
 import database from "@react-native-firebase/database";
 import { sendFcmChatMsg } from "../../../backend/fcm_manager.js";
-//import { database } from '../../../assets/config/firebase.js';
 
 const Chat = ({ route }) => {
     const { user, messages, giftedChat } = useContext(DataContext);

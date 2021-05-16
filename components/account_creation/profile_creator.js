@@ -88,7 +88,8 @@ export default function Sign_Up(props) {
         relationStatus: relationship,
         uid: uid,
         friends: [],
-        tokens: []
+        tokens: [],
+        sentRequests: []
       })
       .then(() => {
         console.log('User added!');
