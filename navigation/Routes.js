@@ -5,7 +5,8 @@ import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { DataContext } from "../context/dataContext.js";
 import auth from '@react-native-firebase/auth';
-import { database } from '../assets/config/firebase.js';
+import database from '@react-native-firebase/database';
+//import { database } from '../assets/config/firebase.js';
 import MMKVStorage from 'react-native-mmkv-storage';
 import NetInfo from '@react-native-community/netinfo';
 import { requestUserPermission, checkAndUpdateFirebaseTokens, fcmListener } from "../backend/fcm_manager.js";
@@ -105,7 +106,7 @@ const Routes = () => {
             }
 
             if (user) {
-                let dbRef = database.ref("/messaging/" + user.uid)
+                let dbRef = database().ref("/messaging/" + user.uid)
                 dbRef.once("value", async (snapshot) => {
                     const newChats = new Set(snapshot.exists() ? Object.keys(snapshot.val()) : [])
                     setChats(newChats)
@@ -132,7 +133,7 @@ const Routes = () => {
     const unsetChatListeners = (user) => {
         //console.log("Unsubscribe from chat for", user)
         if (user) {
-            let dbRef = database.ref("/messaging/" + user.uid)
+            let dbRef = database().ref("/messaging/" + user.uid)
             //console.log("Unsubscribed from child add")
             dbRef.off("child_added")
             unsubscribeFromAllChats(dbRef)

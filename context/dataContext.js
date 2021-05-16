@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
 import Data from "../components/data/main.js"
 import auth from '@react-native-firebase/auth';
-import { database } from '../assets/config/firebase.js';
 
 export const DataContext = createContext({})
 

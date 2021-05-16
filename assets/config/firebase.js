@@ -17,6 +17,4 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-const database = firebase.database()
-
-export { firebase, database };
+export { firebase };
