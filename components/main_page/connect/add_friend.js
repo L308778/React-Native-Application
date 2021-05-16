@@ -59,8 +59,7 @@ const addFriends = ({ navigation, route }) => {
 
         if (!send) {
             let friendRef = firestore().collection("Users").doc(friend.uid)
-            let fData = await friendRef.get()
-            let fReqList = fData.data().sentRequests
+            let fReqList = (await friendRef.get()).data().sentRequests
             if (!fReqList) {
                 friendRef.update({ sentRequests: [] })
                 return
@@ -153,7 +152,7 @@ const addFriends = ({ navigation, route }) => {
         setRequestList(requestList.filter(x => x.uid !== friend.uid))
 
         // Remove requests from firestore
-        updateFirestoreRequest(friend.uid, false)
+        updateFirestoreRequest(friend, false)
     }
 
     const renderAddFriend = (item) => {
