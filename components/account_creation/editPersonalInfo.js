@@ -29,20 +29,20 @@ SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function ProfileCreator(props) {
 
-  const [name, setName] = useState("");
+
+  const {currUser, setCurrUser} = useContext(DataContext)
+
+  const [name, setName] = useState(currUser.name);
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState(currUser.gender);
   const [female, setFemale] = useState("white");
   const [male, setMale] = useState("white");
-  const [age, setAge] = useState("");
+  const [age, setAge] = useState(currUser.age);
   const [single, setSingle] = useState("white");
   const [relation, setRelation] = useState("white");
-  const [relationship, setRelationship] = useState("");
+  const [relationship, setRelationship] = useState(currUser.relationStatus);
   const [checker, setChecker] = useState("")
-
-  
-  const {currUser, setCurrUser} = useContext(DataContext)
 
   const {signup} = useContext(DataContext);
 
@@ -63,7 +63,7 @@ export default function ProfileCreator(props) {
       // Filter results
       .where('name', '==', name)
       .get()
-      setChecker(userNames._docs)
+      await setChecker(userNames._docs)
   }
 
   const getRelation = (incom_relation) => {
@@ -89,23 +89,20 @@ export default function ProfileCreator(props) {
         gender: gender,
         relationStatus: relationship,
         uid: uid,
-        friends: [],
+        friends: currUser.friends,
         avatar: currUser.avatar
       })
       .then(() => {
-        console.log('User added!');
+        console.log('User updated!');
       });
   }
 
   const confirm_profile = async() => {
-    setChecker("")
-    getUserNames(name)
+    setChecker(0)
+    await getUserNames(name)
+    console.log(checker)
 
-    if (!name || !gender || !age || !relationship){
-        return setError("Please fill in all required fields");
-    }
-
-    else if (checker.length > 0){
+    if (checker.length > 0){
       return setError("Please use a different username")
     }
     
@@ -115,14 +112,23 @@ export default function ProfileCreator(props) {
           };
         try{
             await auth().currentUser.updateProfile(update);
+            setCurrUser({
+              name: name,
+              age: age,
+              gender: gender,
+              relationStatus: relationship,
+              uid: uid,
+              friends: currUser.friends,
+              avatar: currUser.avatar
+            });
+        
+            addUser()
+        
+            props.navigation.navigate("profile")
         }catch (e) {
             Alert.alert("Failed to update user\n" + e);
         }
     }
-
-    addUser()
-
-    props.navigation.navigate("welcome")
   }
 
   return (
