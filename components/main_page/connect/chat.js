@@ -12,7 +12,7 @@ const Chat = ({ route }) => {
     const getUser = () => {
         return {
             name: user.displayName,
-            avatar: user.photoURL,
+            avatar: null,
             _id: user.uid
         }
     }
@@ -29,15 +29,13 @@ const Chat = ({ route }) => {
 
     const sendMsg = (message, otherUID) => {
         const theMsg = message[0]
-        const sth = new Date()
         const msg = {
             _id: theMsg._id,
             text: theMsg.text,
-            createdAt: theMsg.createdAt.getTime(),// + sth.getTimezoneOffset() * 60000,
+            createdAt: theMsg.createdAt.getTime(),
             user: {
                 _id: theMsg.user._id,
-                name: theMsg.user.name,
-                avatar: ""
+                name: theMsg.user.name
             }
         }
         sendFcmChatMsg(theMsg.text, theMsg.user.name, tokens.current)

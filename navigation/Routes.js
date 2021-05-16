@@ -15,7 +15,7 @@ let currentlySubscribedUser = false
 
 const Routes = () => {
     const [initializing, setInitializing] = useState(true);
-    const { user, setUser, messages, setMessages, chats, setChats, mmkvInstances, giftedChat } = useContext(DataContext);
+    const { user, setUser, setMessages, chats, setChats, mmkvInstances, giftedChat } = useContext(DataContext);
 
     // Handle user state changes
     const onAuthStateChanged = async (user) => {
