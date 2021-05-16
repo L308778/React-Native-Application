@@ -29,18 +29,21 @@ SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function ProfileCreator(props) {
 
-  const image = props.route.params.image;
-  const [name, setName] = useState("");
+
+  const { currUser, setCurrUser } = useContext(DataContext)
+
+  const [name, setName] = useState(currUser.name);
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState(currUser.gender);
   const [female, setFemale] = useState("white");
   const [male, setMale] = useState("white");
-  const [age, setAge] = useState("");
+  const [age, setAge] = useState(currUser.age);
   const [single, setSingle] = useState("white");
   const [relation, setRelation] = useState("white");
-  const [relationship, setRelationship] = useState("");
-  const [checker, setChecker] = useState("")
+  const [relationship, setRelationship] = useState(currUser.relationStatus);
+
+  const { signup } = useContext(DataContext);
 
   const getGender = (incom_gender) => {
     setGender(incom_gender);
@@ -53,13 +56,14 @@ export default function ProfileCreator(props) {
     }
   };
 
-  const getUserNames = async(name) => { 
-    let userNames = await firestore()
+  const getUserNames = async (name) => {
+    let userNames = (await firestore()
       .collection('Users')
       // Filter results
       .where('name', '==', name)
-      .get()
-      setChecker(userNames._docs)
+      .get())._docs.filter(x => x.data().uid !== currUser.uid)
+
+    return userNames.length > 0
   }
 
   const getRelation = (incom_relation) => {
@@ -73,9 +77,10 @@ export default function ProfileCreator(props) {
     }
   };
 
-  const addUser = async() => {
-    uid = auth().currentUser.uid
-      await firestore()
+
+  const addUser = async () => {
+    let uid = currUser.uid
+    await firestore()
       .collection('Users')
       .doc(uid)
       .set({
@@ -84,61 +89,64 @@ export default function ProfileCreator(props) {
         gender: gender,
         relationStatus: relationship,
         uid: uid,
-        friends: [],
-        tokens: [],
-        sentRequests: [],
-        avatar: image,
-        stored_activities:[]
+        friends: currUser.friends,
+        avatar: currUser.avatar
       })
       .then(() => {
-        console.log('User added!');
+        console.log('User updated!');
       });
   }
 
-  const confirm_profile = async() => {
-    setChecker("")
-    getUserNames(name)
+  const confirm_profile = async () => {
+    setError("")
+    let dupeName = await getUserNames(name)
 
-    if (!name || !gender || !age || !relationship){
-        return setError("Please fill in all required fields");
-    }
-
-    else if (checker.length > 0){
+    if (dupeName) {
       return setError("Please use a different username")
-    }
-    
-    else{
-        const update = {
-            displayName: name,
-          };
-        try{
-            await auth().currentUser.updateProfile(update);
-        }catch (e) {
-            Alert.alert("Failed to update user\n" + e);
-        }
-    }
+    } else {
+      const update = {
+        displayName: name,
+      };
+      try {
+        await auth().currentUser.updateProfile(update);
+        setCurrUser({
+          name: name,
+          age: age,
+          gender: gender,
+          relationStatus: relationship,
+          uid: currUser.uid,
+          friends: currUser.friends,
+          avatar: currUser.avatar
+        });
 
-    addUser()
+        addUser()
 
-    props.navigation.navigate("welcome")
+        props.navigation.navigate("profile")
+      } catch (e) {
+        console.log(e)
+        Alert.alert("Failed to update user\n" + e);
+      }
+    }
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>
-            Create your Profile
+          EDIT YOUR PROFILE
         </Text>
         <TextInput
           style={styles.inputs}
-          placeholder="Username"
+          placeholder={currUser.name}
+          placeholderTextColor="grey"
           defaultValue={name}
           onChangeText={(text) => setName(text)}
           value={name}
         />
         <TextInput
           style={styles.inputs}
-          placeholder="Age"
+          placeholder={currUser.age}
+          placeholderTextColor="grey"
           defaultValue={age}
           onChangeText={(text) => setAge(text)}
           value={age}
@@ -226,7 +234,7 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     fontSize: 30,
     fontWeight: "800",
-    color:"turquoise",
+    color: "turquoise",
     marginBottom: SCREEN_HEIGHT * 0.1
   },
   inputs: {
@@ -272,18 +280,19 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     fontSize: 14,
+    marginTop: 10,
     paddingHorizontal: 20,
   },
   genderGroup: {
     flexDirection: "row",
     paddingVertical: SCREEN_HEIGHT * 0.02,
-    alignItems:"center"
+    alignItems: "center"
   },
   genderButton: {
     borderColor: "turquoise",
     marginHorizontal: SCREEN_WIDTH * 0.1,
     backgroundColor: "white",
-    alignSelf:"center",
+    alignSelf: "center",
     padding: 30,
     borderRadius: 30,
     borderWidth: 2,
@@ -292,13 +301,13 @@ const styles = StyleSheet.create({
   relationGroup: {
     flexDirection: "row",
     paddingVertical: SCREEN_HEIGHT * 0.02,
-    alignItems:"center"
+    alignItems: "center"
   },
   relationButton: {
     borderColor: "turquoise",
     marginHorizontal: SCREEN_WIDTH * 0.1,
     backgroundColor: "white",
-    alignSelf:"center",
+    alignSelf: "center",
     padding: 30,
     borderRadius: 30,
     borderWidth: 2,

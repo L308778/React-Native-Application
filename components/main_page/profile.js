@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
-import { Icon } from "react-native-elements";
+import { Icon, Avatar } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import { DataContext } from "../../context/dataContext";
@@ -29,14 +29,13 @@ You should only be able to see edit profile when you look at your own profile
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
-
 export default function Profile(props) {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [relation, setRelation] = useState("");
+  const [exist, setExist] = useState(false)
 
   const { user, currUser, setCurrUser } = useContext(DataContext);
-  const [image, setImage] = useState(auth().currentUser.photoURL);
 
   const test_images = [
     require("../images/profile_9.jpeg"),
@@ -49,17 +48,9 @@ export default function Profile(props) {
   ];
 
   useEffect(() => {
-    const getProfile = async () => {
-      let userProfile = await firestore()
-        .collection("Users")
-        .doc(user.uid)
-        .get()
-        .then((doc) => {
-          const data = doc.data();
-          setCurrUser(data);
-        });
+    if(currUser.avatar != ""){
+      setExist(true)
     };
-    getProfile();
   }, []);
 
   return (
@@ -68,11 +59,16 @@ export default function Profile(props) {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ alignSelf: "center" }}>
             <View style={styles.profileImage}>
-              <Image
-                source={{uri:image}}
-                style={styles.image}
-                resizeMode="center"
+              {exist? (
+                <Avatar
+                source={{ uri: currUser.avatar }}
+                rounded
+                size="large"
+                containerStyle={styles.profileImage}
               />
+              ) : (
+                <Icon name="user" type="evilicon" color="white" size={200} />
+              )}
             </View>
             <View style={styles.dm}>
               <Icon name="chat" size={18} color="#DFD8C8"></Icon>
@@ -90,10 +86,11 @@ export default function Profile(props) {
           </View>
 
           <View style={styles.infoContainer}>
-          <TouchableOpacity style={{paddingBottom: 10}} onPress={() => props.navigation.navigate("edit")}>
-              <Text style={{color:"grey"}}>
-                Edit Profile
-              </Text>
+            <TouchableOpacity
+              style={{ paddingBottom: 10 }}
+              onPress={() => props.navigation.navigate("editInterim")}
+            >
+              <Text style={{ color: "grey" }}>Edit Profile</Text>
             </TouchableOpacity>
             <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
               {currUser.name}
@@ -217,25 +214,25 @@ export default function Profile(props) {
             </View>
           </View>
           <View style={styles.imageContainer}>
-          <FlatList
-          data={test_images}
-          style={{ flexGrow: 1, flex: 1 }}
-          renderItem={({ item }) => (
-            <View
-              style={{
-                flexDirection: "column",
-                margin: 0,
-                flex: 1
-              }}
-            >
-              <Image style={styles.imageThumbnail} source={item} />
-            </View>
-          )}
-          //Setting the number of column
-          numColumns={2}
-          keyExtractor={(index) => index}
-        />
-        </View>
+            <FlatList
+              data={test_images}
+              style={{ flexGrow: 1, flex: 1 }}
+              renderItem={({ item }) => (
+                <View
+                  style={{
+                    flexDirection: "column",
+                    margin: 0,
+                    flex: 1,
+                  }}
+                >
+                  <Image style={styles.imageThumbnail} source={item} />
+                </View>
+              )}
+              //Setting the number of column
+              numColumns={2}
+              keyExtractor={(index) => index}
+            />
+          </View>
         </ScrollView>
       </SafeAreaView>
       <TouchableOpacity
@@ -274,9 +271,9 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: "500",
   },
-  imageContainer:{
-    flexGrow:1,
-    marginBottom: SCREEN_HEIGHT * 0.03
+  imageContainer: {
+    flexGrow: 1,
+    marginBottom: SCREEN_HEIGHT * 0.03,
   },
   imageThumbnail: {
     justifyContent: "center",
