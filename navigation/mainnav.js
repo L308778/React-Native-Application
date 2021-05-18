@@ -16,7 +16,6 @@ import Profile from "../components/main_page/profile.js";
 import Activity_info from "../components/main_page/activity_info.js";
 import Saved from "../components/main_page/saved_activity/saved.js";
 import Welcome from "../components/welcome.js";
-import EditProfile from "../components/account_creation/edit_profile.js"
 import ConnectStack from "./ConnectStack.js";
 import { screensEnabled } from "react-native-screens";
 import CreatorStack from "./CreatorStack.js"
@@ -139,7 +138,6 @@ const MainStacker = () => {
     >
       <MainStack.Screen name="welcome" component={Welcome} />
       <MainStack.Screen name="location" component={Location} />
-      <MainStack.Screen name="edit" component={EditProfile}/>
       <MainStack.Screen name="budget" component={Budget} />
       <MainStack.Screen name="time" component={Time} />
       <MainStack.Screen name="people" component={People} />

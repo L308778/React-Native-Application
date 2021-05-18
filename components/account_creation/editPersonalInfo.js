@@ -83,7 +83,7 @@ export default function ProfileCreator(props) {
     await firestore()
       .collection('Users')
       .doc(uid)
-      .set({
+      .update({
         name: name,
         age: age,
         gender: gender,
@@ -109,7 +109,8 @@ export default function ProfileCreator(props) {
       };
       try {
         await auth().currentUser.updateProfile(update);
-        setCurrUser({
+        setCurrUser((prevState) => ({
+          ...prevState,
           name: name,
           age: age,
           gender: gender,
@@ -117,7 +118,7 @@ export default function ProfileCreator(props) {
           uid: currUser.uid,
           friends: currUser.friends,
           avatar: currUser.avatar
-        });
+        }));
 
         addUser()
 

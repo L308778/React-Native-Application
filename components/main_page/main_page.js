@@ -7,7 +7,8 @@ import {
   Image,
   SafeAreaView,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  AppState
 } from "react-native";
 import Constants from "expo-constants";
 import Swiper from "react-native-deck-swiper";
@@ -16,6 +17,8 @@ import Activities from "../data/main.js";
 import Images from "../images/image_loader.js";
 import { DataContext } from "../../context/dataContext.js";
 import FlipCard from "react-native-flip-card";
+import firestore from "@react-native-firebase/firestore"
+import auth from "@react-native-firebase/auth";
 
 SCREEN_WIDTH = Dimensions.get("window").width;
 SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -35,28 +38,69 @@ https://github.com/leecade/react-native-swiper
 */
 
 export default function Main(props) {
+
+
   const {
-    data,
     saved,
-    saved_activities,
     for_info,
-    curr_activity,
+    addDiscard,
+    discarded,
+    saved_activities,
+    currUser
   } = useContext(DataContext);
 
   const [saved_activity, setActivity] = useState([]);
+  const [appState, setAppState] = useState(AppState.currentState)
+  const [checker, setChecker] = useState("")
 
   const to_info = (index) => {
     for_info(index);
     props.navigation.navigate("activity_info");
   };
 
+  const stored = (index) => {
+    saved(index)
+  }
+
+  const handleAppStateChange = (state) => {
+    setAppState(state);
+  }
+
+
+  const updateDiscarded = async() => {
+      firestore()
+      .collection("Users")
+      .doc(auth().currentUser.uid)
+      .update({
+        discarded: discarded,
+        stored: saved_activities
+      })
+      .then(() => {
+        console.log(currUser.avatar);
+      });
+  }
+
+  useEffect(() => {
+    AppState.addEventListener('change', handleAppStateChange);
+    console.log(appState)
+    return (() => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    })
+  }, [])
+
+  useEffect(() => {
+    if((appState == "inactive" | appState == "background") & (discarded != currUser.discarded | stored != currUser.stored)){
+      updateDiscarded()
+    }
+  });
+
 
 
   return (
     <SafeAreaView style={styles.container}>
       <Swiper
-
         cards={Activities}
+
         renderCard={(card, index) => {
           return (
             <FlipCard
@@ -95,7 +139,8 @@ export default function Main(props) {
             </FlipCard>
           );
         }}
-        onSwipedRight={(index) => saved(index)}
+        onSwipedRight={(index) => stored(index)}
+        onSwipedLeft={(index) => addDiscard(index)}
         onSwipedTop={(index) => to_info(index)}
         onSwiped={(cardIndex) => {
           console.log("Yes");
