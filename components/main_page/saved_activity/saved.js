@@ -12,7 +12,6 @@ import Constants from "expo-constants";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import React, { useState, useContext, useEffect } from "react";
 import { DataContext } from "../../../context/dataContext";
-import Images from "../../images/image_loader.js";
 import { SearchBar } from "react-native-elements";
 import { useIsFocused} from '@react-navigation/native'; 
 import { Dimensions } from "react-native";
@@ -44,6 +43,7 @@ export default function Saved(props) {
   };
 
   useEffect(() => {
+    console.log(saved_activities)
     if (displayData){
       setDisplayData(saved_activities)
     }},[saved_activities])
@@ -127,7 +127,7 @@ export default function Saved(props) {
         >
           <View style={styles.listItem}>
             <Image
-              source={item.image}
+              source={{uri: item.image}}
               style={{ width: 60, height: 60, borderRadius: 30 }}
             />
             <View

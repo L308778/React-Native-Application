@@ -14,7 +14,6 @@ import Constants from "expo-constants";
 import Swiper from "react-native-deck-swiper";
 import { Icon } from "react-native-elements";
 import Activities from "../data/main.js";
-import Images from "../images/image_loader.js";
 import { DataContext } from "../../context/dataContext.js";
 import FlipCard from "react-native-flip-card";
 import firestore from "@react-native-firebase/firestore"
@@ -42,6 +41,7 @@ export default function Main(props) {
 
   const {
     saved,
+    activities,
     for_info,
     addDiscard,
     discarded,
@@ -99,7 +99,7 @@ export default function Main(props) {
   return (
     <SafeAreaView style={styles.container}>
       <Swiper
-        cards={Activities}
+        cards={activities}
 
         renderCard={(card, index) => {
           return (
@@ -115,7 +115,7 @@ export default function Main(props) {
             >
               {/* Face Side */}
               <SafeAreaView style={styles.card}>
-                <Image source={card.image} style={styles.image} />
+                <Image source={{uri: card.image}} style={styles.image} />
                 <View style={styles.innerCard}>
                   <Text style={styles.dollar}> {card.int_price} </Text>
                   <Text style={styles.text}>{card.name}</Text>

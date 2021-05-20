@@ -1,11 +1,20 @@
 import React, { useState, useContext } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Platform, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Platform,
+  Alert,
+} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { Icon } from 'react-native-elements'
-import Constants from "expo-constants"
-import GeoLocation from "@react-native-community/geolocation"
+import { Icon } from "react-native-elements";
+import Constants from "expo-constants";
+import GeoLocation from "@react-native-community/geolocation";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-import { DataContext } from "../context/dataContext.js"
+import { DataContext } from "../context/dataContext.js";
+import firestore from "@react-native-firebase/firestore"
+import auth from "@react-native-firebase/auth";
 
 /*
 This is the location screen. The user will be asked through the 
@@ -15,32 +24,47 @@ Here we have to implement a dropdown or something where the user can choose in w
 area he or she is, in the case they do not allow location
 */
 
-
 const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.1;
 const LONGITUDE_DELTA = 0.1;
 
 export default function LocationScreen(props) {
+  const [lat, setLatitude] = useState(40);
+  const [long, setLongitude] = useState(127);
+  const { on_location, currUser, setCurrUser } = useContext(DataContext);
 
-  const [lat, setLatitude] = useState(40)
-  const [long, setLongitude] = useState(127)
-  const { on_location } = useContext(DataContext)
+  const updateLocation = async (loc) => {
+    await firestore()
+          .collection("Users")
+          .doc(auth().currentUser.uid)
+          .update({
+            location: loc,
+          })
+          .then(() => {
+            console.log(currUser);
+          });
 
-  const findCoordinates = () => {
+    setCurrUser((prevState) => ({
+      ...prevState,
+      location: loc
+    }));
+
+  }
+
+  const findCoordinates = async () => {
     GeoLocation.getCurrentPosition(
-      position => {
+      (position) => {
         const location = JSON.stringify(position.coords);
-        var lat = parseFloat(position.coords.latitude)
-        var long = parseFloat(position.coords.longitude)
-        setLatitude(lat)
-        setLongitude(long)
-        on_location({ latitude: lat, longitude: long })
-        setTimeout(function () {
-          props.navigation.navigate("tab");
-        }, 2000)
+        var lat = parseFloat(position.coords.latitude);
+        var long = parseFloat(position.coords.longitude);
+        setLatitude(lat);
+        setLongitude(long);
+        on_location({ latitude: lat, longitude: long });
+        updateLocation({ latitude: lat, longitude: long })
+        props.navigation.navigate("tab");
       },
-      error => {
+      (error) => {
         Alert.alert(error.message);
       },
       { enableHighAccuracy: true, timeout: 5000, maximumAge: 1000 }
@@ -49,9 +73,7 @@ export default function LocationScreen(props) {
 
   return (
     <View style={styles.container}>
-      <Text>
-
-      </Text>
+      <Text></Text>
       <View style={styles.inputcontainer}>
         <MapView
           style={styles.map}
@@ -61,15 +83,16 @@ export default function LocationScreen(props) {
             latitude: lat,
             longitude: long,
             latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA
-          }} />
-        <TouchableOpacity style={styles.confirmbutton} onPress={findCoordinates}>
-          <Text style={styles.confirmbuttontext}>
-            FIND ME
-            </Text>
+            longitudeDelta: LONGITUDE_DELTA,
+          }}
+        />
+        <TouchableOpacity
+          style={styles.confirmbutton}
+          onPress={findCoordinates}
+        >
+          <Text style={styles.confirmbuttontext}>FIND ME</Text>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 }
@@ -91,7 +114,7 @@ const styles = StyleSheet.create({
   inputcontainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   confirmbutton: {
     color: "turquoise",
@@ -104,11 +127,11 @@ const styles = StyleSheet.create({
   confirmbuttontext: {
     fontSize: 20,
     fontWeight: "400",
-    color: "white"
+    color: "white",
   },
   map: {
     height: 300,
     width: 350,
-    borderRadius: 30
-  }
+    borderRadius: 30,
+  },
 });

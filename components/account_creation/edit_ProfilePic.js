@@ -77,8 +77,8 @@ export default function EditProfilePic(props) {
     props.navigation.navigate("profile");
   };
 
-  const confirmPic = () => {
-    firestore()
+  const confirmPic = async() => {
+    await firestore()
       .collection("Users")
       .doc(auth().currentUser.uid)
       .update({

@@ -9,11 +9,7 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import Constants from "expo-constants";
-import { TextInput } from "react-native-gesture-handler";
 import { Icon, Avatar } from "react-native-elements";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
 import { DataContext } from "../../context/dataContext";
 import { Dimensions } from "react-native";
 
@@ -123,96 +119,6 @@ export default function Profile(props) {
               <Text style={[styles.text, styles.subText]}>Friends</Text>
             </View>
           </View>
-
-          <View style={{ marginTop: 32 }}>
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            >
-              <View style={styles.mediaImageContainer}>
-                <Image
-                  source={require("../images/profile_1.jpeg")}
-                  style={styles.image}
-                  resizeMode="cover"
-                ></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
-                <Image
-                  source={require("../images/profile_2.jpeg")}
-                  style={styles.image}
-                  resizeMode="cover"
-                ></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
-                <Image
-                  source={require("../images/profile_3.jpeg")}
-                  style={styles.image}
-                  resizeMode="cover"
-                ></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
-                <Image
-                  source={require("../images/profile_4.jpeg")}
-                  style={styles.image}
-                  resizeMode="cover"
-                ></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
-                <Image
-                  source={require("../images/profile_5.jpeg")}
-                  style={styles.image}
-                  resizeMode="cover"
-                ></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
-                <Image
-                  source={require("../images/profile_6.jpeg")}
-                  style={styles.image}
-                  resizeMode="cover"
-                ></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
-                <Image
-                  source={require("../images/profile_7.jpeg")}
-                  style={styles.image}
-                  resizeMode="cover"
-                ></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
-                <Image
-                  source={require("../images/profile_8.jpeg")}
-                  style={styles.image}
-                  resizeMode="cover"
-                ></Image>
-              </View>
-            </ScrollView>
-          </View>
-          <View style={{ alignItems: "center", marginTop: 30 }}>
-            <View style={styles.recentItem}>
-              <View style={styles.activityIndicator}></View>
-              <View style={{ width: 250 }}>
-                <Text
-                  style={[styles.text, { color: "#41444B", fontWeight: "300" }]}
-                >
-                  Started following{" "}
-                  <Text style={{ fontWeight: "400" }}>Jake Challeahe</Text> and{" "}
-                  <Text style={{ fontWeight: "400" }}>Luis Poteer</Text>
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.recentItem}>
-              <View style={styles.activityIndicator}></View>
-              <View style={{ width: 250 }}>
-                <Text
-                  style={[styles.text, { color: "#41444B", fontWeight: "300" }]}
-                >
-                  Started following{" "}
-                  <Text style={{ fontWeight: "400" }}>Luke Harper</Text>
-                </Text>
-              </View>
-            </View>
-          </View>
           <View style={styles.imageContainer}>
             <FlatList
               data={test_images}
@@ -249,6 +155,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: "#FFF",
+    marginBottom: 30
   },
   text: {
     fontFamily: "HelveticaNeue",
@@ -327,6 +234,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "center",
     marginTop: 32,
+    marginBottom: 40
   },
   statsBox: {
     alignItems: "center",
