@@ -46,7 +46,9 @@ export default function Main(props) {
     addDiscard,
     discarded,
     saved_activities,
-    currUser
+    currUser,
+    currActivity,
+    setCurrActivity
   } = useContext(DataContext);
 
   const [saved_activity, setActivity] = useState([]);
@@ -54,7 +56,7 @@ export default function Main(props) {
   const [checker, setChecker] = useState("")
 
   const to_info = (index) => {
-    for_info(index);
+    setCurrActivity(activities[index]);
     props.navigation.navigate("activity_info");
   };
 
@@ -89,6 +91,7 @@ export default function Main(props) {
   }, [])
 
   useEffect(() => {
+    console.log(activities)
     if((appState == "inactive" | appState == "background") & (discarded != currUser.discarded | stored != currUser.stored)){
       updateDiscarded()
     }
@@ -100,7 +103,6 @@ export default function Main(props) {
     <SafeAreaView style={styles.container}>
       <Swiper
         cards={activities}
-
         renderCard={(card, index) => {
           return (
             <FlipCard
@@ -143,10 +145,9 @@ export default function Main(props) {
         onSwipedLeft={(index) => addDiscard(index)}
         onSwipedTop={(index) => to_info(index)}
         onSwiped={(cardIndex) => {
-          console.log("Yes");
+          console.log(cardIndex);
         }}
         onSwipedAll={() => console.log("Yes")}
-        cardIndex={0}
         backgroundColor={"turquoise"}
         stackSize={2}
         infinite

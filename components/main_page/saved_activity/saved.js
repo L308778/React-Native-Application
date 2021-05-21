@@ -32,18 +32,17 @@ SCREEN_HEIGHT = Dimensions.get("window").height
 
 export default function Saved(props) {
   
-  const {saved_activities, update_saved} = useContext(DataContext);
+  const {saved_activities, update_saved, setCurrActivity, currActivity} = useContext(DataContext);
   const [search, setSearch] = useState("");
   const [displayData, setDisplayData] = useState(saved_activities);
 
 
   const to_info = (index) => {
-    for_info(index);
+    setCurrActivity(saved_activities[index]);
     props.navigation.navigate("activity_info");
   };
 
   useEffect(() => {
-    console.log(saved_activities)
     if (displayData){
       setDisplayData(saved_activities)
     }},[saved_activities])
@@ -84,7 +83,7 @@ export default function Saved(props) {
 
     const handle_delete = (index) => {
       let arr = displayData.filter((item) => {
-        return item.key !== index
+        return item.id !== index
       })
 
       setDisplayData(arr)
@@ -101,7 +100,7 @@ export default function Saved(props) {
       return (
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={() => handle_delete(item.key)}
+          onPress={() => handle_delete(item.id)}
         >
           <View style={styles.delete}>
             <Animated.Text
@@ -123,7 +122,7 @@ export default function Saved(props) {
     return (
       <Swipeable renderLeftActions={leftSwipe}>
         <TouchableOpacity
-          onPress={() => to_info(item.key - 1)}
+          onPress={() => to_info(saved_activities.indexOf(item))}
         >
           <View style={styles.listItem}>
             <Image
@@ -174,7 +173,7 @@ export default function Saved(props) {
         style={{ flex: 1 }}
         data={displayData}
         ItemSeparatorComponent={ItemSeparatorView}
-        keyExtractor={(item) => String(item.key)}
+        keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => Item({ item })}
       />
       <TouchableOpacity

@@ -19,10 +19,10 @@ const ScreenHeight = Dimensions.get("window").height
 
 export default function Activity_Info(props) {
 
-    const {curr_activity} = useContext(DataContext)
+    const {currActivity} = useContext(DataContext)
 
 
-    const [data, setData] = useState(curr_activity.data);
+    const [data, setData] = useState(currActivity);
 
     const logger = () => {
       console.log(data)

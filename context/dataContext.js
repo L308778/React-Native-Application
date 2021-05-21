@@ -31,7 +31,7 @@ const DataContextProvider = ({ children }) => {
     latitude: "",
     longitude: "",
   });
-  const [curr_activity, setCurrActivity] = useState({});
+  const [currActivity, setCurrActivity] = useState({});
   const [user, setUser] = useState(false);
   const [welcomeShown, setWelcomeShown] = useState(false);
   const [messages, setMessages] = useState({});
@@ -117,7 +117,7 @@ const DataContextProvider = ({ children }) => {
         activities,
         saved_activities,
         location,
-        curr_activity,
+        currActivity,
         user,
         welcomeShown,
         messages,
@@ -129,6 +129,7 @@ const DataContextProvider = ({ children }) => {
         discarded,
         getData,
         setCurrUser,
+        setCurrActivity,
         setUser,
         signup,
         login,
