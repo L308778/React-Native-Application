@@ -32,6 +32,7 @@ const DataContextProvider = ({ children }) => {
     const mmkvInstances = useRef({})
     const giftedChat = useRef(null)
     const [currUser, setCurrUser] = useState({})
+    const [discarded, setDiscarded] = useState([])
 
     //Most of the functions here except on_location, saved and for_info are used for auth state
     function signup(email, password) {
@@ -74,6 +75,10 @@ const DataContextProvider = ({ children }) => {
         setSavedActivities(saved_activities.concat(Data[index]));
     }
 
+    addDiscard = (index) => {
+        setDiscarded(discarded.concat(index));
+    }
+
     update_saved = (data) => {
         setSavedActivities(data)
     }
@@ -99,6 +104,8 @@ const DataContextProvider = ({ children }) => {
             mmkvInstances,
             giftedChat,
             currUser,
+            addDiscard,
+            discarded,
             setCurrUser,
             setUser,
             signup,

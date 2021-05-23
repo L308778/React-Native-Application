@@ -4,7 +4,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
   Dimensions,
   ActivityIndicator,
 } from "react-native";
@@ -12,7 +11,7 @@ import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import auth from "@react-native-firebase/auth";
 import { DataContext } from "../../context/dataContext.js";
-import { Icon } from "react-native-elements";
+import { Icon, Avatar } from "react-native-elements";
 import { set } from "react-native-reanimated";
 import firestore from "@react-native-firebase/firestore";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
@@ -28,12 +27,13 @@ SCREEN_HEIGHT = Dimensions.get("window").height;
 SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function EditProfilePic(props) {
+  const { currUser, setCurrUser } = useContext(DataContext);
+
   const [uploading, setUploading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
   const [uploadTaskSnapshot, setUploadTaskSnapshot] = useState({});
   const [exist, setExist] = useState(false);
-
-  const { currUser, setCurrUser } = useContext(DataContext);
+  const [oldPic, setOldPic] = useState(currUser.avatar);
 
   const onMediaSelect = async (media) => {
     setUploading(false);
@@ -51,32 +51,42 @@ export default function EditProfilePic(props) {
         setUploading(false);
         setUploadTaskSnapshot({});
         auth().currentUser.updateProfile({ photoURL: downloadURL });
-        setExist(true)
+        setExist(true);
+        setCurrUser((prevState) => ({
+          ...prevState,
+          avatar: downloadURL,
+        }));
+        console.log(currUser)
       });
     }
   };
 
   useEffect(() => {
-      if(currUser.avatar != ""){
-          setExist(true)
-      }
-  }, [])
+    if (currUser.avatar != "") {
+      setExist(true);
+    }
+  }, []);
+
+  const cancel = () => {
+    setCurrUser((prevState) => ({
+      ...prevState,
+      avatar: oldPic,
+    }));
+    console.log(currUser)
+
+    props.navigation.navigate("profile");
+  };
 
   const confirmPic = () => {
-    setCurrUser(prevState => ({
-        ...prevState,
-        avatar: downloadURL
-     }));
-
-     firestore()
-    .collection('Users')
-    .doc(auth().currentUser.uid)
-    .update({
+    firestore()
+      .collection("Users")
+      .doc(auth().currentUser.uid)
+      .update({
         avatar: downloadURL,
-    })
-    .then(() => {
-        console.log('User updated!');
-    });
+      })
+      .then(() => {
+        console.log(currUser.avatar);
+      });
     props.navigation.navigate("profile");
   };
 
@@ -89,7 +99,12 @@ export default function EditProfilePic(props) {
     <View style={styles.container}>
       <TouchableOpacity style={styles.profileImage}>
         {exist ? (
-          <Image source={{ uri: currUser.avatar }} style={styles.profileImage} />
+          <Avatar
+            source={{ uri: currUser.avatar }}
+            rounded
+            size={200}
+            containerStyle={styles.profileImage}
+          />
         ) : (
           <Icon name="user" type="evilicon" color="white" size={200} />
         )}
@@ -127,10 +142,7 @@ export default function EditProfilePic(props) {
       >
         <Text style={styles.panelButtonTitle3}>Confirm</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.panelButton4}
-        onPress={() => props.navigation.navigate("profile")}
-      >
+      <TouchableOpacity style={styles.panelButton4} onPress={() => cancel()}>
         <Text style={styles.panelButtonTitle4}>Back to Profile</Text>
       </TouchableOpacity>
     </View>
@@ -260,9 +272,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   profileImage: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
     overflow: "hidden",
     alignSelf: "center",
     margin: 40,
