@@ -7,14 +7,15 @@ import {
   SafeAreaView,
   Image,
   Animated,
+  Alert,
 } from "react-native";
 import Constants from "expo-constants";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import React, { useState, useContext, useEffect } from "react";
 import { DataContext } from "../../../context/dataContext";
 import Images from "../../images/image_loader.js";
-import { SearchBar } from "react-native-elements";
-import { useIsFocused} from '@react-navigation/native'; 
+import { SearchBar, Icon } from "react-native-elements";
+import { useIsFocused } from '@react-navigation/native';
 import { Dimensions } from "react-native";
 
 /*
@@ -31,22 +32,22 @@ SCREEN_WIDTH = Dimensions.get("window").width
 SCREEN_HEIGHT = Dimensions.get("window").height
 
 
-export default function Saved(props) {
-  
-  const {saved_activities, update_saved} = useContext(DataContext);
+export default function Saved({ navigation }) {
+  const { saved_activities, update_saved } = useContext(DataContext);
   const [search, setSearch] = useState("");
   const [displayData, setDisplayData] = useState(saved_activities);
 
 
   const to_info = (index) => {
     for_info(index);
-    props.navigation.navigate("activity_info");
+    navigation.navigate("activity_info");
   };
 
   useEffect(() => {
-    if (displayData){
+    if (displayData) {
       setDisplayData(saved_activities)
-    }},[saved_activities])
+    }
+  }, [saved_activities])
 
 
   /* 
@@ -56,29 +57,29 @@ export default function Saved(props) {
 
     setSearch(new_text)
 
-    if (new_text.length > 1){
+    if (new_text.length > 1) {
       let text = new_text.toString().toLowerCase()
       console.log(text)
       let filterData = saved_activities.filter((item) => {
         return item.name.toLowerCase().match(text)
       })
 
-      if (!text || text == ""){
+      if (!text || text == "") {
         setDisplayData(saved_activities)
       }
 
-      else if (!Array.isArray(filterData) && !filterData.length){
+      else if (!Array.isArray(filterData) && !filterData.length) {
         setDisplayData([])
       }
 
-      else if(Array.isArray(filterData)) {
+      else if (Array.isArray(filterData)) {
         setDisplayData(filterData);
       }
     }
-    else{
+    else {
       setDisplayData(saved_activities)
     }
-}
+  }
 
   const Item = ({ item }) => {
 
@@ -110,8 +111,8 @@ export default function Saved(props) {
                 color: "white",
                 fontWeight: "500",
                 fontSize: 20,
-                fontFamily:"systemfont",
-                
+                fontFamily: "systemfont",
+
               }}
             >
               Delete
@@ -160,46 +161,46 @@ export default function Saved(props) {
       />
     );
   };
-  if (displayData.length != 0){
+
   return (
     <SafeAreaView style={styles.container}>
-      <SearchBar
-        placeholder="SEARCH YOUR EVENT"
-        onChangeText={(text) => handle_search(text)}
-        value={search}
-        containerStyle={styles.searchbarcontainer}
-        inputContainerStyle={styles.searchbarInputContainer}
-      />
-      <FlatList
-        style={{ flex: 1 }}
-        data={displayData}
-        ItemSeparatorComponent={ItemSeparatorView}
-        keyExtractor={(item) => String(item.key)}
-        renderItem={({ item }) => Item({ item })}
-      />
+      <View style={styles.searchBarContainer}>
+        <SearchBar
+          placeholder="SEARCH YOUR EVENT"
+          onChangeText={(text) => handle_search(text)}
+          value={search}
+          containerStyle={styles.searchBar}
+          inputContainerStyle={styles.searchbarInputContainer}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            if (displayData.length > 1) navigation.navigate("compare")
+            else Alert.alert("You must have at least 2 events to compare!")
+          }}
+          style={{ flex: 1 }}
+        >
+          <Icon name={"compare-arrows"} type="MaterialIcons" color="black" size={40}></Icon>
+        </TouchableOpacity>
+      </View>
+      {displayData.length == 0 ?
+        <Text style={{ color: "grey", flex: 1, alignSelf: "center", top: SCREEN_WIDTH * 0.5, fontSize: 20 }}>
+          No stored activites
+        </Text> :
+        <FlatList
+          style={{ flex: 1 }}
+          data={displayData}
+          ItemSeparatorComponent={ItemSeparatorView}
+          keyExtractor={(item) => String(item.key)}
+          renderItem={({ item }) => Item({ item })}
+        />}
       <TouchableOpacity
         style={styles.confirmbutton}
-        onPress={() => props.navigation.navigate("main")}
+        onPress={() => navigation.navigate("main")}
       >
         <Text style={styles.confirmbuttontext}>RETURN TO TRIPPY</Text>
       </TouchableOpacity>
     </SafeAreaView>
-  );}
-  else{
-    return(
-      <SafeAreaView style={styles.container}>
-      <Text style={{color:"grey", flex:1, alignSelf:"center", top:SCREEN_WIDTH *0.5, fontSize:20}}>
-        No stored activites
-      </Text>
-      <TouchableOpacity
-        style={styles.confirmbutton}
-        onPress={() => props.navigation.navigate("main")}
-      >
-        <Text style={styles.confirmbuttontext}>RETURN TO TRIPPY</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
-    )
-  }
+  )
 }
 
 const styles = StyleSheet.create({
@@ -207,6 +208,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F7F7F7",
     overflow: "hidden",
+  },
+  searchBarContainer: {
+    flexDirection: "row",
+    alignItems: 'center',
+    marginTop: 10
   },
   header: {
     paddingTop: Constants.statusBarHeight,
@@ -250,13 +256,16 @@ const styles = StyleSheet.create({
     backgroundColor: "turquoise",
     borderRadius: 200,
   },
-  searchbarcontainer: {
+  searchBar: {
     borderRadius: 60,
-    width: "95%",
+    width: "70%",
     alignSelf: "center",
     backgroundColor: "turquoise",
     borderBottomColor: "transparent",
     borderTopColor: "transparent",
+    padding: 2,
+    marginLeft: "5%",
+    flex: 4
   },
   searchbarInputContainer: {
     backgroundColor: "white",
@@ -269,12 +278,12 @@ const styles = StyleSheet.create({
     backgroundColor: "darkred",
     justifyContent: "center",
     alignItems: "center",
-    alignSelf:"center",
+    alignSelf: "center",
     width: 110,
     height: 90,
-    borderRadius:20,
-    borderColor:"white",
-    borderWidth:10,
+    borderRadius: 20,
+    borderColor: "white",
+    borderWidth: 10,
     marginLeft: 10,
   },
 });

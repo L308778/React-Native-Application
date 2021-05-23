@@ -23,6 +23,7 @@ import CreatorStack from "./CreatorStack.js"
 import EditInterim from "../components/account_creation/editInterim.js"
 import EditProfilePic from "../components/account_creation/edit_ProfilePic.js"
 import EditPersonalInfo from "../components/account_creation/editPersonalInfo.js"
+import Compare from "../components/main_page/saved_activity/compare.js";
 
 
 /*
@@ -105,7 +106,6 @@ function Mainfunc() {
         name="settings"
         component={Settings}
         options={{
-
           tabBarLabel: "SETTINGS",
           tabBarIcon: () => (
             <Icon name="gear" type="evilicon" color="turquoise" size={43} />
@@ -156,6 +156,7 @@ const MainStacker = () => {
       <MainStack.Screen name="editInterim" component = {EditInterim}/>
       <MainStack.Screen name="editProfilePic" component = {EditProfilePic}/>
       <MainStack.Screen name="editPersonalInfo" component = {EditPersonalInfo}/>
+      <MainStack.Screen name="compare" component = {Compare}/>
     </MainStack.Navigator>
   );
 }
