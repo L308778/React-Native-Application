@@ -48,7 +48,10 @@ export default function Main(props) {
     saved_activities,
     currUser,
     currActivity,
-    setCurrActivity
+    setCurrActivity,
+    user,
+    allUsers,
+    savedTracking
   } = useContext(DataContext);
 
   const [saved_activity, setActivity] = useState([]);
@@ -62,6 +65,7 @@ export default function Main(props) {
 
   const stored = (index) => {
     saved(index)
+    checkUserMatches(index)
   }
 
   const handleAppStateChange = (state) => {
@@ -69,17 +73,25 @@ export default function Main(props) {
   }
 
 
-  const updateDiscarded = async() => {
-      firestore()
+  const updateDiscarded = async () => {
+    firestore()
       .collection("Users")
       .doc(auth().currentUser.uid)
       .update({
         discarded: discarded,
-        stored: saved_activities
+        stored: savedTracking
       })
       .then(() => {
         console.log(currUser.avatar);
       });
+  }
+
+  const checkUserMatches = (index) => {
+    const key = activities[index].id
+    
+    //console.log(savedTracking)
+    let matchUsers = allUsers.filter(otherUser => otherUser && otherUser.uid !== user.uid && otherUser.stored && otherUser.stored.filter(activity => activity.id && activity.id === key).length > 0)
+    console.log(matchUsers)
   }
 
   useEffect(() => {
@@ -91,13 +103,11 @@ export default function Main(props) {
   }, [])
 
   useEffect(() => {
-    console.log(activities)
-    if((appState == "inactive" | appState == "background") & (discarded != currUser.discarded | stored != currUser.stored)){
+    //console.log(activities)
+    if ((appState == "inactive" | appState == "background") & (discarded != currUser.discarded | stored != currUser.stored)) {
       updateDiscarded()
     }
   });
-
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -117,7 +127,7 @@ export default function Main(props) {
             >
               {/* Face Side */}
               <SafeAreaView style={styles.card}>
-                <Image source={{uri: card.image}} style={styles.image} />
+                <Image source={{ uri: card.image }} style={styles.image} />
                 <View style={styles.innerCard}>
                   <Text style={styles.dollar}> {card.int_price} </Text>
                   <Text style={styles.text}>{card.name}</Text>
@@ -241,7 +251,7 @@ const styles = StyleSheet.create({
   backCard: {
     borderRadius: 40,
     borderWidth: 2,
-    marginTop:SCREEN_HEIGHT * 0.05,
+    marginTop: SCREEN_HEIGHT * 0.05,
     borderColor: "#E8E8E8",
     justifyContent: "center",
     backgroundColor: "turquoise",
@@ -270,7 +280,7 @@ const styles = StyleSheet.create({
     padding: 30,
     color: "white",
     fontSize: 25,
-    fontWeight:"700"
+    fontWeight: "700"
   },
   confirmbutton: {
     color: "turquoise",
@@ -278,11 +288,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
     padding: 10,
-    width:"50%",
+    width: "50%",
     marginTop: 30,
-    alignSelf:"center",
-    borderColor:"white",
-    borderWidth:2
+    alignSelf: "center",
+    borderColor: "white",
+    borderWidth: 2
   },
   confirmbuttontext: {
     fontSize: 20,

@@ -40,6 +40,7 @@ const DataContextProvider = ({ children }) => {
   const giftedChat = useRef(null);
   const [currUser, setCurrUser] = useState({});
   const [discarded, setDiscarded] = useState([]);
+  const [allUsers, setAllUsers] = useState([])
 
   const getData = async () => {
     const data = [];
@@ -77,6 +78,20 @@ const DataContextProvider = ({ children }) => {
 
   function updatePassword(password) {
     return currentUser().updatePassword(password);
+  }
+
+  const getAllUser = async () => {
+    let interim = []
+    users = await firestore()
+      .collection("Users")
+      .get()
+      .then(querySnapshot => {
+
+        querySnapshot.forEach(documentSnapshot => {
+          interim.push(documentSnapshot.data());
+        });
+        setAllUsers(interim);
+      })
   }
 
   async function setProfilePic(downloadURL) {
@@ -127,12 +142,14 @@ const DataContextProvider = ({ children }) => {
         currUser,
         addDiscard,
         discarded,
+        allUsers,
         getData,
         setCurrUser,
         setCurrActivity,
         setUser,
         signup,
         login,
+        getAllUser,
         logout,
         resetPassword,
         updateEmail,
