@@ -13,7 +13,6 @@ import Constants from "expo-constants";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import React, { useState, useContext, useEffect } from "react";
 import { DataContext } from "../../../context/dataContext";
-import Images from "../../images/image_loader.js";
 import { SearchBar, Icon } from "react-native-elements";
 import { useIsFocused } from '@react-navigation/native';
 import { Dimensions } from "react-native";
@@ -33,13 +32,14 @@ SCREEN_HEIGHT = Dimensions.get("window").height
 
 
 export default function Saved({ navigation }) {
-  const { saved_activities, update_saved } = useContext(DataContext);
+  
+  const {saved_activities, update_saved, setCurrActivity, currActivity} = useContext(DataContext);
   const [search, setSearch] = useState("");
   const [displayData, setDisplayData] = useState(saved_activities);
 
 
   const to_info = (index) => {
-    for_info(index);
+    setCurrActivity(saved_activities[index]);
     navigation.navigate("activity_info");
   };
 
@@ -85,7 +85,7 @@ export default function Saved({ navigation }) {
 
     const handle_delete = (index) => {
       let arr = displayData.filter((item) => {
-        return item.key !== index
+        return item.id !== index
       })
 
       setDisplayData(arr)
@@ -102,7 +102,7 @@ export default function Saved({ navigation }) {
       return (
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={() => handle_delete(item.key)}
+          onPress={() => handle_delete(item.id)}
         >
           <View style={styles.delete}>
             <Animated.Text
@@ -124,11 +124,11 @@ export default function Saved({ navigation }) {
     return (
       <Swipeable renderLeftActions={leftSwipe}>
         <TouchableOpacity
-          onPress={() => to_info(item.key - 1)}
+          onPress={() => to_info(saved_activities.indexOf(item))}
         >
           <View style={styles.listItem}>
             <Image
-              source={item.image}
+              source={{uri: item.image}}
               style={{ width: 60, height: 60, borderRadius: 30 }}
             />
             <View

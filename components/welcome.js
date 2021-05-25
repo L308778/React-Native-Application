@@ -17,7 +17,7 @@ SCREEN_WIDTH = Dimensions.get("window").width
 
 export default function Welcome(props) {
 
-    const {user, currUser, setCurrUser} = useContext(DataContext)
+    const {user, currUser, setCurrUser, activities, getData} = useContext(DataContext)
 
     useEffect(() => {
         const getProfile = async () => {
@@ -26,12 +26,15 @@ export default function Welcome(props) {
             .doc(user.uid)
             .get()
             .then((doc) => {
-              const data = doc.data();
-              setCurrUser(data);
+              const userData = doc.data();
+              setCurrUser(userData);
             });
         };
     
         getProfile();
+        getData()
+        console.log(activities)
+
         props.navigation.navigate("location")
       }, []);
 

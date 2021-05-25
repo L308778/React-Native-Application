@@ -4,7 +4,6 @@ import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import { Icon } from 'react-native-elements'
 import Activities from "../data/main"
-import Images from "../images/image_loader.js"
 import {DataContext} from "../../context/dataContext.js"
 
 /* 
@@ -20,10 +19,10 @@ const ScreenHeight = Dimensions.get("window").height
 
 export default function Activity_Info(props) {
 
-    const {curr_activity} = useContext(DataContext)
+    const {currActivity} = useContext(DataContext)
 
 
-    const [data, setData] = useState(curr_activity.data);
+    const [data, setData] = useState(currActivity);
 
     const logger = () => {
       console.log(data)
@@ -35,7 +34,7 @@ export default function Activity_Info(props) {
         </View>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>{data.name}</Text>
-        <Image style={styles.image} source={data.image}/>
+        <Image style={styles.image} source={{uri:data.image}}/>
         <View style={styles.long_cont}>
         <Text style={styles.long_text}>{data.longdescription}</Text>
         </View>

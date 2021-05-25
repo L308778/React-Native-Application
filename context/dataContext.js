@@ -1,8 +1,15 @@
-import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
-import Data from "../components/data/main.js"
-import auth from '@react-native-firebase/auth';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
+import Data from "../components/data/main.js";
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 
-export const DataContext = createContext({})
+export const DataContext = createContext({});
 
 /*
 Here we define the context which will be used throughout the application.
@@ -18,114 +25,131 @@ store all information to the current user
 */
 
 const DataContextProvider = ({ children }) => {
-    const [data, setData] = useState(Data)
-    const [saved_activities, setSavedActivities] = useState([])
-    const [location, setLocation] = useState({
-        latitude: "",
-        longitude: ""
-    })
-    const [curr_activity, setCurrActivity] = useState({})
-    const [user, setUser] = useState(false)
-    const [welcomeShown, setWelcomeShown] = useState(false)
-    const [messages, setMessages] = useState({})
-    const [chats, setChats] = useState(new Set())
-    const mmkvInstances = useRef({})
-    const giftedChat = useRef(null)
-    const [currUser, setCurrUser] = useState({})
-    const [discarded, setDiscarded] = useState([])
+  const [activities, setActivities] = useState("");
+  const [saved_activities, setSavedActivities] = useState([]);
+  const [location, setLocation] = useState({
+    latitude: "",
+    longitude: "",
+  });
+  const [currActivity, setCurrActivity] = useState({});
+  const [user, setUser] = useState(false);
+  const [welcomeShown, setWelcomeShown] = useState(false);
+  const [messages, setMessages] = useState({});
+  const [chats, setChats] = useState(new Set());
+  const mmkvInstances = useRef({});
+  const giftedChat = useRef(null);
+  const [currUser, setCurrUser] = useState({});
+  const [discarded, setDiscarded] = useState([]);
 
-    //Most of the functions here except on_location, saved and for_info are used for auth state
-    function signup(email, password) {
-        return auth().createUserWithEmailAndPassword(email, password)
+  const getData = async () => {
+    const data = [];
+    await firestore()
+      .collection("Activities")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
+          data.push(doc.data());
+        });
+      });
+    setActivities(data);
+  };
+
+  //Most of the functions here except on_location, saved and for_info are used for auth state
+  function signup(email, password) {
+    return auth().createUserWithEmailAndPassword(email, password);
+  }
+
+  function login(email, password) {
+    return auth().signInWithEmailAndPassword(email, password);
+  }
+
+  function logout() {
+    return auth().signOut();
+  }
+
+  function resetPassword(email) {
+    return auth().sendPasswordResetEmail(email);
+  }
+
+  function updateEmail(email) {
+    return currentUser().updateEmail(email);
+  }
+
+  function updatePassword(password) {
+    return currentUser().updatePassword(password);
+  }
+
+  async function setProfilePic(downloadURL) {
+    const update = {
+      photoURL: downloadURL,
+    };
+    try {
+      await auth().currentUser.updateProfile(update);
+    } catch (e) {
+      Alert.alert("Failed to update user\n" + e);
     }
+  }
 
-    function login(email, password) {
-        return auth().signInWithEmailAndPassword(email, password)
-    }
+  //These are unrelated to auth context
+  saved = (index) => {
+    setSavedActivities(saved_activities.concat(activities[index]));
+  };
 
-    function logout() {
-        return auth().signOut()
-    }
+  addDiscard = (index) => {
+    setDiscarded(discarded.concat(index));
+  };
 
-    function resetPassword(email) {
-        return auth().sendPasswordResetEmail(email)
-    }
+  update_saved = (data) => {
+    setSavedActivities(data);
+  };
 
-    function updateEmail(email) {
-        return currentUser().updateEmail(email)
-    }
+  on_location = (loc) => {
+    setLocation(loc);
+  };
 
-    function updatePassword(password) {
-        return currentUser().updatePassword(password)
-    }
+  for_info = (index) => {
+    setCurrActivity({ data: activities[index] });
+  };
 
-    async function setProfilePic (downloadURL){
-        const update = {
-          photoURL: downloadURL,
-        };
-        try {
-          await auth().currentUser.updateProfile(update);
-        } catch (e) {
-          Alert.alert("Failed to update user\n" + e);
-        }
-      };
-
-    //These are unrelated to auth context
-    saved = (index) => {
-        setSavedActivities(saved_activities.concat(Data[index]));
-    }
-
-    addDiscard = (index) => {
-        setDiscarded(discarded.concat(index));
-    }
-
-    update_saved = (data) => {
-        setSavedActivities(data)
-    }
-
-    on_location = (loc) => {
-        setLocation(loc)
-    }
-
-    for_info = (index) => {
-        setCurrActivity({ data: Data[index] })
-    }
-
-    return (
-        <DataContext.Provider value={{
-            data,
-            saved_activities,
-            location,
-            curr_activity,
-            user,
-            welcomeShown,
-            messages,
-            chats,
-            mmkvInstances,
-            giftedChat,
-            currUser,
-            addDiscard,
-            discarded,
-            setCurrUser,
-            setUser,
-            signup,
-            login,
-            logout,
-            resetPassword,
-            updateEmail,
-            updatePassword,
-            setProfilePic,
-            setWelcomeShown,
-            setMessages,
-            setChats,
-            saved,
-            on_location,
-            for_info,
-            update_saved
-        }}>
-            {children}
-        </DataContext.Provider>
-    );
-}
+  return (
+    <DataContext.Provider
+      value={{
+        activities,
+        saved_activities,
+        location,
+        currActivity,
+        user,
+        welcomeShown,
+        messages,
+        chats,
+        mmkvInstances,
+        giftedChat,
+        currUser,
+        addDiscard,
+        discarded,
+        getData,
+        setCurrUser,
+        setCurrActivity,
+        setUser,
+        signup,
+        login,
+        logout,
+        resetPassword,
+        updateEmail,
+        updatePassword,
+        setProfilePic,
+        setWelcomeShown,
+        setMessages,
+        setChats,
+        saved,
+        on_location,
+        for_info,
+        update_saved,
+      }}
+    >
+      {children}
+    </DataContext.Provider>
+  );
+};
 
 export default DataContextProvider;

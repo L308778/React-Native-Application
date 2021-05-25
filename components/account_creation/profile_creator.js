@@ -89,7 +89,8 @@ export default function ProfileCreator(props) {
         sentRequests: [],
         avatar: image,
         discarded: [],
-        stored: []
+        stored: [],
+        location:""
       })
       .then(() => {
         console.log('User added!');
