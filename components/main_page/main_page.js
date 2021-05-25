@@ -138,7 +138,7 @@ export default function Main(props) {
               <SafeAreaView style={styles.backCard}>
                 <View style={styles.backContainer}>
                   <Text style={styles.backHeader}>{card.name}</Text>
-                  <Text style={styles.backText}>{card.longdescription}</Text>
+                  <Text style={styles.backText}>{card.description}</Text>
                   <Text style={styles.price}> {card.price} </Text>
                   <TouchableOpacity
                     style={styles.confirmbutton}

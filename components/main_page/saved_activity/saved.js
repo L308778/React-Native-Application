@@ -190,7 +190,7 @@ export default function Saved({ navigation }) {
           style={{ flex: 1 }}
           data={displayData}
           ItemSeparatorComponent={ItemSeparatorView}
-          keyExtractor={(item) => String(item.key)}
+          keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => Item({ item })}
         />}
       <TouchableOpacity

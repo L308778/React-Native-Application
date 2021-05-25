@@ -36,7 +36,7 @@ export default function Activity_Info(props) {
         <Text style={styles.header}>{data.name}</Text>
         <Image style={styles.image} source={{uri:data.image}}/>
         <View style={styles.long_cont}>
-        <Text style={styles.long_text}>{data.longdescription}</Text>
+        <Text style={styles.long_text}>{data.description}</Text>
         </View>
         <View style={styles.parentinfocontainer}>
             <View style={styles.infocontainer}>

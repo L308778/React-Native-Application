@@ -82,18 +82,18 @@ const Compare = ({ navigation }) => {
                 </View>
                 <View style={styles.eventData}>
                     <View style={{ flex: event1Flex, alignItems: "center" }}>
-                        {event1 && <Image style={styles.eventImage} source={event1.image} />}
+                        {event1 && <Image style={styles.eventImage} source={{uri: event1.image}} />}
                     </View>
                     <View style={{ flex: event2Flex, alignItems: "center" }}>
-                        {event2 && <Image style={styles.eventImage} source={event2.image} />}
+                        {event2 && <Image style={styles.eventImage} source={{uri: event2.image}} />}
                     </View>
                 </View>
                 <View style={{ ...styles.eventData }}>
                     <View style={{ flex: event1Flex, alignItems: "center", paddingHorizontal: 15 }}>
-                        {event1 && <Text style={styles.eventDesc}>{event1.longdescription}</Text>}
+                        {event1 && <Text style={styles.eventDesc}>{event1.description}</Text>}
                     </View>
                     <View style={{ flex: event2Flex, alignItems: "center", paddingHorizontal: 15 }}>
-                        {event2 && <Text style={styles.eventDesc}>{event2.longdescription}</Text>}
+                        {event2 && <Text style={styles.eventDesc}>{event2.description}</Text>}
                     </View>
                 </View>
                 <View style={{ ...styles.eventData }}>
